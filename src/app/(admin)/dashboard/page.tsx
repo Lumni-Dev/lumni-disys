@@ -5,6 +5,7 @@ import { Card, CardHeader, CardBody, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Pagination } from "@/components/ui/pagination";
 import { StatCard } from "@/components/ui/stat-card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Topbar } from "@/components/ui/topbar";
 import { type Candidate } from "@/lib/data";
 import { api } from "@/lib/api-client";
@@ -102,9 +103,17 @@ export default function Home() {
       <Topbar showSearch={false} />
       <div className="flex flex-col gap-2.5 p-2.5">
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-          {cards.map((s) => (
-            <StatCard key={s.label} {...s} />
-          ))}
+          {data
+            ? cards.map((s) => <StatCard key={s.label} {...s} />)
+            : Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i}>
+                  <div className="flex flex-col gap-2.5 p-2.5">
+                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-7 w-1/3" />
+                    <Skeleton className="h-8 w-full" />
+                  </div>
+                </Card>
+              ))}
         </div>
 
         <Card>
@@ -113,9 +122,16 @@ export default function Home() {
             subtitle="Candidatos por etapa"
           />
           <CardBody className="space-y-2.5">
-            {funnel.length === 0 && (
-              <p className="text-sm text-muted">Carregando...</p>
-            )}
+            {!data &&
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={i}>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-3 w-6" />
+                  </div>
+                  <Skeleton className="h-2 w-full" />
+                </div>
+              ))}
             {funnel.map((f) => (
               <div key={f.stage}>
                 <div className="mb-1.5 flex items-center justify-between text-sm">
@@ -139,33 +155,45 @@ export default function Home() {
             title="Atividade recente"
             subtitle="Últimas movimentações"
           />
-          <ul className="grid grid-cols-1 divide-y divide-border sm:grid-cols-2">
-            {visible.map((a, i) => (
-              <li key={start + i} className="p-2.5">
-                <p className="text-sm text-foreground">
-                  <span className="font-medium text-foreground">{a.who}</span>{" "}
-                  <span className="text-muted">{a.what}</span>
-                </p>
-                <p className="mt-0.5 truncate text-xs text-muted">{a.role}</p>
-                <p className="mt-0.5 text-[11px] text-muted/70">{a.time}</p>
-              </li>
-            ))}
-          </ul>
-          {visible.length === 0 && (
+          {!candLoaded ? (
+            <ul className="grid grid-cols-1 divide-y divide-border sm:grid-cols-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <li key={i} className="flex flex-col gap-1.5 p-2.5">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                  <Skeleton className="h-3 w-1/4" />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="grid grid-cols-1 divide-y divide-border sm:grid-cols-2">
+              {visible.map((a, i) => (
+                <li key={start + i} className="p-2.5">
+                  <p className="text-sm text-foreground">
+                    <span className="font-medium text-foreground">{a.who}</span>{" "}
+                    <span className="text-muted">{a.what}</span>
+                  </p>
+                  <p className="mt-0.5 truncate text-xs text-muted">{a.role}</p>
+                  <p className="mt-0.5 text-[11px] text-muted/70">{a.time}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          {candLoaded && visible.length === 0 && (
             <p className="p-2.5 text-center text-sm text-muted">
-              {!candLoaded
-                ? "Carregando..."
-                : "Nenhuma atividade recente por enquanto."}
+              Nenhuma atividade recente por enquanto.
             </p>
           )}
           <CardFooter>
-            <span className="text-xs text-muted">
-              {!candLoaded
-                ? "Carregando..."
-                : activities.length === 0
+            {!candLoaded ? (
+              <Skeleton className="h-3 w-24" />
+            ) : (
+              <span className="text-xs text-muted">
+                {activities.length === 0
                   ? "0 movimentações"
                   : `${start + 1}–${start + visible.length} de ${activities.length}`}
-            </span>
+              </span>
+            )}
             <Pagination page={page} pageCount={pageCount} onPage={setPage} />
           </CardFooter>
         </Card>

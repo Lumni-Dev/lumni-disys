@@ -19,6 +19,7 @@ import { CompanyModal } from "@/components/entity-modals";
 import { type Company } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
+import { SkeletonRows } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
 
 const PAGE_SIZE = 10;
@@ -215,13 +216,15 @@ export default function CompaniesPage() {
                 </Td>
               </Tr>
             ))}
-            {visible.length === 0 && (
+            {loading ? (
+              <SkeletonRows cols={colSpan} />
+            ) : visible.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className="p-2.5 text-center text-sm text-muted">
-                  {loading ? "Carregando..." : "Nenhuma empresa encontrada."}
+                  Nenhuma empresa encontrada.
                 </td>
               </tr>
-            )}
+            ) : null}
           </Tbody>
         </Table>
         <CardFooter>

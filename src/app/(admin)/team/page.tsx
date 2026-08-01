@@ -18,6 +18,7 @@ import { initials } from "@/lib/utils";
 import { MemberModal } from "@/components/member-modal";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
+import { SkeletonRows } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
 import {
   countPermissions,
@@ -211,13 +212,15 @@ export default function TeamPage() {
                 </Tr>
               );
             })}
-            {filtered.length === 0 && (
+            {loading ? (
+              <SkeletonRows cols={colSpan} />
+            ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className="p-2.5 text-center text-sm text-muted">
-                  {loading ? "Carregando..." : "Nenhum colaborador encontrado."}
+                  Nenhum colaborador encontrado.
                 </td>
               </tr>
-            )}
+            ) : null}
           </Tbody>
         </Table>
         <CardFooter>

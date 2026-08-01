@@ -7,6 +7,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { AddButton } from "@/components/ui/button";
 import { ExportButton } from "@/components/ui/export-button";
 import { cx, initials } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProcessModal } from "@/components/entity-modals";
 import { type Column, type PipelineCard } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
@@ -147,9 +148,32 @@ export default function PipelinePage() {
       onSearchChange={setQuery}
     >
       {loading ? (
-        <Card>
-          <p className="p-2.5 text-center text-sm text-muted">Carregando...</p>
-        </Card>
+        <div className="scroll-thin flex gap-2.5 overflow-x-auto pb-2.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex min-w-56 flex-1 flex-col gap-2.5 rounded-lg border border-border bg-surface p-2.5"
+            >
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-6" />
+              </div>
+              {Array.from({ length: 3 }).map((_, j) => (
+                <div
+                  key={j}
+                  className="flex flex-col gap-2.5 rounded-lg border border-border bg-surface-2 p-2.5"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                  </div>
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="scroll-thin flex gap-2.5 overflow-x-auto pb-2.5">
           {visibleColumns.map((col) => (
