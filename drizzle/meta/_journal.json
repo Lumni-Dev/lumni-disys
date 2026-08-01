@@ -15,6 +15,34 @@
       "when": 1785602094731,
       "tag": "0001_user_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785608067610,
+      "tag": "0002_greedy_mongu",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785610224960,
+      "tag": "0003_giant_forge",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785622400247,
+      "tag": "0004_special_invaders",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785623740018,
+      "tag": "0005_chief_arachne",
+      "breakpoints": true
     }
   ]
 }

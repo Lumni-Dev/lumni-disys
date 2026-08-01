@@ -11,7 +11,7 @@ import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
-import { IconUsers } from "@/components/ui/icons";
+import { IconUsers, IconTrash } from "@/components/ui/icons";
 import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
 import { type Job } from "@/lib/data";
@@ -172,7 +172,7 @@ export default function JobsPage() {
         {visible.map((v) => (
           <Card
             key={v.id}
-            className={cx(sel.active && sel.ids.has(v.id) && "border-red")}
+            className={cx(sel.active && sel.ids.has(v.id) && "border-white")}
           >
             <button
               type="button"
@@ -201,7 +201,7 @@ export default function JobsPage() {
             </button>
             <CardFooter>
               <span className="flex items-center gap-1.5 text-sm text-muted">
-                <IconUsers className="h-4 w-4 text-red-soft" />
+                <IconUsers className="h-4 w-4 text-foreground" />
                 <span className="font-medium text-foreground">
                   {v.applicants}
                 </span>
@@ -209,6 +209,7 @@ export default function JobsPage() {
               </span>
               <ConfirmAction
                 label="Remover"
+                icon={<IconTrash className="h-4 w-4" />}
                 confirmLabel="Confirmar"
                 onConfirm={() => remove(v.id)}
               />

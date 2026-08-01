@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { isEmail } from "@/lib/validation";
 import {
   MODULES,
   ACTIONS,
@@ -93,9 +94,27 @@ export function MemberModal({
   const [permissions, setPermissions] = useState<Permissions>(
     member?.permissions ?? emptyPermissions(),
   );
+  const [errs, setErrs] = useState<Record<string, boolean>>({});
+  const [attempt, setAttempt] = useState(0);
+  const invalid = (k: string) => (errs[k] ? attempt : 0);
+
+  const hasPermission = MODULES.some((m) =>
+    ACTIONS.some((a) => permissions[m.key]?.[a.key]),
+  );
 
   function submit(e: FormEvent) {
     e.preventDefault();
+    const errors = {
+      email: !isEmail(email),
+      name: !name.trim(),
+      role: !role.trim(),
+      permissions: !hasPermission,
+    };
+    setErrs(errors);
+    if (Object.values(errors).some(Boolean)) {
+      setAttempt((a) => a + 1);
+      return;
+    }
     onSave({
       name: name.trim(),
       email: email.trim(),
@@ -120,27 +139,30 @@ export function MemberModal({
       <form onSubmit={submit}>
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <Field label="E-mail" full>
+            <Field label="E-mail" full req>
               <Input
                 type="email"
-                required
+                invalid={invalid("email")}
+                maxLength={200}
                 readOnly={editing}
                 placeholder="pessoa@empresa.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Field>
-            <Field label="Nome">
+            <Field label="Nome" req>
               <Input
-                required
+                invalid={invalid("name")}
+                maxLength={160}
                 placeholder="Ex.: Ana Ribeiro"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Field>
-            <Field label="Cargo">
+            <Field label="Cargo" req>
               <Input
-                required
+                invalid={invalid("role")}
+                maxLength={120}
                 placeholder="Ex.: Recrutadora"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -150,9 +172,14 @@ export function MemberModal({
 
           <div>
             <p className="mb-1.5 text-xs font-medium text-muted">
-              Permissões por página
+              Permissões por página <span className="text-accent">*</span>
             </p>
             <PermissionsMatrix value={permissions} onChange={setPermissions} />
+            {errs.permissions && (
+              <p className="mt-1.5 text-xs text-accent">
+                Selecione ao menos uma permissão.
+              </p>
+            )}
           </div>
         </div>
         <ModalFooter onCancel={onClose} />

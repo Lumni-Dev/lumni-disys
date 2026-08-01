@@ -41,10 +41,11 @@ export function Topbar({
           <IconSearch className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input
             type="text"
+            maxLength={80}
             placeholder={searchPlaceholder}
             value={searchValue ?? ""}
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface py-1.5 pl-8 pr-2.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-red/60 focus:ring-1 focus:ring-red/40"
+            className="w-full rounded-lg border border-border bg-surface py-1.5 pl-8 pr-2.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-white/50 focus:ring-1 focus:ring-white/30"
           />
         </div>
       ) : (

@@ -173,7 +173,7 @@ export default function PipelinePage() {
                 {col.cards.map((c) => (
                   <div key={c.id}>
                     {drop?.stage === col.stage && drop.beforeId === c.id && (
-                      <div className="mb-2.5 h-0.5 rounded-lg bg-red" />
+                      <div className="mb-2.5 h-0.5 rounded-lg bg-foreground" />
                     )}
                     <div
                       draggable
@@ -194,7 +194,7 @@ export default function PipelinePage() {
                       }}
                       onClick={() => setEditing({ card: c, stage: col.stage })}
                       className={cx(
-                        "cursor-grab rounded-lg border border-border bg-surface-2 p-2.5 transition-colors hover:border-red/50 active:cursor-grabbing",
+                        "cursor-grab rounded-lg border border-border bg-surface-2 p-2.5 transition-colors hover:border-white/40 active:cursor-grabbing",
                         dragged?.id === c.id && "opacity-40",
                       )}
                     >
@@ -210,7 +210,7 @@ export default function PipelinePage() {
                   </div>
                 ))}
                 {drop?.stage === col.stage && drop.beforeId === null && (
-                  <div className="h-0.5 rounded-lg bg-red" />
+                  <div className="h-0.5 rounded-lg bg-foreground" />
                 )}
                 {col.cards.length === 0 && !drop && (
                   <p className="flex flex-1 items-center justify-center py-2.5 text-center text-xs text-muted">

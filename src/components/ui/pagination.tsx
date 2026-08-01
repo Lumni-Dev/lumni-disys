@@ -31,7 +31,7 @@ export function Pagination({
           className={cx(
             "h-7 min-w-7 rounded-lg border px-2 text-xs font-medium transition-colors",
             p === page
-              ? cx("border-red", ACTIVE)
+              ? cx("border-white", ACTIVE)
               : "border-border text-muted hover:bg-surface-2 hover:text-foreground",
           )}
         >

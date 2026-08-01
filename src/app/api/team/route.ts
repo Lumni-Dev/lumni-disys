@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { asc } from "drizzle-orm";
+import { asc, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
+import { currentAccount } from "@/lib/account";
 
 type PermInput = Record<string, Record<string, boolean>>;
 
@@ -16,11 +17,23 @@ function permissionRows(memberId: number, permissions: PermInput = {}) {
 }
 
 export async function GET() {
+  const account = await currentAccount();
+  if (!account)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const members = await db
     .select()
     .from(schema.teamMembers)
+    .where(eq(schema.teamMembers.accountId, account.id))
     .orderBy(asc(schema.teamMembers.id));
-  const perms = await db.select().from(schema.memberPermissions);
+
+  const ids = members.map((m) => m.id);
+  const perms = ids.length
+    ? await db
+        .select()
+        .from(schema.memberPermissions)
+        .where(inArray(schema.memberPermissions.memberId, ids))
+    : [];
 
   const byMember = new Map<
     number,
@@ -38,10 +51,15 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const account = await currentAccount();
+  if (!account)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const body = await req.json();
   const [member] = await db
     .insert(schema.teamMembers)
     .values({
+      accountId: account.id,
       name: body.name,
       email: body.email,
       role: body.role ?? "",

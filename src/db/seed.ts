@@ -4,23 +4,20 @@ config({ path: ".env.local" });
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./schema";
-import {
-  companies,
-  jobs,
-  candidates,
-  notifications,
-  initialColumns,
-} from "../lib/data";
+import { companies, jobs, candidates, initialColumns } from "../lib/data";
 import { initialTeam, MODULES, ACTIONS } from "../lib/permissions";
 
 async function main() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const useSsl = (process.env.DATABASE_URL ?? "").includes("supabase.co");
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: useSsl ? { rejectUnauthorized: false } : undefined,
+  });
   const db = drizzle(pool, { schema, casing: "snake_case" });
 
   await db.delete(schema.memberPermissions);
   await db.delete(schema.teamMembers);
   await db.delete(schema.pipelineCards);
-  await db.delete(schema.notifications);
   await db.delete(schema.candidates);
   await db.delete(schema.jobs);
   await db.delete(schema.companies);
@@ -53,15 +50,6 @@ async function main() {
       email: c.email,
       stage: c.stage,
       linkedin: c.linkedin ?? "",
-    })),
-  );
-
-  await db.insert(schema.notifications).values(
-    notifications.map((n) => ({
-      title: n.title,
-      description: n.description,
-      tone: n.tone,
-      read: n.read,
     })),
   );
 

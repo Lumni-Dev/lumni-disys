@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
+import { currentAccount } from "@/lib/account";
 
 type Params = { params: Promise<{ id: string }> };
 type PermInput = Record<string, Record<string, boolean>>;
@@ -17,13 +18,19 @@ function permissionRows(memberId: number, permissions: PermInput = {}) {
 }
 
 export async function PUT(req: Request, { params }: Params) {
+  const account = await currentAccount();
+  if (!account)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const id = Number((await params).id);
   const body = await req.json();
 
   const [member] = await db
     .update(schema.teamMembers)
     .set({ name: body.name, email: body.email, role: body.role ?? "" })
-    .where(eq(schema.teamMembers.id, id))
+    .where(
+      and(eq(schema.teamMembers.id, id), eq(schema.teamMembers.accountId, account.id)),
+    )
     .returning();
   if (!member)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -38,7 +45,15 @@ export async function PUT(req: Request, { params }: Params) {
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
+  const account = await currentAccount();
+  if (!account)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const id = Number((await params).id);
-  await db.delete(schema.teamMembers).where(eq(schema.teamMembers.id, id));
+  await db
+    .delete(schema.teamMembers)
+    .where(
+      and(eq(schema.teamMembers.id, id), eq(schema.teamMembers.accountId, account.id)),
+    );
   return NextResponse.json({ ok: true });
 }

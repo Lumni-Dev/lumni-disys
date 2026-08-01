@@ -9,6 +9,8 @@ import { Topbar } from "@/components/ui/topbar";
 import { type Candidate } from "@/lib/data";
 import { api } from "@/lib/api-client";
 
+type Trend = number[];
+
 type DashboardData = {
   stats: {
     companies: { active: number; total: number };
@@ -17,13 +19,19 @@ type DashboardData = {
     pipeline: { total: number };
   };
   funnel: { stage: string; count: number }[];
+  trends: {
+    companies: Trend;
+    jobs: Trend;
+    candidates: Trend;
+    pipeline: Trend;
+  };
 };
 
 const CARD_META = [
-  { label: "Empresas ativas", href: "/companies", data: [12, 14, 13, 16, 18, 21, 20, 24] },
-  { label: "Vagas abertas", href: "/jobs", data: [8, 10, 9, 12, 11, 14, 16, 18] },
-  { label: "Candidatos", href: "/candidates", data: [12, 16, 15, 18, 22, 25, 27, 30] },
-  { label: "Processos ativos", href: "/pipeline", data: [22, 25, 24, 28, 30, 33, 35, 37] },
+  { label: "Empresas ativas", href: "/companies" },
+  { label: "Vagas abertas", href: "/jobs" },
+  { label: "Candidatos", href: "/candidates" },
+  { label: "Processos ativos", href: "/pipeline" },
 ];
 
 const ACTIVITY_PAGE_SIZE = 20;
@@ -31,11 +39,19 @@ const ACTIVITY_PAGE_SIZE = 20;
 export default function Home() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [candLoaded, setCandLoaded] = useState(false);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    api.get<DashboardData>("/api/dashboard").then(setData);
-    api.get<Candidate[]>("/api/candidates").then(setCandidates);
+    api
+      .get<DashboardData>("/api/dashboard")
+      .then(setData)
+      .catch(() => {});
+    api
+      .get<Candidate[]>("/api/candidates")
+      .then(setCandidates)
+      .catch(() => {})
+      .finally(() => setCandLoaded(true));
   }, []);
 
   const cards = data
@@ -44,21 +60,25 @@ export default function Home() {
           ...CARD_META[0],
           value: String(data.stats.companies.active),
           delta: `${data.stats.companies.total} no total`,
+          data: data.trends.companies,
         },
         {
           ...CARD_META[1],
           value: String(data.stats.jobs.open),
           delta: `${data.stats.jobs.total} no total`,
+          data: data.trends.jobs,
         },
         {
           ...CARD_META[2],
           value: String(data.stats.candidates.total),
           delta: "no banco de talentos",
+          data: data.trends.candidates,
         },
         {
           ...CARD_META[3],
           value: String(data.stats.pipeline.total),
           delta: "em andamento",
+          data: data.trends.pipeline,
         },
       ]
     : [];
@@ -123,7 +143,7 @@ export default function Home() {
             {visible.map((a, i) => (
               <li key={start + i} className="p-2.5">
                 <p className="text-sm text-foreground">
-                  <span className="font-medium text-red-soft">{a.who}</span>{" "}
+                  <span className="font-medium text-foreground">{a.who}</span>{" "}
                   <span className="text-muted">{a.what}</span>
                 </p>
                 <p className="mt-0.5 truncate text-xs text-muted">{a.role}</p>
@@ -131,11 +151,20 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          {visible.length === 0 && (
+            <p className="p-2.5 text-center text-sm text-muted">
+              {!candLoaded
+                ? "Carregando..."
+                : "Nenhuma atividade recente por enquanto."}
+            </p>
+          )}
           <CardFooter>
             <span className="text-xs text-muted">
-              {activities.length === 0
+              {!candLoaded
                 ? "Carregando..."
-                : `${start + 1}–${start + visible.length} de ${activities.length}`}
+                : activities.length === 0
+                  ? "0 movimentações"
+                  : `${start + 1}–${start + visible.length} de ${activities.length}`}
             </span>
             <Pagination page={page} pageCount={pageCount} onPage={setPage} />
           </CardFooter>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Modal } from "./modal";
+import { Tooltip } from "./tooltip";
 
 export function ConfirmAction({
   label,
@@ -9,24 +10,40 @@ export function ConfirmAction({
   message = "Esta ação não pode ser desfeita.",
   confirmLabel = "Confirmar",
   onConfirm,
+  icon,
 }: {
   label: string;
   title?: string;
   message?: string;
   confirmLabel?: string;
   onConfirm: () => void;
+  icon?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="rounded-lg border border-red/50 px-2.5 py-1.5 text-sm font-medium text-red-soft transition-colors hover:bg-red/10"
-      >
-        {label}
-      </button>
+      {icon ? (
+        <Tooltip label={label}>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={label}
+            title={label}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:border-white/40 hover:text-foreground"
+          >
+            {icon}
+          </button>
+        </Tooltip>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="rounded-lg border border-white/40 px-2.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-white/10"
+        >
+          {label}
+        </button>
+      )}
 
       <Modal
         open={open}
@@ -48,7 +65,7 @@ export function ConfirmAction({
               onConfirm();
               setOpen(false);
             }}
-            className="rounded-lg bg-red px-2.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-soft"
+            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-white"
           >
             {confirmLabel}
           </button>

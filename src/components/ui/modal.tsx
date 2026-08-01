@@ -75,24 +75,17 @@ export function Modal({
 }
 
 export function ModalFooter({
-  onCancel,
-  submitLabel = "Salvar",
+  submitLabel = "Gravar",
 }: {
-  onCancel: () => void;
+  // Fechar o modal já cancela; mantido opcional por compatibilidade.
+  onCancel?: () => void;
   submitLabel?: string;
 }) {
   return (
     <div className="flex items-center justify-end gap-2.5 border-t border-border p-2.5">
       <button
-        type="button"
-        onClick={onCancel}
-        className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
-      >
-        Cancelar
-      </button>
-      <button
         type="submit"
-        className="rounded-lg bg-red px-2.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-soft"
+        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition hover:brightness-110"
       >
         {submitLabel}
       </button>

@@ -18,7 +18,7 @@ export function FilterBar({
         <button
           type="button"
           onClick={onClear}
-          className="ml-auto text-xs font-medium text-red-soft"
+          className="ml-auto text-xs font-medium text-foreground"
         >
           Limpar filtros
         </button>

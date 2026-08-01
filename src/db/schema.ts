@@ -4,7 +4,6 @@ import {
   integer,
   varchar,
   text,
-  boolean,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -17,8 +16,25 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 };
 
+// Workspace/conta: o projeto de um dono. Todos os dados sao escopados por conta;
+// colaboradores pertencem a uma conta e o link publico usa o public_token.
+export const accounts = pgTable(
+  "accounts",
+  {
+    id: serial().primaryKey(),
+    ownerEmail: varchar({ length: 200 }).notNull(),
+    publicToken: varchar({ length: 40 }).notNull(),
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex("accounts_owner_email_key").on(t.ownerEmail),
+    uniqueIndex("accounts_public_token_key").on(t.publicToken),
+  ],
+);
+
 export const companies = pgTable("companies", {
   id: serial().primaryKey(),
+  accountId: integer().references(() => accounts.id),
   name: varchar({ length: 160 }).notNull(),
   sector: varchar({ length: 120 }).notNull().default(""),
   location: varchar({ length: 160 }).notNull().default(""),
@@ -29,6 +45,7 @@ export const companies = pgTable("companies", {
 
 export const jobs = pgTable("jobs", {
   id: serial().primaryKey(),
+  accountId: integer().references(() => accounts.id),
   title: varchar({ length: 200 }).notNull(),
   company: varchar({ length: 160 }).notNull().default(""),
   type: varchar({ length: 40 }).notNull().default("Remoto"),
@@ -40,6 +57,7 @@ export const jobs = pgTable("jobs", {
 
 export const candidates = pgTable("candidates", {
   id: serial().primaryKey(),
+  accountId: integer().references(() => accounts.id),
   name: varchar({ length: 160 }).notNull(),
   role: varchar({ length: 160 }).notNull().default(""),
   email: varchar({ length: 200 }).notNull().default(""),
@@ -48,17 +66,9 @@ export const candidates = pgTable("candidates", {
   ...timestamps,
 });
 
-export const notifications = pgTable("notifications", {
-  id: serial().primaryKey(),
-  title: varchar({ length: 160 }).notNull(),
-  description: varchar({ length: 300 }).notNull().default(""),
-  tone: varchar({ length: 20 }).notNull().default("neutral"),
-  read: boolean().notNull().default(false),
-  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-});
-
 export const pipelineCards = pgTable("pipeline_cards", {
   id: serial().primaryKey(),
+  accountId: integer().references(() => accounts.id),
   name: varchar({ length: 160 }).notNull(),
   job: varchar({ length: 200 }).notNull().default(""),
   company: varchar({ length: 160 }).notNull().default(""),
@@ -71,6 +81,7 @@ export const teamMembers = pgTable(
   "team_members",
   {
     id: serial().primaryKey(),
+    accountId: integer().references(() => accounts.id),
     name: varchar({ length: 160 }).notNull(),
     email: varchar({ length: 200 }).notNull(),
     role: varchar({ length: 120 }).notNull().default(""),
@@ -84,7 +95,11 @@ export const userProfiles = pgTable(
   {
     id: serial().primaryKey(),
     email: varchar({ length: 200 }).notNull(),
+    name: varchar({ length: 160 }).notNull().default(""),
+    phone: varchar({ length: 40 }).notNull().default(""),
+    role: varchar({ length: 120 }).notNull().default(""),
     avatarBase64: text().notNull().default(""),
+    theme: varchar({ length: 20 }).notNull().default("white"),
     ...timestamps,
   },
   (t) => [uniqueIndex("user_profiles_email_key").on(t.email)],

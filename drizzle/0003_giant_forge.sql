@@ -1,0 +1,1 @@
+ALTER TABLE "user_profiles" ADD COLUMN "theme" varchar(20) DEFAULT 'white' NOT NULL;

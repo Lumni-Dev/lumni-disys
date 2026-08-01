@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
 import { AppGuards } from "@/components/app-guards";
+import { LanguageProvider } from "@/i18n/context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,10 +14,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "DISYS RH — ERP de Recursos Humanos",
+  title: "DISYS · ATS de Recursos Humanos",
   description:
-    "ERP de Recursos Humanos: Empresas, Vagas, Candidatos e Processos.",
+    "ATS de Recursos Humanos: recrutamento e selecao com Empresas, Vagas, Candidatos e Processos.",
 };
 
 export default function RootLayout({
@@ -27,11 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <AppGuards />
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

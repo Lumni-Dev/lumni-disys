@@ -11,4 +11,4 @@ export function initials(name: string) {
     .join("");
 }
 
-export const ACTIVE = "bg-red text-white";
+export const ACTIVE = "bg-accent text-accent-foreground";

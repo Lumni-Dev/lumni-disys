@@ -10,6 +10,8 @@ import { Table, Thead, Tbody, Th, Tr, Td } from "@/components/ui/table";
 import { AddButton, Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
+import { Tooltip } from "@/components/ui/tooltip";
+import { IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { initials } from "@/lib/utils";
@@ -190,11 +192,17 @@ export default function TeamPage() {
                   </Td>
                   <Td>
                     <div className="flex items-center gap-1.5">
-                      <Button variant="outline" onClick={() => setEditing(c)}>
-                        Editar
-                      </Button>
+                      <Tooltip label="Editar">
+                        <Button
+                          variant="outline"
+                          aria-label="Editar"
+                          icon={<IconPencil className="h-4 w-4" />}
+                          onClick={() => setEditing(c)}
+                        />
+                      </Tooltip>
                       <ConfirmAction
                         label="Remover"
+                        icon={<IconTrash className="h-4 w-4" />}
                         confirmLabel="Confirmar"
                         onConfirm={() => remove(c.email)}
                       />

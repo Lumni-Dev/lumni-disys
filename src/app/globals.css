@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0b;
-  --surface: #141416;
-  --surface-2: #1c1c1f;
-  --border: #2a2a2e;
-  --foreground: #f4f4f5;
-  --muted: #a1a1aa;
-  --red: #e11d2f;
-  --red-soft: #ef4457;
+  /* Paleta "ink" padrão da Lumni (lumni-landing): preto / branco / cinza. */
+  --background: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #1a1a1a;
+  --border: #262626;
+  --foreground: #f2f2f2;
+  --muted: #8a8a8a;
+  /* Acento temático escolhido pelo usuário (padrão branco = visual monocromático). */
+  --accent: #f2f2f2;
+  --accent-foreground: #000000;
 }
 
 @theme inline {
@@ -18,10 +20,12 @@
   --color-border: var(--border);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
-  --color-red: var(--red);
-  --color-red-soft: var(--red-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --animate-shake: shake 0.4s ease-in-out;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-logo: var(--font-orbitron);
 
   --radius-xs: 8px;
   --radius-sm: 8px;
@@ -32,6 +36,25 @@
   --radius-3xl: 8px;
 
   --spacing-base: 10px;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 * {
@@ -79,7 +102,7 @@ select:not(:disabled) {
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--red);
+  background: var(--muted);
 }
 ::-webkit-scrollbar-corner {
   background: transparent;
@@ -94,5 +117,5 @@ select:not(:disabled) {
   border-radius: 999px;
 }
 .scroll-thin::-webkit-scrollbar-thumb:hover {
-  background: var(--red);
+  background: var(--muted);
 }
