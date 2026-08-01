@@ -139,7 +139,11 @@ export default function CareersPage() {
           </Card>
         )}
 
-        <ApplyModal job={applying} onClose={() => setApplying(null)} />
+        <ApplyModal
+          job={applying}
+          token={token}
+          onClose={() => setApplying(null)}
+        />
       </div>
     </div>
   );

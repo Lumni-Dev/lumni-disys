@@ -10,12 +10,16 @@ import type { Job } from "@/lib/data";
 
 export function ApplyModal({
   job,
+  token,
   onClose,
 }: {
   job: Job | null;
+  token: string;
   onClose: () => void;
 }) {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -27,7 +31,7 @@ export function ApplyModal({
   const invalid = (k: string) => (errs[k] ? attempt : 0);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
     const errors = {
       name: !name.trim(),
@@ -42,11 +46,38 @@ export function ApplyModal({
       setAttempt((a) => a + 1);
       return;
     }
-    setSent(true);
+    if (!job) return;
+
+    setSending(true);
+    setFailed(false);
+    try {
+      const res = await fetch("/api/public/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          jobId: job.id,
+          jobTitle: job.title,
+          name,
+          email,
+          phone,
+          linkedin,
+          message,
+        }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setSent(true);
+    } catch {
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   function close() {
     setSent(false);
+    setSending(false);
+    setFailed(false);
     setName("");
     setEmail("");
     setPhone("");
@@ -154,7 +185,15 @@ export function ApplyModal({
               />
             </Field>
           </div>
-          <ModalFooter onCancel={close} submitLabel="Enviar candidatura" />
+          {failed && (
+            <p className="px-2.5 text-xs text-accent">
+              Nao foi possivel enviar a candidatura. Tente novamente.
+            </p>
+          )}
+          <ModalFooter
+            onCancel={close}
+            submitLabel={sending ? "Enviando..." : "Enviar candidatura"}
+          />
         </form>
       )}
     </Modal>
