@@ -17,6 +17,7 @@ import { JobModal } from "@/components/entity-modals";
 import { type Job } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cx } from "@/lib/utils";
 import { api } from "@/lib/api-client";
 
@@ -168,6 +169,23 @@ export default function JobsPage() {
         </Card>
       )}
 
+      {loading && (
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i}>
+              <div className="flex flex-col gap-2.5 p-2.5">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-1/2" />
+                <div className="flex gap-2.5">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
         {visible.map((v) => (
           <Card
@@ -218,10 +236,10 @@ export default function JobsPage() {
         ))}
       </div>
 
-      {visible.length === 0 && (
+      {!loading && visible.length === 0 && (
         <Card>
           <p className="p-2.5 text-center text-sm text-muted">
-            {loading ? "Carregando..." : "Nenhuma vaga encontrada."}
+            Nenhuma vaga encontrada.
           </p>
         </Card>
       )}

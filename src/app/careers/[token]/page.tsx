@@ -7,12 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
 import { IconSearch } from "@/components/ui/icons";
 import { ApplyModal } from "@/components/apply-modal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { type Job } from "@/lib/data";
 import { api } from "@/lib/api-client";
 
 export default function CareersPage() {
   const { token } = useParams<{ token: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState("");
   const [jobType, setJobType] = useState("");
@@ -20,7 +22,10 @@ export default function CareersPage() {
 
   useEffect(() => {
     if (!token) return;
-    api.get<Job[]>(`/api/public/jobs?token=${encodeURIComponent(token)}`).then(setJobs);
+    api
+      .get<Job[]>(`/api/public/jobs?token=${encodeURIComponent(token)}`)
+      .then(setJobs)
+      .finally(() => setLoading(false));
   }, [token]);
 
   const openJobs = jobs.filter((v) => v.status === "Aberta");
@@ -109,6 +114,25 @@ export default function CareersPage() {
           </div>
         </div>
 
+        {loading && (
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-col gap-2.5 rounded-lg border border-border bg-surface/80 p-2.5 backdrop-blur"
+              >
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-1/2" />
+                <div className="flex gap-2.5">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+                <Skeleton className="h-8 w-full" />
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((v) => (
             <Card key={v.id}>
@@ -131,7 +155,7 @@ export default function CareersPage() {
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <Card>
             <p className="p-2.5 text-center text-sm text-muted">
               Nenhuma vaga encontrada.
