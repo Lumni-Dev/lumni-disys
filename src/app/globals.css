@@ -3,9 +3,9 @@
 :root {
   /* Paleta "ink" padrão da Lumni (lumni-landing): preto / branco / cinza. */
   --background: #000000;
-  --surface: #0f0f0f;
-  --surface-2: #1a1a1a;
-  --border: #262626;
+  --surface: #101012;
+  --surface-2: #1a1a1d;
+  --border: #2a2a2e;
   --foreground: #f2f2f2;
   --muted: #8a8a8a;
   /* Acento temático escolhido pelo usuário (padrão branco = visual monocromático). */
@@ -65,6 +65,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Fundo ambiente do app inteiro: brilhos suaves para nao ficar preto chapado. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 40% at 50% -6%, rgba(255, 255, 255, 0.05), transparent 70%),
+    radial-gradient(38% 34% at 100% 0%, rgba(255, 255, 255, 0.035), transparent 70%),
+    radial-gradient(42% 40% at 0% 18%, rgba(255, 255, 255, 0.025), transparent 70%);
+}
+
+/* Elevacao "glass" reutilizavel: realce superior + sombra suave. */
+.elevated {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 12px 30px -18px rgba(0, 0, 0, 0.9);
 }
 
 * {

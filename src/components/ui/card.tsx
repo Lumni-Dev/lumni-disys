@@ -11,7 +11,7 @@ export function Card({
   return (
     <div
       className={cx(
-        "overflow-hidden rounded-lg border border-border bg-surface",
+        "elevated overflow-hidden rounded-lg border border-white/[0.09] bg-surface bg-gradient-to-b from-white/[0.03] to-transparent",
         className,
       )}
     >
@@ -30,7 +30,7 @@ export function CardHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-2.5 border-b border-border p-2.5">
+    <div className="flex items-center justify-between gap-2.5 border-b border-white/[0.07] p-2.5">
       <div className="min-w-0">
         <h2 className="truncate text-sm font-semibold text-foreground">{title}</h2>
         {subtitle && <p className="truncate text-xs text-muted">{subtitle}</p>}
@@ -65,7 +65,7 @@ export function CardFooter({
   return (
     <div
       className={cx(
-        "flex items-center justify-between gap-2.5 border-t border-border p-2.5",
+        "flex items-center justify-between gap-2.5 border-t border-white/[0.07] bg-white/[0.015] p-2.5",
         className,
       )}
     >
