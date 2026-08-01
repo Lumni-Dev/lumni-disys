@@ -18,7 +18,13 @@ export async function GET() {
     .from(schema.userProfiles)
     .where(eq(schema.userProfiles.email, email));
 
-  return NextResponse.json({ photo: row?.avatarBase64 || null });
+  return NextResponse.json({
+    photo: row?.avatarBase64 || null,
+    theme: row?.theme || "white",
+    name: row?.name || "",
+    phone: row?.phone || "",
+    role: row?.role || "",
+  });
 }
 
 export async function PUT(req: Request) {
@@ -27,15 +33,45 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const photo = typeof body.photo === "string" ? body.photo : "";
+  // Update parcial: só altera os campos enviados, sem zerar os demais.
+  const set: {
+    avatarBase64?: string;
+    theme?: string;
+    name?: string;
+    phone?: string;
+    role?: string;
+  } = {};
+  if (typeof body.photo === "string") set.avatarBase64 = body.photo;
+  if (typeof body.theme === "string") set.theme = body.theme;
+  if (typeof body.name === "string") set.name = body.name;
+  if (typeof body.phone === "string") set.phone = body.phone;
+  if (typeof body.role === "string") set.role = body.role;
 
   await db
     .insert(schema.userProfiles)
-    .values({ email, avatarBase64: photo })
+    .values({
+      email,
+      avatarBase64: set.avatarBase64 ?? "",
+      theme: set.theme ?? "white",
+      name: set.name ?? "",
+      phone: set.phone ?? "",
+      role: set.role ?? "",
+    })
     .onConflictDoUpdate({
       target: schema.userProfiles.email,
-      set: { avatarBase64: photo },
+      set,
     });
 
-  return NextResponse.json({ photo: photo || null });
+  const [row] = await db
+    .select()
+    .from(schema.userProfiles)
+    .where(eq(schema.userProfiles.email, email));
+
+  return NextResponse.json({
+    photo: row?.avatarBase64 || null,
+    theme: row?.theme || "white",
+    name: row?.name || "",
+    phone: row?.phone || "",
+    role: row?.role || "",
+  });
 }

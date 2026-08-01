@@ -17,7 +17,7 @@ export function StatCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:border-red/50"
+      className="group flex flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:border-white/40"
     >
       <div className="border-b border-border p-2.5">
         <p className="text-xs text-muted">{label}</p>
@@ -28,7 +28,7 @@ export function StatCard({
         </p>
         {data && <Sparkline data={data} className="mt-2.5" />}
       </div>
-      <div className="border-t border-border p-2.5 text-xs font-medium text-red-soft">
+      <div className="border-t border-border p-2.5 text-xs font-medium text-foreground">
         {delta}
       </div>
     </Link>

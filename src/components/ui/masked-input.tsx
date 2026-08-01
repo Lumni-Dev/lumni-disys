@@ -1,12 +1,18 @@
 "use client";
 
-import { useState, type InputHTMLAttributes } from "react";
+import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
+import { cx } from "@/lib/utils";
 import { controlClass } from "./form";
 
 type BaseProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "value" | "onChange" | "type"
->;
+  "value" | "onChange" | "type" | "style"
+> & {
+  invalid?: number;
+  // Uso controlado opcional: o pai guarda o valor já formatado.
+  value?: string;
+  onChange?: (value: string) => void;
+};
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -24,17 +30,20 @@ export function formatCnpj(value: string) {
 }
 
 export function formatPhone(value: string) {
-  const d = onlyDigits(value).slice(0, 11);
-  if (d.length === 0) return "";
-  if (d.length <= 2) return `(${d}`;
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  if (d.length <= 10)
-    return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  // Formato internacional: o usuário digita o número completo com o código do
+  // país; a máscara só garante o "+" na frente (padrão E.164, até 15 dígitos).
+  const d = onlyDigits(value).slice(0, 15);
+  return d ? `+${d}` : "";
+}
+
+// Converte o valor formatado ("R$ 1.234,56") em número (1234.56).
+export function moneyToNumber(value: string): number {
+  const d = onlyDigits(value);
+  return d ? parseInt(d, 10) / 100 : 0;
 }
 
 export function formatMoney(value: string) {
-  const d = onlyDigits(value);
+  const d = onlyDigits(value).slice(0, 12);
   if (!d) return "";
   const amount = (parseInt(d, 10) / 100).toLocaleString("pt-BR", {
     minimumFractionDigits: 2,
@@ -43,32 +52,54 @@ export function formatMoney(value: string) {
   return `R$ ${amount}`;
 }
 
-function useMask(format: (v: string) => string, initial = "") {
-  const [value, setValue] = useState(initial);
-  return {
-    value,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-      setValue(format(e.target.value)),
-  };
+function MaskedInput({
+  format,
+  invalid = 0,
+  value,
+  onChange,
+  className,
+  ...props
+}: BaseProps & { format: (v: string) => string }) {
+  const [internal, setInternal] = useState("");
+  const controlled = value !== undefined;
+  const val = controlled ? value : internal;
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (invalid && el) {
+      el.classList.remove("animate-shake");
+      void el.offsetWidth;
+      el.classList.add("animate-shake");
+    }
+  }, [invalid]);
+
+  function handle(raw: string) {
+    const formatted = format(raw);
+    if (controlled) onChange?.(formatted);
+    else setInternal(formatted);
+  }
+
+  return (
+    <input
+      ref={ref}
+      {...props}
+      value={val}
+      onChange={(e) => handle(e.target.value)}
+      className={cx(controlClass, !!invalid && "ring-1 ring-accent", className)}
+      style={invalid ? { borderColor: "var(--accent)" } : undefined}
+    />
+  );
 }
 
 export function CnpjInput(props: BaseProps) {
-  const mask = useMask(formatCnpj);
-  return (
-    <input {...props} {...mask} inputMode="numeric" className={controlClass} />
-  );
+  return <MaskedInput format={formatCnpj} inputMode="numeric" {...props} />;
 }
 
 export function PhoneInput(props: BaseProps) {
-  const mask = useMask(formatPhone);
-  return (
-    <input {...props} {...mask} inputMode="tel" className={controlClass} />
-  );
+  return <MaskedInput format={formatPhone} inputMode="tel" {...props} />;
 }
 
 export function MoneyInput(props: BaseProps) {
-  const mask = useMask(formatMoney);
-  return (
-    <input {...props} {...mask} inputMode="numeric" className={controlClass} />
-  );
+  return <MaskedInput format={formatMoney} inputMode="numeric" {...props} />;
 }

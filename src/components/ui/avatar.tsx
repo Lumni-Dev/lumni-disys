@@ -4,9 +4,9 @@ import { cx } from "@/lib/utils";
 type Tone = "red" | "neutral" | "solid";
 
 const tones: Record<Tone, string> = {
-  red: "bg-red/10 text-red-soft",
-  neutral: "bg-surface-2 text-red-soft",
-  solid: "bg-red text-white",
+  red: "bg-white/10 text-foreground",
+  neutral: "bg-surface-2 text-foreground",
+  solid: "bg-foreground text-background",
 };
 
 export function Avatar({

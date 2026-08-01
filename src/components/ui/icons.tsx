@@ -24,7 +24,10 @@ function Svg({
 
 export const IconDashboard = (p: IconProps) => (
   <Svg {...p}>
-    <path d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10" />
+    <rect x="3" y="3" width="7" height="9" rx="1" />
+    <rect x="14" y="3" width="7" height="5" rx="1" />
+    <rect x="14" y="12" width="7" height="9" rx="1" />
+    <rect x="3" y="16" width="7" height="5" rx="1" />
   </Svg>
 );
 
@@ -168,5 +171,19 @@ export const IconCamera = (p: IconProps) => (
   <Svg {...p}>
     <path d="M3 8a2 2 0 012-2h1l1.5-2h7L15 6h1a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
     <circle cx="11" cy="12.5" r="3.2" />
+  </Svg>
+);
+
+export const IconPencil = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z" />
+    <path d="M13.5 6.5l3 3" />
+  </Svg>
+);
+
+export const IconTrash = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" />
+    <path d="M10 11v6M14 11v6" />
   </Svg>
 );

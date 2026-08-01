@@ -15,7 +15,7 @@ export function Progress({
       )}
     >
       <div
-        className="h-full rounded-lg bg-gradient-to-r from-red to-red-soft"
+        className="h-full rounded-lg bg-gradient-to-r from-white to-white"
         style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
       />
     </div>

@@ -11,6 +11,8 @@ import { Pagination } from "@/components/ui/pagination";
 import { AddButton, Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
+import { Tooltip } from "@/components/ui/tooltip";
+import { IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { CompanyModal } from "@/components/entity-modals";
@@ -195,11 +197,17 @@ export default function CompaniesPage() {
                 </Td>
                 <Td>
                   <div className="flex items-center gap-1.5">
-                    <Button variant="outline" onClick={() => setEditing(e)}>
-                      Editar
-                    </Button>
+                    <Tooltip label="Editar">
+                      <Button
+                        variant="outline"
+                        aria-label="Editar"
+                        icon={<IconPencil className="h-4 w-4" />}
+                        onClick={() => setEditing(e)}
+                      />
+                    </Tooltip>
                     <ConfirmAction
                       label="Remover"
+                      icon={<IconTrash className="h-4 w-4" />}
                       confirmLabel="Confirmar"
                       onConfirm={() => remove(e.id)}
                     />

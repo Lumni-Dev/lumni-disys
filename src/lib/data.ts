@@ -123,35 +123,6 @@ export const candidates: Candidate[] = range(30).map((i) => {
   };
 });
 
-export type NotificationTone = "neutral" | "red" | "green" | "amber" | "blue";
-export type Notification = {
-  title: string;
-  description: string;
-  time: string;
-  tone: NotificationTone;
-  read: boolean;
-};
-
-const notifTitles = [
-  "Nova candidatura", "Entrevista agendada", "Vaga publicada",
-  "Proposta enviada", "Processo encerrado", "Candidato aprovado",
-  "Feedback pendente", "Documento recebido",
-];
-const notifTones: NotificationTone[] = ["red", "blue", "green", "amber", "neutral"];
-
-export const notifications: Notification[] = range(30).map((i) => {
-  const name = `${firstNames[i % firstNames.length]} ${
-    lastNames[i % lastNames.length]
-  }`;
-  return {
-    title: notifTitles[i % notifTitles.length],
-    description: `${name} — ${roles[i % roles.length]}`,
-    time: modifiedDate(i),
-    tone: notifTones[i % notifTones.length],
-    read: i >= 3,
-  };
-});
-
 export type PipelineCard = {
   id: number;
   name: string;

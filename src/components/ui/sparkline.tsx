@@ -34,11 +34,11 @@ export function Sparkline({
       style={{ height }}
       aria-hidden
     >
-      <path d={area} fill="var(--red)" fillOpacity={0.12} />
+      <path d={area} fill="var(--foreground)" fillOpacity={0.12} />
       <path
         d={line}
         fill="none"
-        stroke="var(--red-soft)"
+        stroke="var(--foreground)"
         strokeWidth={1.5}
         vectorEffect="non-scaling-stroke"
         strokeLinejoin="round"

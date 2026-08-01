@@ -4,10 +4,10 @@ export type Tone = "neutral" | "red" | "green" | "amber" | "blue";
 
 const tones: Record<Tone, string> = {
   neutral: "bg-surface-2 text-muted border-border",
-  red: "bg-red/10 text-red-soft border-red/30",
-  green: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-  amber: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-  blue: "bg-sky-500/10 text-sky-400 border-sky-500/30",
+  red: "bg-white/15 text-foreground border-white/25",
+  green: "bg-white/10 text-foreground border-white/20",
+  amber: "bg-white/[0.06] text-muted border-white/15",
+  blue: "bg-surface-2 text-muted border-border",
 };
 
 export function Badge({

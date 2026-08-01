@@ -18,6 +18,7 @@ export function Select({
   placeholder = "Selecione…",
   emptyLabel,
   disabled,
+  invalid = 0,
   className,
 }: {
   value: string;
@@ -26,6 +27,7 @@ export function Select({
   placeholder?: string;
   emptyLabel?: string;
   disabled?: boolean;
+  invalid?: number;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -34,6 +36,15 @@ export function Select({
   const [activeIndex, setActiveIndex] = useState(-1);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = triggerRef.current;
+    if (invalid && el) {
+      el.classList.remove("animate-shake");
+      void el.offsetWidth;
+      el.classList.add("animate-shake");
+    }
+  }, [invalid]);
 
   const opts = [
     ...(emptyLabel !== undefined ? [{ value: "", label: emptyLabel }] : []),
@@ -135,9 +146,11 @@ export function Select({
         className={cx(
           controlClass,
           "flex cursor-pointer items-center justify-between gap-2.5 text-left disabled:cursor-not-allowed disabled:opacity-40",
-          open && "border-red/60 ring-1 ring-red/40",
+          open && "border-white/50 ring-1 ring-white/30",
+          !!invalid && "ring-1 ring-accent",
           className,
         )}
+        style={invalid ? { borderColor: "var(--accent)" } : undefined}
       >
         <span className={cx("truncate", !selected && "text-muted")}>
           {selected?.label ?? placeholder}
@@ -170,9 +183,9 @@ export function Select({
                   className={cx(
                     "flex w-full items-center justify-between gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm transition-colors",
                     i === activeIndex
-                      ? "bg-red text-white"
+                      ? "bg-foreground text-background"
                       : isSelected
-                        ? "text-red-soft"
+                        ? "text-foreground"
                         : "text-foreground hover:bg-surface-2",
                   )}
                 >

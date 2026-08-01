@@ -68,25 +68,6 @@ export function serializeCandidate(r: CandidateRow) {
   };
 }
 
-type NotificationRow = {
-  id: number;
-  title: string;
-  description: string;
-  tone: string;
-  read: boolean;
-  createdAt: Date | string;
-};
-export function serializeNotification(r: NotificationRow) {
-  return {
-    id: r.id,
-    title: r.title,
-    description: r.description,
-    tone: r.tone,
-    read: r.read,
-    time: formatDate(r.createdAt),
-  };
-}
-
 type MemberRow = { id: number; name: string; email: string; role: string };
 type PermissionRow = { memberId: number; module: string; action: string };
 

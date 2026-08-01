@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -10,7 +9,6 @@ import { useSidebar } from "./sidebar-context";
 import { useProfile } from "./profile-context";
 import {
   IconDashboard,
-  IconBell,
   IconBuilding,
   IconBriefcase,
   IconUsers,
@@ -21,13 +19,12 @@ import {
 } from "@/components/ui/icons";
 
 const nav = [
-  { href: "/dashboard", label: "Dashboard", Icon: IconDashboard, badge: 0 },
-  { href: "/notifications", label: "Notificações", Icon: IconBell, badge: 3 },
-  { href: "/companies", label: "Empresas", Icon: IconBuilding, badge: 0 },
-  { href: "/jobs", label: "Vagas", Icon: IconBriefcase, badge: 0 },
-  { href: "/candidates", label: "Candidatos", Icon: IconUsers, badge: 0 },
-  { href: "/pipeline", label: "Processos", Icon: IconFile, badge: 0 },
-  { href: "/team", label: "Colaboradores", Icon: IconShield, badge: 0 },
+  { href: "/dashboard", label: "Dashboard", Icon: IconDashboard },
+  { href: "/companies", label: "Empresas", Icon: IconBuilding },
+  { href: "/jobs", label: "Vagas", Icon: IconBriefcase },
+  { href: "/candidates", label: "Candidatos", Icon: IconUsers },
+  { href: "/pipeline", label: "Processos", Icon: IconFile },
+  { href: "/team", label: "Colaboradores", Icon: IconShield },
 ];
 
 export function Sidebar() {
@@ -67,18 +64,13 @@ export function Sidebar() {
             collapsed && "lg:justify-center",
           )}
         >
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red shadow-lg shadow-red/30">
-            <Image
-              src="/logo-disys-white.png"
-              alt="DISYS"
-              width={28}
-              height={28}
-              className="h-6 w-6 object-contain"
-              priority
-            />
-          </div>
+          {collapsed && (
+            <span className="hidden rounded-lg bg-accent text-lg font-bold text-accent-foreground [font-family:var(--font-orbitron)] lg:mx-auto lg:flex lg:h-10 lg:w-10 lg:items-center lg:justify-center">
+              D
+            </span>
+          )}
           <div className={cx("min-w-0 leading-tight", hide)}>
-            <p className="truncate text-sm font-semibold tracking-wide text-foreground">
+            <p className="truncate text-base font-normal tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
               DISYS
             </p>
             <p className="truncate text-xs text-muted">Recursos Humanos</p>
@@ -93,7 +85,7 @@ export function Sidebar() {
         </div>
 
         <nav className="scroll-thin flex flex-1 flex-col gap-1 overflow-y-auto p-2.5">
-          {nav.map(({ href, label, Icon, badge }) => {
+          {nav.map(({ href, label, Icon }) => {
             const active =
               href === "/dashboard"
                 ? pathname === "/dashboard"
@@ -106,7 +98,7 @@ export function Sidebar() {
                 title={collapsed ? label : undefined}
                 className={cx(
                   "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
-                  collapsed && "lg:justify-center",
+                  collapsed && "lg:mx-auto lg:h-10 lg:w-10 lg:justify-center lg:p-0",
                   active
                     ? ACTIVE
                     : "text-muted hover:bg-surface-2 hover:text-foreground",
@@ -116,17 +108,6 @@ export function Sidebar() {
                   className={cx("h-5 w-5 shrink-0", !active && "text-muted")}
                 />
                 <span className={hide}>{label}</span>
-                {badge > 0 && (
-                  <span
-                    className={cx(
-                      "ml-auto flex h-5 min-w-5 items-center justify-center rounded-lg px-1.5 text-xs font-semibold",
-                      active ? "bg-white/20 text-white" : "bg-red text-white",
-                      hide,
-                    )}
-                  >
-                    {badge}
-                  </span>
-                )}
               </Link>
             );
           })}
@@ -155,8 +136,10 @@ export function Sidebar() {
             title={collapsed ? "Minha conta" : undefined}
             className={cx(
               "flex items-center gap-2.5 rounded-lg p-2 transition-colors",
-              collapsed && "lg:justify-center",
-              accountActive ? ACTIVE : "hover:bg-surface-2",
+              collapsed && "lg:mx-auto lg:h-10 lg:w-10 lg:justify-center lg:p-0",
+              accountActive
+                ? "bg-surface-2 ring-1 ring-white/15"
+                : "hover:bg-surface-2",
             )}
           >
             {userImage ? (
@@ -164,28 +147,16 @@ export function Sidebar() {
               <img
                 src={userImage}
                 alt=""
-                className="h-8 w-8 shrink-0 rounded-lg object-cover"
+                className="h-8 w-8 min-w-8 shrink-0 rounded-lg object-cover"
               />
             ) : (
               <Avatar tone="neutral">{initials(userName)}</Avatar>
             )}
             <div className={cx("min-w-0 leading-tight", hide)}>
-              <p
-                className={cx(
-                  "truncate text-sm font-medium",
-                  accountActive ? "text-white" : "text-foreground",
-                )}
-              >
+              <p className="truncate text-sm font-medium text-foreground">
                 {userName}
               </p>
-              <p
-                className={cx(
-                  "truncate text-xs",
-                  accountActive ? "text-white/70" : "text-muted",
-                )}
-              >
-                {userEmail}
-              </p>
+              <p className="truncate text-xs text-muted">{userEmail}</p>
             </div>
           </Link>
         </div>

@@ -1,0 +1,91 @@
+import type { Landing } from "@/i18n/types";
+
+const zh: Landing = {
+  languageLabel: "语言",
+  nav: {
+    modules: "模块",
+    features: "功能",
+    access: "访问",
+    signIn: "登录",
+  },
+  hero: {
+    titleLead: "实用又快速的",
+    titleAccent: "人力资源 ATS",
+    subtitle:
+      "在一个快速、安全且互联的平台上管理公司、职位、候选人和流程。从首次接触到成功录用，招得更好。",
+    ctaGuest: "进入系统",
+    ctaAuthed: "前往系统",
+    ctaSecondary: "查看模块",
+  },
+  kpis: {
+    companies: "公司",
+    openJobs: "开放职位",
+    candidates: "候选人",
+    inProcess: "进行中",
+  },
+  stats: ["集成模块", "云端运行", "需记住的密码", "可用性"],
+  modulesSection: {
+    title: "您的人力资源所需的一切",
+    subtitle:
+      "五个相互协作的集成模块，将全部招聘工作汇聚于同一个流程之中。",
+  },
+  modules: [
+    {
+      title: "公司",
+      desc: "登记客户和单位，包含完整数据和实时状态。",
+    },
+    {
+      title: "职位",
+      desc: "发布职位，设定级别和薪资范围，并跟踪招聘进度。",
+    },
+    {
+      title: "候选人",
+      desc: "将人才、简历和作品集集中到可搜索的资料库中。",
+    },
+    {
+      title: "流程",
+      desc: "可视化拖放式管道，在各阶段之间移动候选人。",
+    },
+    {
+      title: "团队",
+      desc: "通过电子邮件邀请团队成员，并按页面控制权限。",
+    },
+  ],
+  features: [
+    {
+      title: "真正的快速",
+      desc: "精简的界面、快捷操作以及每个页面上的即时搜索。",
+    },
+    {
+      title: "安全登录",
+      desc: "仅通过 Google 或 LinkedIn 访问，无需管理密码。",
+    },
+    {
+      title: "井然有序",
+      desc: "公司、职位、候选人和流程在同一处紧密相连。",
+    },
+  ],
+  cta: {
+    title: "开始更聪明地招聘",
+    subtitle: "使用您的账户登录，立即畅享整个平台。",
+  },
+  footer: {
+    description:
+      "Lumni 构建系统、自动化流程，并将工程师融入您的团队。从最初的诊断到在生产环境中运行的代码。",
+    servicesHeading: "服务",
+    services: [
+      "系统与应用开发",
+      "流程自动化",
+      "技术咨询",
+      "网络安全",
+      "开发支持",
+    ],
+    contactHeading: "联系我们",
+    privacy: "隐私",
+    terms: "条款",
+    backToTop: "返回顶部",
+    rights: "版权所有。",
+  },
+};
+
+export default zh;
