@@ -156,7 +156,7 @@ export default function Home() {
             subtitle="Últimas movimentações"
           />
           {!candLoaded ? (
-            <ul className="grid grid-cols-1 divide-y divide-border sm:grid-cols-2">
+            <ul className="grid grid-cols-1 divide-y divide-white/[0.07] sm:grid-cols-2">
               {Array.from({ length: 6 }).map((_, i) => (
                 <li key={i} className="flex flex-col gap-1.5 p-2.5">
                   <Skeleton className="h-4 w-1/2" />
@@ -166,7 +166,7 @@ export default function Home() {
               ))}
             </ul>
           ) : (
-            <ul className="grid grid-cols-1 divide-y divide-border sm:grid-cols-2">
+            <ul className="grid grid-cols-1 divide-y divide-white/[0.07] sm:grid-cols-2">
               {visible.map((a, i) => (
                 <li key={start + i} className="p-2.5">
                   <p className="text-sm text-foreground">

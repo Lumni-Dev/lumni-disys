@@ -52,7 +52,7 @@ export function Sidebar() {
 
       <aside
         className={cx(
-          "fixed inset-y-0 left-0 z-50 flex h-screen w-56 shrink-0 flex-col border-r border-border bg-surface transition-all duration-200",
+          "fixed inset-y-0 left-0 z-50 flex h-screen w-56 shrink-0 flex-col border-r border-white/[0.07] bg-surface/70 shadow-[8px_0_24px_-16px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:sticky lg:top-0 lg:translate-x-0",
           collapsed ? "lg:w-16" : "lg:w-56",
@@ -60,7 +60,7 @@ export function Sidebar() {
       >
         <div
           className={cx(
-            "flex shrink-0 items-center gap-2.5 border-b border-border p-2.5",
+            "flex shrink-0 items-center gap-2.5 border-b border-white/[0.07] p-2.5",
             collapsed && "lg:justify-center",
           )}
         >
@@ -116,7 +116,7 @@ export function Sidebar() {
         <button
           onClick={toggleCollapsed}
           className={cx(
-            "hidden shrink-0 items-center gap-2.5 border-t border-border px-2.5 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:flex",
+            "hidden shrink-0 items-center gap-2.5 border-t border-white/[0.07] px-2.5 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:flex",
             collapsed && "lg:justify-center",
           )}
         >
@@ -129,7 +129,7 @@ export function Sidebar() {
           <span className={hide}>Recolher</span>
         </button>
 
-        <div className="shrink-0 border-t border-border p-2.5">
+        <div className="shrink-0 border-t border-white/[0.07] p-2.5">
           <Link
             href="/account"
             onClick={close}

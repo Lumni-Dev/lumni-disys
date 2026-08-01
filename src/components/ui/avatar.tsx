@@ -21,7 +21,7 @@ export function Avatar({
   return (
     <div
       className={cx(
-        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold",
+        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ring-1 ring-white/10 shadow-sm",
         tones[tone],
         className,
       )}

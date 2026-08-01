@@ -170,7 +170,7 @@ export function Select({
           <div
             ref={panelRef}
             style={{ ...panelStyle, maxHeight }}
-            className="scroll-thin z-[60] overflow-y-auto rounded-lg border border-border bg-surface p-1 shadow-2xl shadow-black/50"
+            className="scroll-thin z-[60] overflow-y-auto rounded-lg border border-white/10 bg-surface bg-gradient-to-b from-white/[0.03] to-transparent p-1 shadow-2xl shadow-black/50"
           >
             {opts.map((o, i) => {
               const isSelected = o.value === value;

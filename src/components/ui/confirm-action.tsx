@@ -30,7 +30,7 @@ export function ConfirmAction({
             onClick={() => setOpen(true)}
             aria-label={label}
             title={label}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:border-white/40 hover:text-foreground"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted shadow-sm transition-all duration-200 hover:border-white/25 hover:text-foreground active:scale-[0.98]"
           >
             {icon}
           </button>
@@ -39,7 +39,7 @@ export function ConfirmAction({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="rounded-lg border border-white/40 px-2.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-white/10"
+          className="rounded-lg border border-white/40 px-2.5 py-1.5 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:bg-white/10 active:scale-[0.98]"
         >
           {label}
         </button>
@@ -55,7 +55,7 @@ export function ConfirmAction({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+            className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-muted transition-all duration-200 hover:border-white/25 hover:bg-surface-2 hover:text-foreground active:scale-[0.98]"
           >
             Cancelar
           </button>
@@ -65,7 +65,7 @@ export function ConfirmAction({
               onConfirm();
               setOpen(false);
             }}
-            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-white"
+            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:bg-white active:scale-[0.98]"
           >
             {confirmLabel}
           </button>

@@ -11,14 +11,14 @@ export function FilterBar({
   hasFilters?: boolean;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface p-2.5">
+    <div className="elevated flex flex-wrap items-center gap-2.5 rounded-lg border border-white/[0.09] bg-surface bg-gradient-to-b from-white/[0.03] to-transparent p-2.5">
       <span className="text-xs font-medium text-muted">Filtros</span>
       {children}
       {hasFilters && onClear && (
         <button
           type="button"
           onClick={onClear}
-          className="ml-auto text-xs font-medium text-foreground"
+          className="ml-auto text-xs font-medium text-muted transition-colors hover:text-foreground"
         >
           Limpar filtros
         </button>

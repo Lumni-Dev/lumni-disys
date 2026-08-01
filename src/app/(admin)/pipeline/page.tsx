@@ -181,7 +181,7 @@ export default function PipelinePage() {
               <CardHeader
                 title={col.stage}
                 action={
-                  <span className="rounded-lg bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted">
+                  <span className="rounded-lg border border-white/[0.09] bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted shadow-[0_1px_2px_rgba(0,0,0,0.25)]">
                     {col.cards.length}
                   </span>
                 }
@@ -218,7 +218,7 @@ export default function PipelinePage() {
                       }}
                       onClick={() => setEditing({ card: c, stage: col.stage })}
                       className={cx(
-                        "cursor-grab rounded-lg border border-border bg-surface-2 p-2.5 transition-colors hover:border-white/40 active:cursor-grabbing",
+                        "elevated cursor-grab rounded-lg border border-white/[0.09] bg-surface-2 bg-gradient-to-b from-white/[0.03] to-transparent p-2.5 shadow-sm transition-all duration-200 hover:border-white/25 hover:shadow-md active:cursor-grabbing",
                         dragged?.id === c.id && "opacity-40",
                       )}
                     >

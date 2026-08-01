@@ -24,14 +24,14 @@ export function Topbar({
   return (
     <header
       className={cx(
-        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-border bg-background/80 p-2.5 backdrop-blur",
+        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-white/[0.07] bg-background/60 p-2.5 shadow-[0_1px_0_0_rgba(255,255,255,0.03)] backdrop-blur-xl",
         emptyOnDesktop && "lg:hidden",
       )}
     >
       <button
         onClick={() => setMobileOpen(true)}
         aria-label="Abrir menu"
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-muted transition-colors hover:text-foreground lg:hidden"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-white/25 hover:text-foreground active:scale-[0.98] lg:hidden"
       >
         <IconMenu className="h-5 w-5" />
       </button>
@@ -45,7 +45,7 @@ export function Topbar({
             placeholder={searchPlaceholder}
             value={searchValue ?? ""}
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface py-1.5 pl-8 pr-2.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-white/50 focus:ring-1 focus:ring-white/30"
+            className="w-full rounded-lg border border-border bg-surface-2/70 py-1.5 pl-8 pr-2.5 text-sm text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] outline-none transition-colors placeholder:text-muted focus:border-white/40 focus:bg-surface-2 focus:ring-2 focus:ring-white/10"
           />
         </div>
       ) : (
