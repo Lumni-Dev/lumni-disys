@@ -41,7 +41,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-2.5 sm:items-center">
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md"
         onClick={onClose}
         aria-hidden
       />
@@ -50,11 +50,11 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         className={cx(
-          "relative z-10 my-2.5 w-full rounded-lg border border-border bg-surface shadow-2xl shadow-black/50",
+          "relative z-10 my-2.5 w-full rounded-lg border border-white/10 bg-surface bg-gradient-to-b from-white/[0.03] to-transparent shadow-2xl shadow-black/50",
           size === "lg" ? "max-w-2xl" : "max-w-lg",
         )}
       >
-        <div className="flex items-start justify-between gap-2.5 border-b border-border p-2.5">
+        <div className="flex items-start justify-between gap-2.5 border-b border-white/[0.07] p-2.5">
           <div>
             <h2 className="text-sm font-semibold text-foreground">{title}</h2>
             {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
@@ -82,10 +82,10 @@ export function ModalFooter({
   submitLabel?: string;
 }) {
   return (
-    <div className="flex items-center justify-end gap-2.5 border-t border-border p-2.5">
+    <div className="flex items-center justify-end gap-2.5 border-t border-white/[0.07] p-2.5">
       <button
         type="submit"
-        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition hover:brightness-110"
+        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
       >
         {submitLabel}
       </button>

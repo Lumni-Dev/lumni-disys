@@ -56,7 +56,7 @@ export function Tooltip({
               top: coords.y,
               transform: "translateX(-50%)",
             }}
-            className="pointer-events-none z-[100] whitespace-nowrap rounded-lg border border-border bg-surface px-2 py-1 text-xs text-foreground shadow-lg"
+            className="pointer-events-none z-[100] whitespace-nowrap rounded-lg border border-white/10 bg-surface px-2 py-1 text-xs text-foreground shadow-xl shadow-black/50"
           >
             {label}
           </span>,
