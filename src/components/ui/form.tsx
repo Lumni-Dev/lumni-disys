@@ -4,7 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { cx } from "@/lib/utils";
 
 export const controlClass =
-  "w-full rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-white/50 focus:ring-1 focus:ring-white/30";
+  "w-full rounded-lg border border-border bg-surface-2/70 px-2.5 py-1.5 text-sm text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] outline-none transition-colors placeholder:text-muted focus:border-white/40 focus:bg-surface-2 focus:ring-2 focus:ring-white/10";
 
 export function Field({
   label,
