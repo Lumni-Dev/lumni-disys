@@ -9,6 +9,58 @@ function newToken(): string {
   return randomBytes(9).toString("hex");
 }
 
+// Registros de exemplo para uma conta nova: um por pagina, marcados "(exemplo)".
+// Os valores de status/etapa sao os canonicos usados na logica (Ativa, Aberta,
+// Triagem), so os nomes trazem o "(exemplo)".
+async function seedExampleData(accountId: number): Promise<void> {
+  try {
+    await db.insert(schema.companies).values({
+      accountId,
+      name: "Empresa Lumni Dev (exemplo)",
+      sector: "Tecnologia",
+      location: "Sao Paulo, SP",
+      openings: 3,
+      status: "Ativa",
+    });
+    await db.insert(schema.jobs).values({
+      accountId,
+      title: "Desenvolvedor(a) Full Stack (exemplo)",
+      company: "Empresa Lumni Dev (exemplo)",
+      type: "Remoto",
+      level: "Pleno",
+      applicants: 1,
+      status: "Aberta",
+    });
+    await db.insert(schema.candidates).values({
+      accountId,
+      name: "Ana Maria Silva (exemplo)",
+      role: "Desenvolvedora Full Stack",
+      email: "ana.exemplo@lumni.dev.br",
+      stage: "Triagem",
+      linkedin: "https://www.linkedin.com/in/exemplo",
+    });
+    await db.insert(schema.pipelineCards).values({
+      accountId,
+      name: "Ana Maria Silva (exemplo)",
+      job: "Desenvolvedor(a) Full Stack (exemplo)",
+      company: "Empresa Lumni Dev (exemplo)",
+      stage: "Triagem",
+      position: 0,
+    });
+    await db
+      .insert(schema.teamMembers)
+      .values({
+        accountId,
+        name: "Colaborador Exemplo (exemplo)",
+        email: `colaborador.exemplo.${accountId}@exemplo.disys`,
+        role: "Recrutador(a)",
+      })
+      .onConflictDoNothing({ target: schema.teamMembers.email });
+  } catch {
+    // O seed nao pode bloquear a criacao da conta.
+  }
+}
+
 async function ownedAccount(email: string): Promise<Account | null> {
   const [acc] = await db
     .select()
@@ -19,7 +71,7 @@ async function ownedAccount(email: string): Promise<Account | null> {
 
 /**
  * Conta (workspace) do e-mail: se ele e colaborador de um projeto, e aquela
- * conta; senao, e o dono da propria (criada no primeiro acesso).
+ * conta; senao, e o dono da propria (criada no primeiro acesso, com exemplos).
  */
 export async function accountForEmail(email: string): Promise<Account> {
   const [member] = await db
@@ -42,7 +94,10 @@ export async function accountForEmail(email: string): Promise<Account> {
     .values({ ownerEmail: email, publicToken: newToken() })
     .onConflictDoNothing({ target: schema.accounts.ownerEmail })
     .returning();
-  if (created) return { id: created.id, publicToken: created.publicToken };
+  if (created) {
+    await seedExampleData(created.id);
+    return { id: created.id, publicToken: created.publicToken };
+  }
 
   // Corrida: outra requisicao criou a conta; le de novo.
   const again = await ownedAccount(email);

@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
+import { useI18n } from "@/i18n/context";
 import { IconClose } from "./icons";
 
 export function Modal({
@@ -20,6 +21,7 @@ export function Modal({
   size?: "md" | "lg";
   children: ReactNode;
 }) {
+  const { admin } = useI18n();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -61,7 +63,7 @@ export function Modal({
           </div>
           <button
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={admin.common.close}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
           >
             <IconClose className="h-4 w-4" />
@@ -75,19 +77,21 @@ export function Modal({
 }
 
 export function ModalFooter({
-  submitLabel = "Gravar",
+  submitLabel,
 }: {
   // Fechar o modal já cancela; mantido opcional por compatibilidade.
   onCancel?: () => void;
   submitLabel?: string;
 }) {
+  const { admin } = useI18n();
+  const label = submitLabel ?? admin.common.save;
   return (
     <div className="flex items-center justify-end gap-2.5 border-t border-white/[0.05] p-2.5">
       <button
         type="submit"
         className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
       >
-        {submitLabel}
+        {label}
       </button>
     </div>
   );

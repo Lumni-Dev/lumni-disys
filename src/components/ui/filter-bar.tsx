@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
-import { Select } from "./select";
+import { useI18n } from "@/i18n/context";
+import { Select, type Option } from "./select";
 
 export function FilterBar({
   children,
@@ -10,9 +13,12 @@ export function FilterBar({
   onClear?: () => void;
   hasFilters?: boolean;
 }) {
+  const { admin } = useI18n();
   return (
     <div className="elevated flex flex-wrap items-center gap-2.5 rounded-lg border border-white/[0.06] bg-surface p-2.5">
-      <span className="text-xs font-medium text-muted">Filtros</span>
+      <span className="text-xs font-medium text-muted">
+        {admin.common.filters}
+      </span>
       {children}
       {hasFilters && onClear && (
         <button
@@ -20,7 +26,7 @@ export function FilterBar({
           onClick={onClear}
           className="ml-auto text-xs font-medium text-muted transition-colors hover:text-foreground"
         >
-          Limpar filtros
+          {admin.common.clearFilters}
         </button>
       )}
     </div>
@@ -36,7 +42,7 @@ export function FilterSelect({
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
-  options: string[];
+  options: Option[];
 }) {
   return (
     <div className="w-full sm:w-44">

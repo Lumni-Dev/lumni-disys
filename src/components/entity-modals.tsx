@@ -3,10 +3,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
-import { Select } from "@/components/ui/select";
+import { Select, type Option } from "@/components/ui/select";
 import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
 import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
 import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
+import { useI18n } from "@/i18n/context";
 import type { Company, Job, Candidate, PipelineCard } from "@/lib/data";
 
 const LEVELS = ["Estágio", "Trainee", "Júnior", "Pleno", "Sênior", "Temporário"];
@@ -18,6 +19,14 @@ const STAGES = [
   "Entrevista final",
   "Proposta",
 ];
+
+// Mantem o valor canonico PT (usado na logica/API) e traduz apenas o rotulo.
+function localizedOptions(
+  values: string[],
+  labels: Record<string, string>,
+): Option[] {
+  return values.map((v) => ({ value: v, label: labels[v] ?? v }));
+}
 
 function FormModal({
   open,
@@ -93,6 +102,8 @@ export function CompanyModal({
   const [states, setStates] = useState<UF[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const { run, invalid } = useValidation();
+  const { admin } = useI18n();
+  const t = admin.modals.company;
 
   const isBrazil = country === "Brasil";
 
@@ -119,10 +130,8 @@ export function CompanyModal({
     <FormModal
       open={open}
       onClose={onClose}
-      title={company ? "Editar empresa" : "Nova empresa"}
-      subtitle={
-        company ? "Atualize os dados da empresa" : "Cadastre uma empresa parceira"
-      }
+      title={company ? t.editTitle : t.newTitle}
+      subtitle={company ? t.editSubtitle : t.newSubtitle}
       onSubmit={() => {
         const ok = run({
           name: isBlank(name),
@@ -153,7 +162,7 @@ export function CompanyModal({
         return true;
       }}
     >
-      <Field label="Nome da empresa" full req>
+      <Field label={t.name} full req>
         <Input
           invalid={invalid("name")}
           maxLength={160}
@@ -161,7 +170,7 @@ export function CompanyModal({
           onChange={(e) => setName(e.target.value)}
         />
       </Field>
-      <Field label="Setor" req>
+      <Field label={t.sector} req>
         <Input
           invalid={invalid("sector")}
           maxLength={120}
@@ -169,19 +178,19 @@ export function CompanyModal({
           onChange={(e) => setSector(e.target.value)}
         />
       </Field>
-      <Field label="País" req>
+      <Field label={t.country} req>
         <Select
           value={country}
           onChange={changeCountry}
           options={countries}
-          emptyLabel="Selecionar"
+          emptyLabel={admin.modals.select}
           invalid={invalid("country")}
         />
       </Field>
 
       {isBrazil ? (
         <>
-          <Field label="CNPJ" req>
+          <Field label={t.cnpj} req>
             <CnpjInput
               invalid={invalid("cnpj")}
               placeholder="00.000.000/0000-00"
@@ -189,7 +198,7 @@ export function CompanyModal({
               onChange={setCnpj}
             />
           </Field>
-          <Field label="Estado" req>
+          <Field label={t.state} req>
             <Select
               value={uf}
               onChange={(v) => {
@@ -197,33 +206,33 @@ export function CompanyModal({
                 setCity("");
               }}
               options={states.map((s) => ({ value: s.sigla, label: s.nome }))}
-              emptyLabel="Selecionar"
+              emptyLabel={admin.modals.select}
               invalid={invalid("uf")}
             />
           </Field>
-          <Field label="Cidade" req>
+          <Field label={t.city} req>
             <Select
               value={city}
               onChange={setCity}
               options={cities}
               disabled={!uf}
-              placeholder={uf ? "Selecione a cidade" : "Escolha o estado antes"}
+              placeholder={uf ? t.selectCity : t.selectStateFirst}
               invalid={invalid("city")}
             />
           </Field>
         </>
       ) : (
         <>
-          <Field label="Registro fiscal" req>
+          <Field label={t.taxId} req>
             <Input
               invalid={invalid("taxId")}
               maxLength={40}
-              placeholder="Tax ID / VAT / EIN…"
+              placeholder={t.taxIdPlaceholder}
               value={taxId}
               onChange={(e) => setTaxId(e.target.value)}
             />
           </Field>
-          <Field label="Estado / Província" req>
+          <Field label={t.stateProvince} req>
             <Input
               invalid={invalid("stateText")}
               maxLength={120}
@@ -231,7 +240,7 @@ export function CompanyModal({
               onChange={(e) => setStateText(e.target.value)}
             />
           </Field>
-          <Field label="Cidade" req>
+          <Field label={t.city} req>
             <Input
               invalid={invalid("cityText")}
               maxLength={120}
@@ -242,7 +251,7 @@ export function CompanyModal({
         </>
       )}
 
-      <Field label="Vagas abertas" req>
+      <Field label={t.openings} req>
         <Input
           inputMode="numeric"
           maxLength={5}
@@ -251,12 +260,12 @@ export function CompanyModal({
           onChange={(e) => setOpenings(e.target.value.replace(/\D/g, ""))}
         />
       </Field>
-      <Field label="Status" req>
+      <Field label={t.status} req>
         <Select
           value={status}
           onChange={setStatus}
-          options={["Ativa", "Pausada"]}
-          emptyLabel="Selecionar"
+          options={localizedOptions(["Ativa", "Pausada"], admin.status)}
+          emptyLabel={admin.modals.select}
           invalid={invalid("status")}
         />
       </Field>
@@ -284,13 +293,15 @@ export function JobModal({
   const [salaryFrom, setSalaryFrom] = useState("");
   const [salaryTo, setSalaryTo] = useState("");
   const { run, invalid, hasError } = useValidation();
+  const { admin } = useI18n();
+  const t = admin.modals.job;
 
   return (
     <FormModal
       open={open}
       onClose={onClose}
-      title={job ? "Editar vaga" : "Nova vaga"}
-      subtitle={job ? "Atualize os dados da vaga" : "Publique uma nova posição"}
+      title={job ? t.editTitle : t.newTitle}
+      subtitle={job ? t.editSubtitle : t.newSubtitle}
       onSubmit={() => {
         const from = moneyToNumber(salaryFrom);
         const to = moneyToNumber(salaryTo);
@@ -319,7 +330,7 @@ export function JobModal({
         return true;
       }}
     >
-      <Field label="Título da vaga" full req>
+      <Field label={t.title} full req>
         <Input
           invalid={invalid("title")}
           maxLength={200}
@@ -327,7 +338,7 @@ export function JobModal({
           onChange={(e) => setTitle(e.target.value)}
         />
       </Field>
-      <Field label="Empresa" full req>
+      <Field label={t.company} full req>
         <Input
           invalid={invalid("company")}
           maxLength={160}
@@ -335,25 +346,25 @@ export function JobModal({
           onChange={(e) => setCompany(e.target.value)}
         />
       </Field>
-      <Field label="Nível" req>
+      <Field label={t.level} req>
         <Select
           value={level}
           onChange={setLevel}
-          options={LEVELS}
-          emptyLabel="Selecionar"
+          options={localizedOptions(LEVELS, admin.levels)}
+          emptyLabel={admin.modals.select}
           invalid={invalid("level")}
         />
       </Field>
-      <Field label="Modalidade" req>
+      <Field label={t.type} req>
         <Select
           value={type}
           onChange={setType}
-          options={JOB_TYPES}
-          emptyLabel="Selecionar"
+          options={localizedOptions(JOB_TYPES, admin.jobTypes)}
+          emptyLabel={admin.modals.select}
           invalid={invalid("type")}
         />
       </Field>
-      <Field label="Candidatos" req>
+      <Field label={t.applicants} req>
         <Input
           inputMode="numeric"
           maxLength={5}
@@ -362,26 +373,29 @@ export function JobModal({
           onChange={(e) => setApplicants(e.target.value.replace(/\D/g, ""))}
         />
       </Field>
-      <Field label="Status" req>
+      <Field label={t.status} req>
         <Select
           value={status}
           onChange={setStatus}
-          options={["Aberta", "Em análise", "Fechada"]}
-          emptyLabel="Selecionar"
+          options={localizedOptions(
+            ["Aberta", "Em análise", "Fechada"],
+            admin.status,
+          )}
+          emptyLabel={admin.modals.select}
           invalid={invalid("status")}
         />
       </Field>
-      <Field label="Faixa salarial" full req>
+      <Field label={t.salaryRange} full req>
         <div className="grid grid-cols-2 gap-2.5">
           <MoneyInput
             invalid={invalid("salaryFrom") || invalid("salaryOrder")}
-            placeholder="Salário de"
+            placeholder={t.salaryFrom}
             value={salaryFrom}
             onChange={setSalaryFrom}
           />
           <MoneyInput
             invalid={invalid("salaryTo") || invalid("salaryOrder")}
-            placeholder="Salário até"
+            placeholder={t.salaryTo}
             value={salaryTo}
             onChange={setSalaryTo}
           />
@@ -389,7 +403,7 @@ export function JobModal({
       </Field>
       {hasError("salaryOrder") && (
         <p className="-mt-1 text-xs text-accent sm:col-span-2">
-          O salário &quot;de&quot; não pode ser maior que o &quot;até&quot;.
+          {t.salaryOrderError}
         </p>
       )}
     </FormModal>
@@ -413,17 +427,15 @@ export function CandidateModal({
   const [linkedin, setLinkedin] = useState(candidate?.linkedin ?? "");
   const [stage, setStage] = useState<string>(candidate?.stage ?? "");
   const { run, invalid } = useValidation();
+  const { admin } = useI18n();
+  const t = admin.modals.candidate;
 
   return (
     <FormModal
       open={open}
       onClose={onClose}
-      title={candidate ? "Editar candidato" : "Adicionar candidato"}
-      subtitle={
-        candidate
-          ? "Atualize os dados do candidato"
-          : "Inclua um candidato no banco de talentos"
-      }
+      title={candidate ? t.editTitle : t.newTitle}
+      subtitle={candidate ? t.editSubtitle : t.newSubtitle}
       onSubmit={() => {
         const ok = run({
           name: isBlank(name),
@@ -445,7 +457,7 @@ export function CandidateModal({
         return true;
       }}
     >
-      <Field label="Nome completo" full req>
+      <Field label={t.fullName} full req>
         <Input
           invalid={invalid("name")}
           maxLength={160}
@@ -453,7 +465,7 @@ export function CandidateModal({
           onChange={(e) => setName(e.target.value)}
         />
       </Field>
-      <Field label="E-mail" req>
+      <Field label={t.email} req>
         <Input
           type="email"
           invalid={invalid("email")}
@@ -462,7 +474,7 @@ export function CandidateModal({
           onChange={(e) => setEmail(e.target.value)}
         />
       </Field>
-      <Field label="Cargo pretendido" req>
+      <Field label={t.desiredRole} req>
         <Input
           invalid={invalid("role")}
           maxLength={160}
@@ -470,22 +482,22 @@ export function CandidateModal({
           onChange={(e) => setRole(e.target.value)}
         />
       </Field>
-      <Field label="LinkedIn ou Portfólio" full req>
+      <Field label={t.linkedin} full req>
         <Input
           type="url"
           invalid={invalid("linkedin")}
           maxLength={300}
-          placeholder="https://linkedin.com/in/…"
+          placeholder={t.linkedinPlaceholder}
           value={linkedin}
           onChange={(e) => setLinkedin(e.target.value)}
         />
       </Field>
-      <Field label="Etapa" full req>
+      <Field label={t.stage} full req>
         <Select
           value={stage}
           onChange={setStage}
-          options={STAGES}
-          emptyLabel="Selecionar"
+          options={localizedOptions(STAGES, admin.stages)}
+          emptyLabel={admin.modals.select}
           invalid={invalid("stage")}
         />
       </Field>
@@ -513,15 +525,15 @@ export function ProcessModal({
   const [company, setCompany] = useState(card?.company ?? "");
   const [stage, setStage] = useState(currentStage ?? "");
   const { run, invalid } = useValidation();
+  const { admin } = useI18n();
+  const t = admin.modals.process;
 
   return (
     <FormModal
       open={open}
       onClose={onClose}
-      title={card ? "Editar processo" : "Novo processo"}
-      subtitle={
-        card ? "Atualize o candidato no funil" : "Inicie um processo seletivo"
-      }
+      title={card ? t.editTitle : t.newTitle}
+      subtitle={card ? t.editSubtitle : t.newSubtitle}
       onSubmit={() => {
         const ok = run({
           name: isBlank(name),
@@ -542,7 +554,7 @@ export function ProcessModal({
         return true;
       }}
     >
-      <Field label="Candidato" full req>
+      <Field label={t.candidate} full req>
         <Input
           invalid={invalid("name")}
           maxLength={160}
@@ -550,7 +562,7 @@ export function ProcessModal({
           onChange={(e) => setName(e.target.value)}
         />
       </Field>
-      <Field label="Vaga" req>
+      <Field label={t.job} req>
         <Input
           invalid={invalid("job")}
           maxLength={200}
@@ -558,7 +570,7 @@ export function ProcessModal({
           onChange={(e) => setJob(e.target.value)}
         />
       </Field>
-      <Field label="Empresa" req>
+      <Field label={t.company} req>
         <Input
           invalid={invalid("company")}
           maxLength={160}
@@ -566,12 +578,12 @@ export function ProcessModal({
           onChange={(e) => setCompany(e.target.value)}
         />
       </Field>
-      <Field label="Etapa" full req>
+      <Field label={t.stage} full req>
         <Select
           value={stage}
           onChange={setStage}
-          options={stages}
-          emptyLabel="Selecionar"
+          options={localizedOptions(stages, admin.stages)}
+          emptyLabel={admin.modals.select}
           invalid={invalid("stage")}
         />
       </Field>

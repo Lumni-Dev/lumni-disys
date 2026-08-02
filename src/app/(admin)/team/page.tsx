@@ -20,15 +20,19 @@ import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
+import type { Admin } from "@/i18n/types";
 import {
   countPermissions,
-  pagesWithAccess,
+  MODULES,
+  ACTIONS,
   type Member,
 } from "@/lib/permissions";
 
 type MemberRow = Member & { id: number };
 
 export default function TeamPage() {
+  const { admin } = useI18n();
   const [list, setList] = useState<MemberRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -54,6 +58,13 @@ export default function TeamPage() {
 
   const sel = useSelection(filtered, (c) => c.email);
 
+  // Nomes das paginas com acesso, traduzidos (a chave do modulo bate com nav).
+  function accessNames(permissions: Member["permissions"]): string[] {
+    return MODULES.filter((m) =>
+      ACTIONS.some((a) => permissions[m.key]?.[a.key]),
+    ).map((m) => admin.nav[m.key as keyof Admin["nav"]] ?? m.label);
+  }
+
   async function save(c: Member) {
     const existing = list.find((m) => m.email === c.email);
     if (existing) {
@@ -76,19 +87,19 @@ export default function TeamPage() {
 
   function exportSelected() {
     downloadExcel(
-      "colaboradores",
+      admin.team.fileName,
       [
-        { key: "name", label: "Nome" },
-        { key: "email", label: "E-mail" },
-        { key: "role", label: "Cargo" },
-        { key: "pages", label: "Páginas com acesso" },
-        { key: "permissions", label: "Total de permissões" },
+        { key: "name", label: admin.team.exportCols.name },
+        { key: "email", label: admin.team.exportCols.email },
+        { key: "role", label: admin.team.exportCols.role },
+        { key: "pages", label: admin.team.exportCols.pages },
+        { key: "permissions", label: admin.team.exportCols.permissionsTotal },
       ],
       sel.selected.map((c) => ({
         name: c.name,
         email: c.email,
         role: c.role,
-        pages: pagesWithAccess(c.permissions).join(", "),
+        pages: accessNames(c.permissions).join(", "),
         permissions: countPermissions(c.permissions).total,
       })),
     );
@@ -103,11 +114,11 @@ export default function TeamPage() {
         <>
           <ExportButton onClick={sel.start} />
           <AddButton onClick={() => setAddOpen(true)}>
-            Convidar colaborador
+            {admin.team.add}
           </AddButton>
         </>
       }
-      searchPlaceholder="Buscar colaboradores..."
+      searchPlaceholder={admin.team.searchPlaceholder}
       searchValue={query}
       onSearchChange={setQuery}
     >
@@ -115,18 +126,20 @@ export default function TeamPage() {
         <FilterSelect
           value={fRole}
           onChange={setFRole}
-          placeholder="Todos os cargos"
+          placeholder={admin.team.allRoles}
           options={roles}
         />
       </FilterBar>
 
       <Card>
         <CardHeader
-          title={sel.active ? "Selecione para exportar" : "Colaboradores"}
+          title={
+            sel.active ? admin.common.selectToExport : admin.team.listTitle
+          }
           subtitle={
             sel.active
-              ? "Marque os itens e clique em Exportar"
-              : `${list.length} com acesso ao sistema`
+              ? admin.common.markToExport
+              : admin.team.withAccess(list.length)
           }
           action={
             sel.active ? (
@@ -145,15 +158,15 @@ export default function TeamPage() {
                 <Checkbox checked={sel.all} onChange={sel.toggleAll} />
               </Th>
             )}
-            <Th>Colaborador</Th>
-            <Th>Cargo</Th>
-            <Th>Acesso às páginas</Th>
-            <Th>Ações</Th>
+            <Th>{admin.team.cols.member}</Th>
+            <Th>{admin.team.cols.role}</Th>
+            <Th>{admin.team.cols.pageAccess}</Th>
+            <Th>{admin.common.actions}</Th>
           </Thead>
           <Tbody>
             {filtered.map((c) => {
               const { pages, total } = countPermissions(c.permissions);
-              const names = pagesWithAccess(c.permissions);
+              const names = accessNames(c.permissions);
               return (
                 <Tr key={c.email}>
                   {sel.active && (
@@ -173,10 +186,12 @@ export default function TeamPage() {
                       </div>
                     </div>
                   </Td>
-                  <Td className="text-muted">{c.role || "—"}</Td>
+                  <Td className="text-muted">{c.role || "-"}</Td>
                   <Td>
                     {pages === 0 ? (
-                      <span className="text-xs text-muted">Sem acesso</span>
+                      <span className="text-xs text-muted">
+                        {admin.team.noAccess}
+                      </span>
                     ) : (
                       <div className="flex flex-wrap items-center gap-1.5">
                         {names.slice(0, 3).map((n) => (
@@ -186,25 +201,24 @@ export default function TeamPage() {
                         ))}
                         {names.length > 3 && <Badge>+{names.length - 3}</Badge>}
                         <span className="text-xs text-muted">
-                          · {total} permissões
+                          · {admin.team.permissions(total)}
                         </span>
                       </div>
                     )}
                   </Td>
                   <Td>
                     <div className="flex items-center gap-1.5">
-                      <Tooltip label="Editar">
+                      <Tooltip label={admin.common.edit}>
                         <Button
                           variant="outline"
-                          aria-label="Editar"
+                          aria-label={admin.common.edit}
                           icon={<IconPencil className="h-4 w-4" />}
                           onClick={() => setEditing(c)}
                         />
                       </Tooltip>
                       <ConfirmAction
-                        label="Remover"
+                        label={admin.common.remove}
                         icon={<IconTrash className="h-4 w-4" />}
-                        confirmLabel="Confirmar"
                         onConfirm={() => remove(c.email)}
                       />
                     </div>
@@ -217,7 +231,7 @@ export default function TeamPage() {
             ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className="p-2.5 text-center text-sm text-muted">
-                  Nenhum colaborador encontrado.
+                  {admin.team.empty}
                 </td>
               </tr>
             ) : null}
@@ -225,7 +239,7 @@ export default function TeamPage() {
         </Table>
         <CardFooter>
           <span className="text-xs text-muted">
-            {filtered.length} de {list.length}
+            {admin.team.footerRange(filtered.length, list.length)}
           </span>
         </CardFooter>
       </Card>
