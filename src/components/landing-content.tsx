@@ -210,7 +210,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
           </div>
         </section>
 
-        <section className="relative grid grid-cols-2 gap-2.5 overflow-hidden border-y border-border py-8 md:grid-cols-4">
+        <section className="relative grid grid-cols-2 gap-2.5 border-y border-border py-8 md:grid-cols-4">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-40 w-[640px] max-w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-[0.05] blur-[110px]"
@@ -225,7 +225,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
           ))}
         </section>
 
-        <section id="modulos" className="relative scroll-mt-20 overflow-hidden py-20">
+        <section id="modulos" className="relative scroll-mt-20 py-20">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-6 -z-10 h-[440px] w-[780px] max-w-[95%] -translate-x-1/2 rounded-full bg-foreground opacity-[0.05] blur-[140px]"
@@ -278,7 +278,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
           </div>
         </section>
 
-        <section id="recursos" className="relative scroll-mt-20 overflow-hidden py-8">
+        <section id="recursos" className="relative scroll-mt-20 py-8">
           <div
             aria-hidden
             className="pointer-events-none absolute -bottom-24 -left-24 -z-10 h-72 w-72 rounded-full bg-foreground opacity-[0.045] blur-[120px]"
