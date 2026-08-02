@@ -231,6 +231,7 @@ const en: Admin = {
       sector: "Sector",
       country: "Country",
       cnpj: "CNPJ",
+      cnpjLookup: "Looking up CNPJ data...",
       state: "State",
       city: "City",
       taxId: "Tax registration",

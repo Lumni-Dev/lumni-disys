@@ -264,6 +264,8 @@ export interface Admin {
       sector: string;
       country: string;
       cnpj: string;
+      /** Texto exibido enquanto os dados do CNPJ sao consultados. */
+      cnpjLookup: string;
       state: string;
       city: string;
       taxId: string;

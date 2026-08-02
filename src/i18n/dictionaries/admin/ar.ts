@@ -231,6 +231,7 @@ const ar: Admin = {
       sector: "القطاع",
       country: "الدولة",
       cnpj: "CNPJ",
+      cnpjLookup: "جارٍ البحث عن بيانات CNPJ...",
       state: "الولاية",
       city: "المدينة",
       taxId: "التسجيل الضريبي",
