@@ -30,7 +30,7 @@ export function ConfirmAction({
             onClick={() => setOpen(true)}
             aria-label={label}
             title={label}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted shadow-sm transition-all duration-200 hover:border-white/25 hover:text-foreground active:scale-[0.98]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:text-foreground active:scale-[0.98]"
           >
             {icon}
           </button>
@@ -55,7 +55,7 @@ export function ConfirmAction({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-muted transition-all duration-200 hover:border-white/25 hover:bg-surface-2 hover:text-foreground active:scale-[0.98]"
+            className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-muted transition-all duration-200 hover:border-white/[0.15] hover:bg-surface-2 hover:text-foreground active:scale-[0.98]"
           >
             Cancelar
           </button>

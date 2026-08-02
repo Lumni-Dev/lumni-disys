@@ -50,11 +50,11 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         className={cx(
-          "relative z-10 my-2.5 w-full rounded-lg border border-white/10 bg-surface shadow-2xl shadow-black/50",
+          "relative z-10 my-2.5 w-full rounded-lg border border-white/[0.08] bg-surface shadow-2xl shadow-black/50",
           size === "lg" ? "max-w-2xl" : "max-w-lg",
         )}
       >
-        <div className="flex items-start justify-between gap-2.5 border-b border-white/[0.07] p-2.5">
+        <div className="flex items-start justify-between gap-2.5 border-b border-white/[0.05] p-2.5">
           <div>
             <h2 className="text-sm font-semibold text-foreground">{title}</h2>
             {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
@@ -82,7 +82,7 @@ export function ModalFooter({
   submitLabel?: string;
 }) {
   return (
-    <div className="flex items-center justify-end gap-2.5 border-t border-white/[0.07] p-2.5">
+    <div className="flex items-center justify-end gap-2.5 border-t border-white/[0.05] p-2.5">
       <button
         type="submit"
         className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"

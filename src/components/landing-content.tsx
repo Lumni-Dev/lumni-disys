@@ -178,7 +178,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
                 {KPI_META.map((c) => (
                   <div
                     key={c.key}
-                    className="group/kpi rounded-lg border border-border bg-surface-2 p-3 text-left transition-colors hover:border-white/25"
+                    className="group/kpi rounded-lg border border-border bg-surface-2 p-3 text-left transition-colors hover:border-white/[0.15]"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate text-xs text-muted">
