@@ -69,6 +69,9 @@ export const candidates = pgTable("candidates", {
 export const pipelineCards = pgTable("pipeline_cards", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
+  candidateId: integer().references(() => candidates.id, {
+    onDelete: "set null",
+  }),
   name: varchar({ length: 160 }).notNull(),
   job: varchar({ length: 200 }).notNull().default(""),
   company: varchar({ length: 160 }).notNull().default(""),

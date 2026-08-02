@@ -31,16 +31,20 @@ async function seedExampleData(accountId: number): Promise<void> {
       applicants: 1,
       status: "Aberta",
     });
-    await db.insert(schema.candidates).values({
-      accountId,
-      name: "Ana Maria Silva (exemplo)",
-      role: "Desenvolvedora Full Stack",
-      email: "ana.exemplo@lumni.dev.br",
-      stage: "Triagem",
-      linkedin: "https://www.linkedin.com/in/exemplo",
-    });
+    const [candidate] = await db
+      .insert(schema.candidates)
+      .values({
+        accountId,
+        name: "Ana Maria Silva (exemplo)",
+        role: "Desenvolvedora Full Stack",
+        email: "ana.exemplo@lumni.dev.br",
+        stage: "Triagem",
+        linkedin: "https://www.linkedin.com/in/exemplo",
+      })
+      .returning({ id: schema.candidates.id });
     await db.insert(schema.pipelineCards).values({
       accountId,
+      candidateId: candidate?.id ?? null,
       name: "Ana Maria Silva (exemplo)",
       job: "Desenvolvedor(a) Full Stack (exemplo)",
       company: "Empresa Lumni Dev (exemplo)",

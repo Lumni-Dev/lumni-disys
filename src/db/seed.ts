@@ -43,18 +43,32 @@ async function main() {
     })),
   );
 
-  await db.insert(schema.candidates).values(
-    candidates.map((c) => ({
-      name: c.name,
-      role: c.role,
-      email: c.email,
-      stage: c.stage,
-      linkedin: c.linkedin ?? "",
-    })),
+  // Etapa de cada card por nome, para alinhar a etapa do candidato vinculado e
+  // manter funil/atividades do dashboard coerentes com o pipeline desde o seed.
+  const cardStageByName = new Map(
+    initialColumns.flatMap((col) =>
+      col.cards.map((card) => [card.name, col.stage] as const),
+    ),
   );
+
+  const candidateRows = await db
+    .insert(schema.candidates)
+    .values(
+      candidates.map((c) => ({
+        name: c.name,
+        role: c.role,
+        email: c.email,
+        stage: cardStageByName.get(c.name) ?? c.stage,
+        linkedin: c.linkedin ?? "",
+      })),
+    )
+    .returning({ id: schema.candidates.id, name: schema.candidates.name });
+
+  const candidateIdByName = new Map(candidateRows.map((c) => [c.name, c.id]));
 
   const cards = initialColumns.flatMap((col) =>
     col.cards.map((card, i) => ({
+      candidateId: candidateIdByName.get(card.name) ?? null,
       name: card.name,
       job: card.job,
       company: card.company,

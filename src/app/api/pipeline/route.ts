@@ -50,10 +50,25 @@ export async function POST(req: Request) {
       ),
     );
 
+  // Vincula o card a um candidato existente com o mesmo nome, para que mover
+  // o card no pipeline reflita no funil e nas atividades do dashboard.
+  const [candidate] = await db
+    .select({ id: schema.candidates.id })
+    .from(schema.candidates)
+    .where(
+      and(
+        eq(schema.candidates.accountId, account.id),
+        eq(schema.candidates.name, body.name),
+      ),
+    )
+    .orderBy(asc(schema.candidates.id))
+    .limit(1);
+
   const [row] = await db
     .insert(schema.pipelineCards)
     .values({
       accountId: account.id,
+      candidateId: candidate?.id ?? null,
       name: body.name,
       job: body.job ?? "",
       company: body.company ?? "",
@@ -61,6 +76,19 @@ export async function POST(req: Request) {
       position: inStage.length,
     })
     .returning();
+
+  // Sincroniza a etapa do candidato vinculado com a etapa inicial do card.
+  if (candidate?.id) {
+    await db
+      .update(schema.candidates)
+      .set({ stage })
+      .where(
+        and(
+          eq(schema.candidates.id, candidate.id),
+          eq(schema.candidates.accountId, account.id),
+        ),
+      );
+  }
 
   return NextResponse.json(
     { id: row.id, name: row.name, job: row.job, company: row.company, stage },
