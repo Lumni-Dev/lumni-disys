@@ -136,6 +136,7 @@ const nl: Admin = {
       openings: "Aantal vacatures",
       applicants: "Kandidaten",
       status: "Status",
+      description: "Omschrijving",
     },
   },
   candidates: {
@@ -263,6 +264,7 @@ const nl: Admin = {
       type: "Werkvorm",
       openings: "Aantal vacatures",
       status: "Status",
+      description: "Functieomschrijving",
       salaryRange: "Salarisbereik",
       salaryFrom: "Salaris vanaf",
       salaryTo: "Salaris tot",

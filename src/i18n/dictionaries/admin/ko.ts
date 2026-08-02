@@ -136,6 +136,7 @@ const ko: Admin = {
       openings: "모집 인원",
       applicants: "지원자",
       status: "상태",
+      description: "설명",
     },
   },
   candidates: {
@@ -261,6 +262,7 @@ const ko: Admin = {
       type: "근무 형태",
       openings: "모집 인원",
       status: "상태",
+      description: "공고 설명",
       salaryRange: "급여 범위",
       salaryFrom: "최소 급여",
       salaryTo: "최대 급여",

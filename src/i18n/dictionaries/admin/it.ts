@@ -136,6 +136,7 @@ const it: Admin = {
       openings: "Numero di posti",
       applicants: "Candidati",
       status: "Stato",
+      description: "Descrizione",
     },
   },
   candidates: {
@@ -263,6 +264,7 @@ const it: Admin = {
       type: "Modalità di lavoro",
       openings: "Numero di posti",
       status: "Stato",
+      description: "Descrizione della posizione",
       salaryRange: "Fascia salariale",
       salaryFrom: "Salario da",
       salaryTo: "Salario a",

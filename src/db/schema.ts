@@ -48,6 +48,8 @@ export const jobs = pgTable("jobs", {
   accountId: integer().references(() => accounts.id),
   title: varchar({ length: 200 }).notNull(),
   company: varchar({ length: 160 }).notNull().default(""),
+  // Descricao da vaga (ate 5000 caracteres, limitado na API).
+  description: text().notNull().default(""),
   type: varchar({ length: 40 }).notNull().default("Remoto"),
   level: varchar({ length: 40 }).notNull().default("Pleno"),
   // Quantidade de posicoes abertas nesta vaga (informado ao criar).
