@@ -25,7 +25,7 @@ const MODULE_ICONS = [
 
 const FEATURE_ICONS = [IconSearch, IconShield, IconDashboard] as const;
 
-const STAT_VALUES = ["5", "100%", "0", "24/7"] as const;
+const STAT_VALUES = ["5", "12", "0", "24/7"] as const;
 
 const KPI_META = [
   { key: "companies", v: "128", delta: "+12%", up: true, data: [20, 24, 23, 30, 33, 39, 45, 52] },

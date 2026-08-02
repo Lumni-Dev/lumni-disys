@@ -12,7 +12,7 @@ const nl: Landing = {
     titleLead: "Het praktische, snelle",
     titleAccent: "HR-ATS",
     subtitle:
-      "Bedrijven, vacatures, kandidaten en processen in een enkel snel, veilig en verbonden platform. Werf beter, van het eerste contact tot de aanwerving.",
+      "Bedrijven, vacatures, kandidaten en processen op een platform, met cv-analyse door AI. Werf beter, van het eerste contact tot de aanwerving.",
     ctaGuest: "Ga naar het systeem",
     ctaAuthed: "Naar het systeem",
     ctaSecondary: "Bekijk modules",
@@ -23,7 +23,7 @@ const nl: Landing = {
     candidates: "Kandidaten",
     inProcess: "In behandeling",
   },
-  stats: ["Geïntegreerde modules", "In de cloud", "Te onthouden wachtwoorden", "Beschikbaar"],
+  stats: ["Geïntegreerde modules", "Talen", "Te onthouden wachtwoorden", "Beschikbaar"],
   modulesSection: {
     title: "Alles wat uw HR nodig heeft",
     subtitle:
@@ -36,33 +36,33 @@ const nl: Landing = {
     },
     {
       title: "Vacatures",
-      desc: "Plaats vacatures, stel niveaus en salarisschalen in en volg openstaande posities.",
+      desc: "Publiceer met volledige omschrijving en deel de publieke link van elke vacature om sollicitaties te ontvangen.",
     },
     {
       title: "Kandidaten",
-      desc: "Centraliseer talent, cv's en portfolio's in een doorzoekbare database.",
+      desc: "Talentenpool met bijgevoegd cv en door AI berekende match met de vacature, van 0 tot 100.",
     },
     {
       title: "Processen",
-      desc: "Visuele drag-and-drop pijplijn om kandidaten tussen fasen te verplaatsen.",
+      desc: "Visuele drag-and-drop pijplijn; nieuwe sollicitaties komen vanzelf in de screening.",
     },
     {
       title: "Team",
-      desc: "Nodig uw team uit per e-mail en beheer rechten per pagina.",
+      desc: "Nodig uit per e-mail met acceptatie, stel rechten per pagina in en wissel tussen workspaces.",
     },
   ],
   features: [
     {
-      title: "Werkelijk snel",
-      desc: "Een strakke interface, sneltoetsen en directe zoekfunctie op elke pagina.",
+      title: "AI-match",
+      desc: "Elk binnengekomen cv wordt beoordeeld tegen de vacature, van 0 tot 100.",
     },
     {
       title: "Veilig inloggen",
       desc: "Toegang met alleen Google of LinkedIn, geen wachtwoorden om te beheren.",
     },
     {
-      title: "Alles georganiseerd",
-      desc: "Bedrijven, vacatures, kandidaten en processen verbonden op één plek.",
+      title: "Publieke vacaturepagina's",
+      desc: "Deel de link van je workspace of een enkele vacature en ontvang sollicitaties met cv.",
     },
   ],
   cta: {

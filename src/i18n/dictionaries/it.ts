@@ -12,7 +12,7 @@ const it: Landing = {
     titleLead: "L'ATS per le Risorse Umane",
     titleAccent: "pratico e veloce",
     subtitle:
-      "Aziende, posizioni, candidati e processi in un'unica piattaforma veloce, sicura e connessa. Recluta meglio, dal primo contatto all'assunzione.",
+      "Aziende, posizioni, candidati e processi in un'unica piattaforma, con analisi dei curriculum via IA. Recluta meglio, dal primo contatto all'assunzione.",
     ctaGuest: "Entra nel sistema",
     ctaAuthed: "Vai al sistema",
     ctaSecondary: "Scopri i moduli",
@@ -23,7 +23,7 @@ const it: Landing = {
     candidates: "Candidati",
     inProcess: "In corso",
   },
-  stats: ["Moduli integrati", "Nel cloud", "Password da ricordare", "Disponibile"],
+  stats: ["Moduli integrati", "Lingue", "Password da ricordare", "Disponibile"],
   modulesSection: {
     title: "Tutto ciò di cui le tue Risorse Umane hanno bisogno",
     subtitle:
@@ -36,33 +36,33 @@ const it: Landing = {
     },
     {
       title: "Posizioni",
-      desc: "Pubblica posizioni, definisci livelli e fasce salariali e monitora le aperture.",
+      desc: "Pubblica con descrizione completa e condividi il link pubblico di ogni posizione per ricevere candidature.",
     },
     {
       title: "Candidati",
-      desc: "Centralizza talenti, curriculum e portfolio in una base ricercabile.",
+      desc: "Bacino talenti con curriculum allegato e compatibilità con la posizione calcolata dall'IA, da 0 a 100.",
     },
     {
       title: "Processi",
-      desc: "Pipeline visiva con trascina e rilascia per spostare i candidati tra le fasi.",
+      desc: "Pipeline visiva con trascina e rilascia; le nuove candidature entrano da sole nella preselezione.",
     },
     {
       title: "Team",
-      desc: "Invita il tuo team via email e gestisci i permessi per ogni pagina.",
+      desc: "Invita via e-mail con accettazione, definisci permessi per pagina e passa da un workspace all'altro.",
     },
   ],
   features: [
     {
-      title: "Davvero veloce",
-      desc: "Un'interfaccia essenziale, scorciatoie e ricerca istantanea in ogni pagina.",
+      title: "Compatibilità via IA",
+      desc: "Ogni curriculum ricevuto viene analizzato rispetto alla posizione e riceve un punteggio da 0 a 100.",
     },
     {
       title: "Accesso sicuro",
       desc: "Accesso solo con Google o LinkedIn, senza password da gestire.",
     },
     {
-      title: "Tutto organizzato",
-      desc: "Aziende, posizioni, candidati e processi connessi in un unico posto.",
+      title: "Posizioni pubbliche",
+      desc: "Condividi il link del workspace o di una singola posizione e ricevi candidature con curriculum.",
     },
   ],
   cta: {
