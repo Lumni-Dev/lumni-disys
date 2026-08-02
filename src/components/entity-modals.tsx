@@ -512,6 +512,12 @@ export function CandidateModal({
   const [role, setRole] = useState(candidate?.role ?? "");
   const [linkedin, setLinkedin] = useState(candidate?.linkedin ?? "");
   const [stage, setStage] = useState<string>(candidate?.stage ?? "");
+  // Curriculo obrigatorio: na edicao o arquivo atual vale, e da para trocar.
+  const [cvName, setCvName] = useState(candidate?.cvName ?? "");
+  const [cvData, setCvData] = useState("");
+  const [cvTooBig, setCvTooBig] = useState(false);
+  const cvRef = useRef<HTMLInputElement>(null);
+  const hasCv = Boolean(cvData || candidate?.hasCv);
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.candidate;
@@ -519,6 +525,23 @@ export function CandidateModal({
   // candidato -> vaga (valor livre continua permitido).
   const jobs = useJobs(open);
   const jobTitles = [...new Set(jobs.map((j) => j.title))];
+
+  function onCvFile(file: File | undefined) {
+    setCvTooBig(false);
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setCvName(candidate?.cvName ?? "");
+      setCvData("");
+      setCvTooBig(true);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCvName(file.name);
+      setCvData(String(reader.result ?? ""));
+    };
+    reader.readAsDataURL(file);
+  }
 
   return (
     <FormModal
@@ -533,6 +556,7 @@ export function CandidateModal({
           role: isBlank(role),
           linkedin: !isUrl(linkedin),
           stage: isBlank(stage),
+          cv: !hasCv,
         });
         if (!ok) return false;
         onSave({
@@ -544,6 +568,8 @@ export function CandidateModal({
           // A data real vem do servidor (updatedAt); este valor e ignorado.
           modifiedAt: candidate?.modifiedAt ?? "",
           linkedin: linkedin.trim(),
+          cvName,
+          cvData,
         });
         return true;
       }}
@@ -583,6 +609,27 @@ export function CandidateModal({
           placeholder={t.linkedinPlaceholder}
           value={linkedin}
           onChange={(e) => setLinkedin(e.target.value)}
+        />
+      </Field>
+      <Field label={admin.careers.cv} full req>
+        <button
+          type="button"
+          onClick={() => cvRef.current?.click()}
+          style={invalid("cv") ? { borderColor: "var(--accent)" } : undefined}
+          className="flex w-full items-center justify-between rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-white/40 hover:text-foreground"
+        >
+          <span className="truncate">{cvName || admin.careers.cvAttach}</span>
+          <span className="text-foreground">{admin.careers.cvSelect}</span>
+        </button>
+        {cvTooBig && (
+          <span className="text-xs text-accent">{admin.careers.cvTooBig}</span>
+        )}
+        <input
+          ref={cvRef}
+          type="file"
+          accept=".pdf,.doc,.docx"
+          className="hidden"
+          onChange={(e) => onCvFile(e.target.files?.[0])}
         />
       </Field>
       <Field label={t.stage} full req>

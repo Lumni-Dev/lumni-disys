@@ -60,6 +60,7 @@ type CandidateRow = {
   email: string;
   stage: string;
   linkedin: string;
+  cvName?: string;
   updatedAt: Date | string;
   // A listagem envia so o flag (hasCv); rotas com .returning() trazem o
   // conteudo e o flag e derivado aqui. O base64 nunca vai na resposta.
@@ -76,6 +77,7 @@ export function serializeCandidate(r: CandidateRow) {
     stage: r.stage,
     linkedin: r.linkedin,
     hasCv: r.hasCv ?? Boolean(r.cvBase64),
+    cvName: r.cvName ?? "",
     matchScore: r.matchScore ?? null,
     modifiedAt: formatDate(r.updatedAt),
   };

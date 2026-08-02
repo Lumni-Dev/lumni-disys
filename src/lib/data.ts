@@ -109,6 +109,9 @@ export type Candidate = {
   modifiedAt: string;
   linkedin?: string;
   hasCv?: boolean;
+  cvName?: string;
+  /** Payload transitorio de upload do modal (data URL); nao vem da API. */
+  cvData?: string;
   matchScore?: number | null;
 };
 
