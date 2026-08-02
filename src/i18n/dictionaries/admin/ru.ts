@@ -123,6 +123,7 @@ const ru: Admin = {
     allTypes: "Все форматы работы",
     allStatuses: "Все статусы",
     candidatesLabel: "кандидатов",
+    shareJob: "Скопировать ссылку на вакансию",
     openingsCount: (n) => {
       const m10 = n % 10;
       const m100 = n % 100;
@@ -352,6 +353,8 @@ const ru: Admin = {
     emailPlaceholder: "vy@email.com",
     invalidLink:
       "Эта ссылка на вакансии недействительна. Запросите у компании полную ссылку.",
+    jobNotFound: "Эта вакансия больше недоступна.",
+    viewAll: "Все вакансии",
     goHome: "На главную",
   },
   login: {

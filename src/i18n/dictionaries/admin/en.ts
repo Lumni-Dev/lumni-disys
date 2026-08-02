@@ -123,6 +123,7 @@ const en: Admin = {
     allTypes: "All work models",
     allStatuses: "All statuses",
     candidatesLabel: "candidates",
+    shareJob: "Copy job link",
     openingsCount: (n) => `${n} opening${n === 1 ? "" : "s"}`,
     empty: "No jobs found.",
     fileName: "jobs",
@@ -342,6 +343,8 @@ const en: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink:
       "This jobs link is not valid. Ask the company for their full jobs link.",
+    jobNotFound: "This job is no longer available.",
+    viewAll: "View all jobs",
     goHome: "Go to home",
   },
   login: {

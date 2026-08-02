@@ -123,6 +123,7 @@ const fr: Admin = {
     allTypes: "Tous les modes de travail",
     allStatuses: "Tous les statuts",
     candidatesLabel: "candidats",
+    shareJob: "Copier le lien de l'offre",
     openingsCount: (n) => `${n} poste${n === 1 ? "" : "s"}`,
     empty: "Aucune offre trouvée.",
     fileName: "offres",
@@ -343,6 +344,8 @@ const fr: Admin = {
     emailPlaceholder: "vous@email.com",
     invalidLink:
       "Ce lien d'offres n'est pas valide. Demandez à l'entreprise son lien complet.",
+    jobNotFound: "Cette offre n'est plus disponible.",
+    viewAll: "Voir toutes les offres",
     goHome: "Aller à l'accueil",
   },
   login: {

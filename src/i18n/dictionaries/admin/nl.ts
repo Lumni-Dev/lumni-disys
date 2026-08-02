@@ -123,6 +123,7 @@ const nl: Admin = {
     allTypes: "Alle werkvormen",
     allStatuses: "Alle statussen",
     candidatesLabel: "kandidaten",
+    shareJob: "Vacaturelink kopiëren",
     openingsCount: (n) => `${n} vacature${n === 1 ? "" : "s"}`,
     empty: "Geen vacatures gevonden.",
     fileName: "vacatures",
@@ -344,6 +345,8 @@ const nl: Admin = {
     emailPlaceholder: "jij@email.com",
     invalidLink:
       "Deze vacaturelink is niet geldig. Vraag het bedrijf om de volledige link.",
+    jobNotFound: "Deze vacature is niet meer beschikbaar.",
+    viewAll: "Alle vacatures bekijken",
     goHome: "Naar home",
   },
   login: {

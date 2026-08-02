@@ -123,6 +123,7 @@ const ja: Admin = {
     allTypes: "すべての勤務形態",
     allStatuses: "すべてのステータス",
     candidatesLabel: "人の候補者",
+    shareJob: "求人リンクをコピー",
     openingsCount: (n) => `募集${n}名`,
     empty: "求人が見つかりません。",
     fileName: "jobs",
@@ -341,6 +342,8 @@ const ja: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink:
       "この求人リンクは無効です。企業に完全なリンクをお問い合わせください。",
+    jobNotFound: "この求人は現在募集していません。",
+    viewAll: "すべての求人を見る",
     goHome: "ホームへ",
   },
   login: {

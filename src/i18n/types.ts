@@ -156,6 +156,8 @@ export interface Admin {
     allTypes: string;
     allStatuses: string;
     candidatesLabel: string;
+    /** Tooltip do botao de copiar o link publico de uma vaga. */
+    shareJob: string;
     /** Ex.: "2 vagas" (badge no cartao da vaga e na pagina publica). */
     openingsCount(n: number): string;
     empty: string;
@@ -374,6 +376,9 @@ export interface Admin {
     namePlaceholder: string;
     emailPlaceholder: string;
     invalidLink: string;
+    /** Pagina publica de uma vaga especifica. */
+    jobNotFound: string;
+    viewAll: string;
     goHome: string;
   };
   /** Pagina de login. */

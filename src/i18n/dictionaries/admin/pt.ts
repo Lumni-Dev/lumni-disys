@@ -123,6 +123,7 @@ const pt: Admin = {
     allTypes: "Todas as modalidades",
     allStatuses: "Todos os status",
     candidatesLabel: "candidatos",
+    shareJob: "Copiar link da vaga",
     openingsCount: (n) => `${n} vaga${n === 1 ? "" : "s"}`,
     empty: "Nenhuma vaga encontrada.",
     fileName: "vagas",
@@ -344,6 +345,8 @@ const pt: Admin = {
     emailPlaceholder: "voce@email.com",
     invalidLink:
       "Este link de vagas não é válido. Peça à empresa o link completo das vagas dela.",
+    jobNotFound: "Esta vaga não está mais disponível.",
+    viewAll: "Ver todas as vagas",
     goHome: "Ir para a home",
   },
   login: {
