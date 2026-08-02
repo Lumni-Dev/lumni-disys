@@ -207,6 +207,8 @@ export interface Admin {
     listTitle: string;
     withAccess(n: number): string;
     noAccess: string;
+    /** Badge de convite ainda nao aceito. */
+    pending: string;
     permissions(n: number): string;
     empty: string;
     fileName: string;
@@ -248,6 +250,8 @@ export interface Admin {
     confirmDelete: string;
     signOutTitle: string;
     signOutDesc: string;
+    leaveTitle: string;
+    leaveDesc: string;
   };
   modals: {
     select: string;
@@ -366,5 +370,15 @@ export interface Admin {
     emailPlaceholder: string;
     invalidLink: string;
     goHome: string;
+  };
+  /** Pagina de aceite do convite de workspace. */
+  invite: {
+    title: string;
+    signInToView: string;
+    invitedBy(owner: string): string;
+    accept: string;
+    decline: string;
+    invalid: string;
+    wrongEmail: string;
   };
 }

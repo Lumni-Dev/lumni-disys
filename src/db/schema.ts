@@ -91,10 +91,17 @@ export const teamMembers = pgTable(
     name: varchar({ length: 160 }).notNull(),
     email: varchar({ length: 200 }).notNull(),
     role: varchar({ length: 120 }).notNull().default(""),
+    // Convite: nasce "pending" e vira "accepted" quando a pessoa aceita.
+    status: varchar({ length: 20 }).notNull().default("pending"),
+    // Token do link de aceite enviado por e-mail (limpo apos o aceite).
+    inviteToken: varchar({ length: 40 }),
     ...timestamps,
   },
   // Unico por workspace: a mesma pessoa pode colaborar em varias contas.
-  (t) => [uniqueIndex("team_members_account_email_key").on(t.accountId, t.email)],
+  (t) => [
+    uniqueIndex("team_members_account_email_key").on(t.accountId, t.email),
+    uniqueIndex("team_members_invite_token_key").on(t.inviteToken),
+  ],
 );
 
 export const userProfiles = pgTable(

@@ -189,6 +189,7 @@ const de: Admin = {
       pages: "Seiten mit Zugriff",
       permissionsTotal: "Berechtigungen gesamt",
     },
+    pending: "Einladung ausstehend",
   },
   account: {
     changePhoto: "Profilbild ändern",
@@ -215,6 +216,9 @@ const de: Admin = {
     confirmDelete: "Löschung bestätigen",
     signOutTitle: "Abmelden",
     signOutDesc: "Beenden Sie Ihre Sitzung auf diesem Gerät.",
+    leaveTitle: "Workspace verlassen",
+    leaveDesc:
+      "Sie verlieren den Zugriff auf diesen Workspace. Der Inhaber kann Sie erneut einladen.",
   },
   modals: {
     select: "Auswählen",
@@ -336,6 +340,18 @@ const de: Admin = {
     invalidLink:
       "Dieser Stellen-Link ist ungültig. Fragen Sie das Unternehmen nach dem vollständigen Link.",
     goHome: "Zur Startseite",
+  },
+  invite: {
+    title: "Workspace-Einladung",
+    signInToView:
+      "Melden Sie sich mit der eingeladenen E-Mail an, um fortzufahren.",
+    invitedBy: (owner) =>
+      `${owner} hat Sie eingeladen, in seinem DISYS-Workspace mitzuarbeiten.`,
+    accept: "Einladung annehmen",
+    decline: "Ablehnen",
+    invalid: "Diese Einladung ist ungültig oder wurde bereits verwendet.",
+    wrongEmail:
+      "Diese Einladung wurde an eine andere E-Mail gesendet. Melden Sie sich mit dem eingeladenen Konto an.",
   },
 };
 

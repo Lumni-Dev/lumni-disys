@@ -11,6 +11,9 @@ export default auth((req) => {
   const isPublic =
     isGuestOnly ||
     pathname.startsWith("/careers") ||
+    // A pagina do convite cuida da sessao sozinha (mostra login sem perder
+    // o token do convite no redirect).
+    pathname.startsWith("/invite") ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/public");
 

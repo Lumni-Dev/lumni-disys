@@ -35,7 +35,7 @@ export async function authorize(
     .where(eq(schema.accounts.ownerEmail, email));
   if (own?.id === account.id) return { account, response: null };
 
-  // Colaborador: precisa da permissao do modulo/acao.
+  // Colaborador (convite aceito): precisa da permissao do modulo/acao.
   const [member] = await db
     .select({ id: schema.teamMembers.id })
     .from(schema.teamMembers)
@@ -43,6 +43,7 @@ export async function authorize(
       and(
         eq(schema.teamMembers.email, email),
         eq(schema.teamMembers.accountId, account.id),
+        eq(schema.teamMembers.status, "accepted"),
       ),
     );
   if (member) {

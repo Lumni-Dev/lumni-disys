@@ -72,7 +72,13 @@ export function serializeCandidate(r: CandidateRow) {
   };
 }
 
-type MemberRow = { id: number; name: string; email: string; role: string };
+type MemberRow = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+};
 type PermissionRow = { memberId: number; module: string; action: string };
 
 export function serializeMember(
@@ -88,6 +94,7 @@ export function serializeMember(
     name: member.name,
     email: member.email,
     role: member.role,
+    status: member.status,
     permissions,
   };
 }

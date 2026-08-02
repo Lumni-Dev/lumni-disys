@@ -189,6 +189,7 @@ const nl: Admin = {
       pages: "Pagina's met toegang",
       permissionsTotal: "Totaal aantal rechten",
     },
+    pending: "Uitnodiging in afwachting",
   },
   account: {
     changePhoto: "Profielfoto wijzigen",
@@ -215,6 +216,9 @@ const nl: Admin = {
     confirmDelete: "Verwijdering bevestigen",
     signOutTitle: "Afmelden",
     signOutDesc: "Beëindig je sessie op dit apparaat.",
+    leaveTitle: "Workspace verlaten",
+    leaveDesc:
+      "Je verliest de toegang tot deze workspace. De eigenaar kan je opnieuw uitnodigen.",
   },
   modals: {
     select: "Selecteren",
@@ -336,6 +340,17 @@ const nl: Admin = {
     invalidLink:
       "Deze vacaturelink is niet geldig. Vraag het bedrijf om de volledige link.",
     goHome: "Naar home",
+  },
+  invite: {
+    title: "Workspace-uitnodiging",
+    signInToView: "Log in met het uitgenodigde e-mailadres om door te gaan.",
+    invitedBy: (owner) =>
+      `${owner} heeft je uitgenodigd om samen te werken in zijn of haar DISYS-workspace.`,
+    accept: "Uitnodiging accepteren",
+    decline: "Weigeren",
+    invalid: "Deze uitnodiging is ongeldig of al gebruikt.",
+    wrongEmail:
+      "Deze uitnodiging is naar een ander e-mailadres gestuurd. Log in met het uitgenodigde account.",
   },
 };
 

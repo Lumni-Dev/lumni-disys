@@ -31,6 +31,7 @@ export async function GET() {
         and(
           eq(schema.teamMembers.email, email),
           eq(schema.teamMembers.accountId, account.id),
+          eq(schema.teamMembers.status, "accepted"),
         ),
       );
     if (member) {

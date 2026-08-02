@@ -189,6 +189,7 @@ const en: Admin = {
       pages: "Pages with access",
       permissionsTotal: "Total permissions",
     },
+    pending: "Invite pending",
   },
   account: {
     changePhoto: "Change profile photo",
@@ -215,6 +216,9 @@ const en: Admin = {
     confirmDelete: "Confirm deletion",
     signOutTitle: "Sign out",
     signOutDesc: "End your session on this device.",
+    leaveTitle: "Leave workspace",
+    leaveDesc:
+      "You will lose access to this workspace. The owner can invite you again.",
   },
   modals: {
     select: "Select",
@@ -334,6 +338,17 @@ const en: Admin = {
     invalidLink:
       "This jobs link is not valid. Ask the company for their full jobs link.",
     goHome: "Go to home",
+  },
+  invite: {
+    title: "Workspace invite",
+    signInToView: "Sign in with the invited email to continue.",
+    invitedBy: (owner) =>
+      `${owner} invited you to collaborate on their DISYS workspace.`,
+    accept: "Accept invite",
+    decline: "Decline",
+    invalid: "This invite is invalid or was already used.",
+    wrongEmail:
+      "This invite was sent to a different email. Sign in with the invited account.",
   },
 };
 

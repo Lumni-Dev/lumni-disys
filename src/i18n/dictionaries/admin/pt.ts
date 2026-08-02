@@ -189,6 +189,7 @@ const pt: Admin = {
       pages: "Páginas com acesso",
       permissionsTotal: "Total de permissões",
     },
+    pending: "Convite pendente",
   },
   account: {
     changePhoto: "Trocar foto de perfil",
@@ -215,6 +216,9 @@ const pt: Admin = {
     confirmDelete: "Confirmar exclusão",
     signOutTitle: "Sair da conta",
     signOutDesc: "Encerrar sua sessão neste dispositivo.",
+    leaveTitle: "Sair do workspace",
+    leaveDesc:
+      "Você deixa de ver os dados deste workspace. O dono pode convidar novamente.",
   },
   modals: {
     select: "Selecionar",
@@ -336,6 +340,17 @@ const pt: Admin = {
     invalidLink:
       "Este link de vagas não é válido. Peça à empresa o link completo das vagas dela.",
     goHome: "Ir para a home",
+  },
+  invite: {
+    title: "Convite de workspace",
+    signInToView: "Entre com o e-mail que recebeu o convite para continuar.",
+    invitedBy: (owner) =>
+      `${owner} convidou você para colaborar no workspace dele no DISYS.`,
+    accept: "Aceitar convite",
+    decline: "Recusar",
+    invalid: "Convite inválido ou já utilizado.",
+    wrongEmail:
+      "Este convite foi enviado para outro e-mail. Entre com a conta convidada.",
   },
 };
 

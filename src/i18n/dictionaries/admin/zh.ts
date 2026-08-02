@@ -189,6 +189,7 @@ const zh: Admin = {
       pages: "可访问页面",
       permissionsTotal: "权限总数",
     },
+    pending: "邀请待处理",
   },
   account: {
     changePhoto: "更换头像",
@@ -214,6 +215,8 @@ const zh: Admin = {
     confirmDelete: "确认删除",
     signOutTitle: "退出登录",
     signOutDesc: "结束您在本设备上的会话。",
+    leaveTitle: "退出工作区",
+    leaveDesc: "您将失去对此工作区的访问权限。所有者可以再次邀请您。",
   },
   modals: {
     select: "选择",
@@ -329,6 +332,15 @@ const zh: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink: "此招聘链接无效。请向公司索取完整链接。",
     goHome: "返回首页",
+  },
+  invite: {
+    title: "工作区邀请",
+    signInToView: "请使用受邀邮箱登录以继续。",
+    invitedBy: (owner) => `${owner} 邀请您加入其 DISYS 工作区。`,
+    accept: "接受邀请",
+    decline: "拒绝",
+    invalid: "邀请无效或已被使用。",
+    wrongEmail: "此邀请发送给了其他邮箱。请使用受邀账号登录。",
   },
 };
 

@@ -190,6 +190,7 @@ const ar: Admin = {
       pages: "الصفحات المتاحة",
       permissionsTotal: "إجمالي الصلاحيات",
     },
+    pending: "الدعوة قيد الانتظار",
   },
   account: {
     changePhoto: "تغيير صورة الملف الشخصي",
@@ -215,6 +216,9 @@ const ar: Admin = {
     confirmDelete: "تأكيد الحذف",
     signOutTitle: "تسجيل الخروج",
     signOutDesc: "إنهاء جلستك على هذا الجهاز.",
+    leaveTitle: "مغادرة مساحة العمل",
+    leaveDesc:
+      "ستفقد الوصول إلى مساحة العمل هذه. يمكن للمالك دعوتك مجدداً.",
   },
   modals: {
     select: "تحديد",
@@ -335,6 +339,15 @@ const ar: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink: "رابط الوظائف هذا غير صالح. اطلب من الشركة الرابط الكامل.",
     goHome: "الذهاب إلى الرئيسية",
+  },
+  invite: {
+    title: "دعوة إلى مساحة العمل",
+    signInToView: "سجّل الدخول بالبريد المدعو للمتابعة.",
+    invitedBy: (owner) => `دعاك ${owner} للتعاون في مساحة عمله على DISYS.`,
+    accept: "قبول الدعوة",
+    decline: "رفض",
+    invalid: "الدعوة غير صالحة أو استُخدمت من قبل.",
+    wrongEmail: "أُرسلت هذه الدعوة إلى بريد آخر. سجّل الدخول بالحساب المدعو.",
   },
 };
 

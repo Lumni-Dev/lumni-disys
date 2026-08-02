@@ -189,6 +189,7 @@ const fr: Admin = {
       pages: "Pages accessibles",
       permissionsTotal: "Total des permissions",
     },
+    pending: "Invitation en attente",
   },
   account: {
     changePhoto: "Changer la photo de profil",
@@ -215,6 +216,9 @@ const fr: Admin = {
     confirmDelete: "Confirmer la suppression",
     signOutTitle: "Se déconnecter",
     signOutDesc: "Terminez votre session sur cet appareil.",
+    leaveTitle: "Quitter l'espace de travail",
+    leaveDesc:
+      "Vous perdrez l'accès à cet espace de travail. Le propriétaire peut vous réinviter.",
   },
   modals: {
     select: "Sélectionner",
@@ -335,6 +339,17 @@ const fr: Admin = {
     invalidLink:
       "Ce lien d'offres n'est pas valide. Demandez à l'entreprise son lien complet.",
     goHome: "Aller à l'accueil",
+  },
+  invite: {
+    title: "Invitation à l'espace de travail",
+    signInToView: "Connectez-vous avec l'e-mail invité pour continuer.",
+    invitedBy: (owner) =>
+      `${owner} vous a invité à collaborer sur son espace de travail DISYS.`,
+    accept: "Accepter l'invitation",
+    decline: "Refuser",
+    invalid: "Invitation non valide ou déjà utilisée.",
+    wrongEmail:
+      "Cette invitation a été envoyée à un autre e-mail. Connectez-vous avec le compte invité.",
   },
 };
 
