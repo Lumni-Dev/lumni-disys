@@ -26,7 +26,12 @@ export async function GET() {
       schema.accounts,
       eq(schema.teamMembers.accountId, schema.accounts.id),
     )
-    .where(eq(schema.teamMembers.email, email))
+    .where(
+      and(
+        eq(schema.teamMembers.email, email),
+        eq(schema.teamMembers.status, "accepted"),
+      ),
+    )
     .orderBy(asc(schema.teamMembers.id));
 
   // A propria conta primeiro; convites depois (sem duplicar).
@@ -88,6 +93,7 @@ export async function PUT(req: Request) {
         and(
           eq(schema.teamMembers.accountId, id),
           eq(schema.teamMembers.email, email),
+          eq(schema.teamMembers.status, "accepted"),
         ),
       );
     if (!member)
@@ -101,6 +107,43 @@ export async function PUT(req: Request) {
       target: schema.userProfiles.email,
       set: { activeAccountId: id },
     });
+
+  return NextResponse.json({ ok: true });
+}
+
+// Sai do workspace ativo (apenas colaborador; o dono exclui a conta na tela
+// de conta). Remove o vinculo, as permissoes caem em cascata e a resolucao
+// volta para a conta propria.
+export async function DELETE() {
+  const session = await auth();
+  const email = session?.user?.email;
+  if (!email)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const current = await accountForEmail(email);
+
+  const [acc] = await db
+    .select({ ownerEmail: schema.accounts.ownerEmail })
+    .from(schema.accounts)
+    .where(eq(schema.accounts.id, current.id));
+  if (acc?.ownerEmail === email)
+    return NextResponse.json(
+      { error: "O dono nao sai do proprio workspace" },
+      { status: 400 },
+    );
+
+  await db
+    .delete(schema.teamMembers)
+    .where(
+      and(
+        eq(schema.teamMembers.accountId, current.id),
+        eq(schema.teamMembers.email, email),
+      ),
+    );
+  await db
+    .update(schema.userProfiles)
+    .set({ activeAccountId: null })
+    .where(eq(schema.userProfiles.email, email));
 
   return NextResponse.json({ ok: true });
 }

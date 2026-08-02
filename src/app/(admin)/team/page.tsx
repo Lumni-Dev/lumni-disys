@@ -181,7 +181,12 @@ export default function TeamPage() {
                     <div className="flex items-center gap-2.5">
                       <Avatar tone="neutral">{initials(c.name)}</Avatar>
                       <div className="min-w-0 leading-tight">
-                        <p className="truncate font-medium text-foreground">{c.name}</p>
+                        <p className="flex items-center gap-1.5 truncate font-medium text-foreground">
+                          {c.name}
+                          {c.status === "pending" && (
+                            <Badge tone="amber">{admin.team.pending}</Badge>
+                          )}
+                        </p>
                         <p className="truncate text-xs text-muted">{c.email}</p>
                       </div>
                     </div>

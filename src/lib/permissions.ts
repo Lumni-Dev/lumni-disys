@@ -5,6 +5,8 @@ export type Member = {
   name: string;
   email: string;
   role: string;
+  /** "pending" enquanto o convite nao foi aceito; "accepted" depois. */
+  status?: string;
   permissions: Permissions;
 };
 

@@ -189,6 +189,7 @@ const ja: Admin = {
       pages: "アクセス可能なページ",
       permissionsTotal: "権限の合計",
     },
+    pending: "招待保留中",
   },
   account: {
     changePhoto: "プロフィール写真を変更",
@@ -215,6 +216,9 @@ const ja: Admin = {
     confirmDelete: "削除を確認",
     signOutTitle: "サインアウト",
     signOutDesc: "このデバイスでのセッションを終了します。",
+    leaveTitle: "ワークスペースから退出",
+    leaveDesc:
+      "このワークスペースへのアクセスを失います。オーナーは再度招待できます。",
   },
   modals: {
     select: "選択",
@@ -333,6 +337,17 @@ const ja: Admin = {
     invalidLink:
       "この求人リンクは無効です。企業に完全なリンクをお問い合わせください。",
     goHome: "ホームへ",
+  },
+  invite: {
+    title: "ワークスペースへの招待",
+    signInToView: "続行するには招待されたメールアドレスでサインインしてください。",
+    invitedBy: (owner) =>
+      `${owner}さんがDISYSワークスペースへの参加に招待しています。`,
+    accept: "招待を承認",
+    decline: "辞退",
+    invalid: "この招待は無効か、すでに使用されています。",
+    wrongEmail:
+      "この招待は別のメールアドレス宛です。招待されたアカウントでサインインしてください。",
   },
 };
 

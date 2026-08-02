@@ -92,6 +92,7 @@ async function hasAccess(email: string, accountId: number): Promise<boolean> {
       and(
         eq(schema.teamMembers.accountId, accountId),
         eq(schema.teamMembers.email, email),
+        eq(schema.teamMembers.status, "accepted"),
       ),
     );
   return Boolean(member);
@@ -122,11 +123,16 @@ export async function accountForEmail(email: string): Promise<Account> {
   const owned = await ownedAccount(email);
   if (owned) return owned;
 
-  // 3) Primeiro convite de colaborador (quem so foi convidado cai aqui).
+  // 3) Primeiro convite ACEITO (quem so foi convidado cai aqui).
   const [member] = await db
     .select()
     .from(schema.teamMembers)
-    .where(eq(schema.teamMembers.email, email))
+    .where(
+      and(
+        eq(schema.teamMembers.email, email),
+        eq(schema.teamMembers.status, "accepted"),
+      ),
+    )
     .orderBy(asc(schema.teamMembers.id))
     .limit(1);
   if (member?.accountId) {

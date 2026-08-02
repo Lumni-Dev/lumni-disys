@@ -1,8 +1,11 @@
+import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { and, asc, eq, inArray } from "drizzle-orm";
+import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { sendInviteEmail } from "@/lib/mail";
 
 type PermInput = Record<string, Record<string, boolean>>;
 
@@ -71,6 +74,9 @@ export async function POST(req: Request) {
       { status: 409 },
     );
 
+  // Convite pendente: a pessoa so entra no workspace depois de aceitar
+  // pelo link enviado por e-mail.
+  const inviteToken = randomBytes(16).toString("hex");
   const [member] = await db
     .insert(schema.teamMembers)
     .values({
@@ -78,11 +84,33 @@ export async function POST(req: Request) {
       name: body.name,
       email: body.email,
       role: body.role ?? "",
+      status: "pending",
+      inviteToken,
     })
     .returning();
 
   const rows = permissionRows(member.id, body.permissions);
   if (rows.length) await db.insert(schema.memberPermissions).values(rows);
+
+  // Envio best-effort: se o SMTP falhar, o convite continua criado e o
+  // dono pode remover e convidar de novo.
+  try {
+    const session = await auth();
+    const inviterName =
+      session?.user?.name ?? session?.user?.email ?? "Um usuario do DISYS";
+    const host =
+      req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "";
+    const proto = req.headers.get("x-forwarded-proto") ?? "https";
+    if (host) {
+      await sendInviteEmail({
+        to: body.email,
+        inviterName,
+        url: `${proto}://${host}/invite/${inviteToken}`,
+      });
+    }
+  } catch {
+    // E-mail e melhor esforco; nao bloqueia o convite.
+  }
 
   return NextResponse.json(serializeMember(member, rows), { status: 201 });
 }

@@ -189,6 +189,7 @@ const ko: Admin = {
       pages: "접근 가능한 페이지",
       permissionsTotal: "총 권한",
     },
+    pending: "초대 대기 중",
   },
   account: {
     changePhoto: "프로필 사진 변경",
@@ -214,6 +215,9 @@ const ko: Admin = {
     confirmDelete: "삭제 확인",
     signOutTitle: "로그아웃",
     signOutDesc: "이 기기에서 세션을 종료합니다.",
+    leaveTitle: "워크스페이스 나가기",
+    leaveDesc:
+      "이 워크스페이스에 대한 접근 권한을 잃게 됩니다. 소유자가 다시 초대할 수 있습니다.",
   },
   modals: {
     select: "선택",
@@ -330,6 +334,16 @@ const ko: Admin = {
     invalidLink:
       "이 채용 링크는 유효하지 않습니다. 회사에 전체 링크를 요청하세요.",
     goHome: "홈으로",
+  },
+  invite: {
+    title: "워크스페이스 초대",
+    signInToView: "계속하려면 초대받은 이메일로 로그인하세요.",
+    invitedBy: (owner) => `${owner}님이 DISYS 워크스페이스에 초대했습니다.`,
+    accept: "초대 수락",
+    decline: "거절",
+    invalid: "유효하지 않거나 이미 사용된 초대입니다.",
+    wrongEmail:
+      "이 초대는 다른 이메일로 발송되었습니다. 초대받은 계정으로 로그인하세요.",
   },
 };
 

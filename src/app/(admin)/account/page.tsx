@@ -33,8 +33,11 @@ export default function AccountPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [savingTheme, setSavingTheme] = useState(false);
   const [themeSaved, setThemeSaved] = useState(false);
-  // So o dono do workspace ve a zona de perigo (excluir a conta inteira).
-  const isOwner = !!useAccess()?.owner;
+  // So o dono do workspace ve a zona de perigo (excluir a conta inteira);
+  // colaborador ve a opcao de sair do workspace ativo.
+  const access = useAccess();
+  const isOwner = !!access?.owner;
+  const isMember = !!access && !access.owner;
 
   async function onSaveTheme() {
     setSavingTheme(true);
@@ -287,6 +290,28 @@ export default function AccountPage() {
                 void api
                   .del("/api/account")
                   .then(() => signOut({ redirectTo: "/" }))
+                  .catch(() => {});
+              }}
+            />
+          </CardBody>
+        </Card>
+      )}
+
+      {isMember && (
+        <Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
+            <div className="leading-tight">
+              <p className="text-sm font-medium text-foreground">
+                {admin.account.leaveTitle}
+              </p>
+              <p className="text-xs text-muted">{admin.account.leaveDesc}</p>
+            </div>
+            <ConfirmAction
+              label={admin.account.leaveTitle}
+              onConfirm={() => {
+                void api
+                  .del("/api/workspaces")
+                  .then(() => window.location.assign("/dashboard"))
                   .catch(() => {});
               }}
             />
