@@ -6,6 +6,7 @@ import { Field, Input, Textarea } from "@/components/ui/form";
 import { PhoneInput } from "@/components/ui/masked-input";
 import { IconCheck } from "@/components/ui/icons";
 import { isEmail, isPhone, isUrl } from "@/lib/validation";
+import { useI18n } from "@/i18n/context";
 import type { Job } from "@/lib/data";
 
 export function ApplyModal({
@@ -17,6 +18,8 @@ export function ApplyModal({
   token: string;
   onClose: () => void;
 }) {
+  const { admin } = useI18n();
+  const t = admin.careers;
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -92,7 +95,7 @@ export function ApplyModal({
     <Modal
       open={!!job}
       onClose={close}
-      title={sent ? "Candidatura enviada" : "Candidatar-se"}
+      title={sent ? t.sentTitle : t.apply}
       subtitle={job ? `${job.title} · ${job.company}` : ""}
     >
       {sent ? (
@@ -100,43 +103,39 @@ export function ApplyModal({
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-foreground text-background">
             <IconCheck className="h-6 w-6" />
           </div>
-          <p className="text-sm font-medium text-foreground">
-            Recebemos sua candidatura!
-          </p>
-          <p className="text-xs text-muted">
-            Boa sorte no processo seletivo. Entraremos em contato por e-mail.
-          </p>
+          <p className="text-sm font-medium text-foreground">{t.received}</p>
+          <p className="text-xs text-muted">{t.goodLuck}</p>
           <button
             type="button"
             onClick={close}
             className="mt-1.5 rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-white"
           >
-            Fechar
+            {admin.common.close}
           </button>
         </div>
       ) : (
         <form onSubmit={submit} noValidate>
           <div className="grid grid-cols-1 gap-2.5 p-2.5 sm:grid-cols-2">
-            <Field label="Nome completo" full req>
+            <Field label={t.fullName} full req>
               <Input
                 invalid={invalid("name")}
                 maxLength={160}
-                placeholder="Ex.: Ana Ribeiro"
+                placeholder={t.namePlaceholder}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Field>
-            <Field label="E-mail" req>
+            <Field label={t.email} req>
               <Input
                 type="email"
                 invalid={invalid("email")}
                 maxLength={200}
-                placeholder="voce@email.com"
+                placeholder={t.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Field>
-            <Field label="Telefone" req>
+            <Field label={t.phone} req>
               <PhoneInput
                 invalid={invalid("phone")}
                 placeholder="+55 11 99999-9999"
@@ -144,7 +143,7 @@ export function ApplyModal({
                 onChange={setPhone}
               />
             </Field>
-            <Field label="LinkedIn / Portfólio" full req>
+            <Field label={t.linkedin} full req>
               <Input
                 type="url"
                 invalid={invalid("linkedin")}
@@ -154,27 +153,25 @@ export function ApplyModal({
                 onChange={(e) => setLinkedin(e.target.value)}
               />
             </Field>
-            <Field label="Mensagem" full req>
+            <Field label={t.message} full req>
               <Textarea
                 rows={3}
                 maxLength={500}
                 invalid={invalid("message")}
-                placeholder="Conte por que você é ideal para esta vaga..."
+                placeholder={t.messagePlaceholder}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
             </Field>
-            <Field label="Currículo" full req>
+            <Field label={t.cv} full req>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 style={invalid("cv") ? { borderColor: "var(--accent)" } : undefined}
                 className="flex w-full items-center justify-between rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-white/40 hover:text-foreground"
               >
-                <span className="truncate">
-                  {cv || "Anexar currículo (PDF, DOC)"}
-                </span>
-                <span className="text-foreground">Selecionar</span>
+                <span className="truncate">{cv || t.cvAttach}</span>
+                <span className="text-foreground">{t.cvSelect}</span>
               </button>
               <input
                 ref={fileRef}
@@ -185,14 +182,10 @@ export function ApplyModal({
               />
             </Field>
           </div>
-          {failed && (
-            <p className="px-2.5 text-xs text-accent">
-              Nao foi possivel enviar a candidatura. Tente novamente.
-            </p>
-          )}
+          {failed && <p className="px-2.5 text-xs text-accent">{t.sendFailed}</p>}
           <ModalFooter
             onCancel={close}
-            submitLabel={sending ? "Enviando..." : "Enviar candidatura"}
+            submitLabel={sending ? t.sending : t.send}
           />
         </form>
       )}

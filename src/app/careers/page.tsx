@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useI18n } from "@/i18n/context";
 
 export default function CareersIndexPage() {
+  const { admin } = useI18n();
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
       <div
@@ -25,15 +29,12 @@ export default function CareersIndexPage() {
         <p className="text-2xl font-normal tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
           DISYS
         </p>
-        <p className="mt-4 text-sm text-muted">
-          Este link de vagas nao e valido. Peca a empresa o link completo das
-          vagas dela.
-        </p>
+        <p className="mt-4 text-sm text-muted">{admin.careers.invalidLink}</p>
         <Link
           href="/"
           className="mt-6 inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10"
         >
-          Ir para a home
+          {admin.careers.goHome}
         </Link>
       </div>
     </div>

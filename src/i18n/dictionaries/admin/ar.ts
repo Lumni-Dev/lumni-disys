@@ -122,6 +122,8 @@ const ar: Admin = {
     allTypes: "جميع نماذج العمل",
     allStatuses: "جميع الحالات",
     candidatesLabel: "مرشحون",
+    openingsCount: (n) =>
+      n === 1 ? "وظيفة واحدة" : n === 2 ? "وظيفتان" : `${n} وظائف`,
     empty: "لم يتم العثور على وظائف.",
     fileName: "الوظائف",
     range: (from, to, total) => `${from}-${to} من ${total} وظيفة`,
@@ -130,6 +132,7 @@ const ar: Admin = {
       company: "الشركة",
       level: "المستوى",
       type: "نموذج العمل",
+      openings: "عدد الوظائف",
       applicants: "المرشحون",
       status: "الحالة",
     },
@@ -214,6 +217,7 @@ const ar: Admin = {
   },
   modals: {
     select: "تحديد",
+    searchOrType: "ابحث أو اكتب...",
     confirmMessage: "لا يمكن التراجع عن هذا الإجراء.",
     permissionsByPage: "الصلاحيات حسب الصفحة",
     page: "الصفحة",
@@ -246,7 +250,7 @@ const ar: Admin = {
       company: "الشركة",
       level: "المستوى",
       type: "نموذج العمل",
-      applicants: "المرشحون",
+      openings: "عدد الوظائف",
       status: "الحالة",
       salaryRange: "نطاق الراتب",
       salaryFrom: "الراتب من",
@@ -296,6 +300,39 @@ const ar: Admin = {
     copy: "نسخ",
     copied: "تم النسخ!",
     openPublic: "فتح الصفحة العامة",
+  },
+  careers: {
+    tagline: "وظائفنا",
+    title: "الوظائف المتاحة",
+    available: (n) =>
+      n === 1
+        ? "فرصة واحدة متاحة"
+        : n === 2
+          ? "فرصتان متاحتان"
+          : `${n} فرص متاحة`,
+    searchPlaceholder: "ابحث حسب الوظيفة أو الشركة...",
+    postedAt: (date) => `نُشرت في ${date}`,
+    apply: "تقدّم الآن",
+    sentTitle: "تم إرسال الطلب",
+    received: "استلمنا طلبك!",
+    goodLuck: "حظاً موفقاً! سنتواصل معك عبر البريد الإلكتروني.",
+    fullName: "الاسم الكامل",
+    email: "البريد الإلكتروني",
+    phone: "الهاتف",
+    linkedin: "LinkedIn / الأعمال",
+    message: "الرسالة",
+    messagePlaceholder: "أخبرنا لماذا أنت الشخص المناسب لهذه الوظيفة...",
+    cv: "السيرة الذاتية",
+    cvAttach: "إرفاق السيرة الذاتية (PDF, DOC)",
+    cvSelect: "اختيار",
+    send: "إرسال الطلب",
+    sending: "جارٍ الإرسال...",
+    sendFailed: "تعذّر إرسال الطلب. حاول مرة أخرى.",
+    empty: "لم يتم العثور على وظائف.",
+    namePlaceholder: "مثال: سارة أحمد",
+    emailPlaceholder: "you@email.com",
+    invalidLink: "رابط الوظائف هذا غير صالح. اطلب من الشركة الرابط الكامل.",
+    goHome: "الذهاب إلى الرئيسية",
   },
 };
 

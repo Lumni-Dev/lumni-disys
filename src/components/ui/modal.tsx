@@ -1,10 +1,20 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
 import { IconClose } from "./icons";
+
+// True apenas no cliente (portal nao existe no SSR), sem setState em effect.
+const emptySubscribe = () => () => {};
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
 
 export function Modal({
   open,
@@ -22,8 +32,7 @@ export function Modal({
   children: ReactNode;
 }) {
   const { admin } = useI18n();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   useEffect(() => {
     if (!open) return;

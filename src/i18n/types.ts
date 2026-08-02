@@ -154,6 +154,8 @@ export interface Admin {
     allTypes: string;
     allStatuses: string;
     candidatesLabel: string;
+    /** Ex.: "2 vagas" (badge no cartao da vaga e na pagina publica). */
+    openingsCount(n: number): string;
     empty: string;
     fileName: string;
     range(from: number, to: number, total: number): string;
@@ -162,6 +164,7 @@ export interface Admin {
       company: string;
       level: string;
       type: string;
+      openings: string;
       applicants: string;
       status: string;
     };
@@ -246,6 +249,8 @@ export interface Admin {
   };
   modals: {
     select: string;
+    /** Placeholder dos campos de busca com sugestoes. */
+    searchOrType: string;
     confirmMessage: string;
     permissionsByPage: string;
     page: string;
@@ -278,7 +283,7 @@ export interface Admin {
       company: string;
       level: string;
       type: string;
-      applicants: string;
+      openings: string;
       status: string;
       salaryRange: string;
       salaryFrom: string;
@@ -328,5 +333,34 @@ export interface Admin {
     copy: string;
     copied: string;
     openPublic: string;
+  };
+  /** Pagina publica de vagas (careers) e o modal de candidatura. */
+  careers: {
+    tagline: string;
+    title: string;
+    available(n: number): string;
+    searchPlaceholder: string;
+    postedAt(date: string): string;
+    apply: string;
+    sentTitle: string;
+    received: string;
+    goodLuck: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    linkedin: string;
+    message: string;
+    messagePlaceholder: string;
+    cv: string;
+    cvAttach: string;
+    cvSelect: string;
+    send: string;
+    sending: string;
+    sendFailed: string;
+    empty: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
+    invalidLink: string;
+    goHome: string;
   };
 }

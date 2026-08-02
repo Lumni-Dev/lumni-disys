@@ -122,6 +122,17 @@ const ru: Admin = {
     allTypes: "Все форматы работы",
     allStatuses: "Все статусы",
     candidatesLabel: "кандидатов",
+    openingsCount: (n) => {
+      const m10 = n % 10;
+      const m100 = n % 100;
+      const word =
+        m10 === 1 && m100 !== 11
+          ? "вакансия"
+          : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)
+            ? "вакансии"
+            : "вакансий";
+      return `${n} ${word}`;
+    },
     empty: "Вакансии не найдены.",
     fileName: "jobs",
     range: (from, to, total) => `${from}-${to} из ${total} вакансий`,
@@ -130,6 +141,7 @@ const ru: Admin = {
       company: "Компания",
       level: "Уровень",
       type: "Формат работы",
+      openings: "Количество вакансий",
       applicants: "Кандидаты",
       status: "Статус",
     },
@@ -215,6 +227,7 @@ const ru: Admin = {
   },
   modals: {
     select: "Выбрать",
+    searchOrType: "Найдите или введите...",
     confirmMessage: "Это действие нельзя отменить.",
     permissionsByPage: "Разрешения по страницам",
     page: "Страница",
@@ -247,7 +260,7 @@ const ru: Admin = {
       company: "Компания",
       level: "Уровень",
       type: "Формат работы",
-      applicants: "Кандидаты",
+      openings: "Количество вакансий",
       status: "Статус",
       salaryRange: "Диапазон зарплаты",
       salaryFrom: "Зарплата от",
@@ -299,6 +312,36 @@ const ru: Admin = {
     copy: "Копировать",
     copied: "Скопировано!",
     openPublic: "Открыть публичную страницу",
+  },
+  careers: {
+    tagline: "Наши вакансии",
+    title: "Открытые вакансии",
+    available: (n) => `Доступно вакансий: ${n}`,
+    searchPlaceholder: "Поиск по должности или компании...",
+    postedAt: (date) => `Опубликована ${date}`,
+    apply: "Откликнуться",
+    sentTitle: "Отклик отправлен",
+    received: "Мы получили ваш отклик!",
+    goodLuck: "Удачи! Мы свяжемся с вами по электронной почте.",
+    fullName: "Полное имя",
+    email: "Эл. почта",
+    phone: "Телефон",
+    linkedin: "LinkedIn / Портфолио",
+    message: "Сообщение",
+    messagePlaceholder:
+      "Расскажите, почему вы подходите на эту вакансию...",
+    cv: "Резюме",
+    cvAttach: "Прикрепить резюме (PDF, DOC)",
+    cvSelect: "Выбрать",
+    send: "Отправить отклик",
+    sending: "Отправка...",
+    sendFailed: "Не удалось отправить отклик. Попробуйте еще раз.",
+    empty: "Вакансии не найдены.",
+    namePlaceholder: "напр. Анна Иванова",
+    emailPlaceholder: "vy@email.com",
+    invalidLink:
+      "Эта ссылка на вакансии недействительна. Запросите у компании полную ссылку.",
+    goHome: "На главную",
   },
 };
 

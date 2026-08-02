@@ -28,6 +28,7 @@ async function seedExampleData(accountId: number): Promise<void> {
       company: "Empresa Lumni Dev (exemplo)",
       type: "Remoto",
       level: "Pleno",
+      openings: 2,
       applicants: 1,
       status: "Aberta",
     });
@@ -36,7 +37,8 @@ async function seedExampleData(accountId: number): Promise<void> {
       .values({
         accountId,
         name: "Ana Maria Silva (exemplo)",
-        role: "Desenvolvedora Full Stack",
+        // Mesmo titulo da vaga de exemplo: mostra o vinculo candidato -> vaga.
+        role: "Desenvolvedor(a) Full Stack (exemplo)",
         email: "ana.exemplo@lumni.dev.br",
         stage: "Triagem",
         linkedin: "https://www.linkedin.com/in/exemplo",

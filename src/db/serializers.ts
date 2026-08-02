@@ -32,8 +32,10 @@ type JobRow = {
   company: string;
   type: string;
   level: string;
+  openings: number;
   applicants: number;
   status: string;
+  createdAt: Date | string;
 };
 export function serializeJob(r: JobRow) {
   return {
@@ -42,8 +44,10 @@ export function serializeJob(r: JobRow) {
     company: r.company,
     type: r.type,
     level: r.level,
+    openings: r.openings,
     applicants: r.applicants,
     status: r.status,
+    postedAt: formatDate(r.createdAt),
   };
 }
 

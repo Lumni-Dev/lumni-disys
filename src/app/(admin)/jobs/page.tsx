@@ -34,6 +34,7 @@ export default function JobsPage() {
     { key: "company", label: admin.jobs.cols.company },
     { key: "level", label: admin.jobs.cols.level },
     { key: "type", label: admin.jobs.cols.type },
+    { key: "openings", label: admin.jobs.cols.openings },
     { key: "applicants", label: admin.jobs.cols.applicants },
     { key: "status", label: admin.jobs.cols.status },
   ];
@@ -224,6 +225,7 @@ export default function JobsPage() {
               <CardBody className="flex flex-wrap gap-2.5">
                 <Badge>{admin.jobTypes[v.type] ?? v.type}</Badge>
                 <Badge>{admin.levels[v.level] ?? v.level}</Badge>
+                <Badge>{admin.jobs.openingsCount(v.openings)}</Badge>
               </CardBody>
             </button>
             <CardFooter>
