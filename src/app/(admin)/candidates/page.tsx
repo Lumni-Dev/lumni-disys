@@ -22,16 +22,9 @@ import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 10;
-
-const COLUMNS = [
-  { key: "name", label: "Candidato" },
-  { key: "email", label: "E-mail" },
-  { key: "role", label: "Cargo pretendido" },
-  { key: "stage", label: "Etapa" },
-  { key: "modifiedAt", label: "Última modificação" },
-] as const;
 
 const stageTone: Record<string, Tone> = {
   Triagem: "neutral",
@@ -42,6 +35,14 @@ const stageTone: Record<string, Tone> = {
 };
 
 export default function CandidatesPage() {
+  const { admin } = useI18n();
+  const COLUMNS: { key: keyof Candidate; label: string }[] = [
+    { key: "name", label: admin.candidates.cols.name },
+    { key: "email", label: admin.candidates.cols.email },
+    { key: "role", label: admin.candidates.cols.role },
+    { key: "stage", label: admin.candidates.cols.stage },
+    { key: "modifiedAt", label: admin.candidates.cols.modifiedAt },
+  ];
   const [list, setList] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -94,7 +95,7 @@ export default function CandidatesPage() {
   }
 
   function exportSelected() {
-    downloadExcel("candidatos", [...COLUMNS], sel.selected);
+    downloadExcel(admin.candidates.fileName, COLUMNS, sel.selected);
     sel.cancel();
   }
 
@@ -112,11 +113,11 @@ export default function CandidatesPage() {
         <>
           <ExportButton onClick={sel.start} />
           <AddButton onClick={() => setAddOpen(true)}>
-            Adicionar candidato
+            {admin.candidates.add}
           </AddButton>
         </>
       }
-      searchPlaceholder="Buscar candidatos..."
+      searchPlaceholder={admin.candidates.searchPlaceholder}
       searchValue={query}
       onSearchChange={(v) => {
         setQuery(v);
@@ -130,14 +131,14 @@ export default function CandidatesPage() {
             setFStage(v);
             setPage(1);
           }}
-          placeholder="Todas as etapas"
+          placeholder={admin.candidates.allStages}
           options={[
             "Triagem",
             "Entrevista RH",
             "Teste técnico",
             "Entrevista final",
             "Proposta",
-          ]}
+          ].map((v) => ({ value: v, label: admin.stages[v] ?? v }))}
         />
         <FilterSelect
           value={fRole}
@@ -145,18 +146,22 @@ export default function CandidatesPage() {
             setFRole(v);
             setPage(1);
           }}
-          placeholder="Todos os cargos"
+          placeholder={admin.candidates.allRoles}
           options={roles}
         />
       </FilterBar>
 
       <Card>
         <CardHeader
-          title={sel.active ? "Selecione para exportar" : "Banco de talentos"}
+          title={
+            sel.active
+              ? admin.common.selectToExport
+              : admin.candidates.listTitle
+          }
           subtitle={
             sel.active
-              ? "Marque os itens e clique em Exportar"
-              : `${filtered.length} candidatos`
+              ? admin.common.markToExport
+              : admin.candidates.count(filtered.length)
           }
           action={
             sel.active ? (
@@ -175,11 +180,11 @@ export default function CandidatesPage() {
                 <Checkbox checked={sel.all} onChange={sel.toggleAll} />
               </Th>
             )}
-            <Th>Candidato</Th>
-            <Th>Cargo pretendido</Th>
-            <Th>Etapa</Th>
-            <Th>Última modificação</Th>
-            <Th>Ações</Th>
+            <Th>{admin.candidates.cols.name}</Th>
+            <Th>{admin.candidates.cols.role}</Th>
+            <Th>{admin.candidates.cols.stage}</Th>
+            <Th>{admin.candidates.cols.modifiedAt}</Th>
+            <Th>{admin.common.actions}</Th>
           </Thead>
           <Tbody>
             {visible.map((c) => (
@@ -207,23 +212,24 @@ export default function CandidatesPage() {
                 </Td>
                 <Td className="text-muted">{c.role}</Td>
                 <Td>
-                  <Badge tone={stageTone[c.stage]}>{c.stage}</Badge>
+                  <Badge tone={stageTone[c.stage]}>
+                    {admin.stages[c.stage] ?? c.stage}
+                  </Badge>
                 </Td>
                 <Td className="text-muted">{c.modifiedAt}</Td>
                 <Td>
                   <div className="flex items-center gap-1.5">
-                    <Tooltip label="Editar">
+                    <Tooltip label={admin.common.edit}>
                       <Button
                         variant="outline"
-                        aria-label="Editar"
+                        aria-label={admin.common.edit}
                         icon={<IconPencil className="h-4 w-4" />}
                         onClick={() => setEditing(c)}
                       />
                     </Tooltip>
                     <ConfirmAction
-                      label="Remover"
+                      label={admin.common.remove}
                       icon={<IconTrash className="h-4 w-4" />}
-                      confirmLabel="Confirmar"
                       onConfirm={() => remove(c.id)}
                     />
                   </div>
@@ -235,7 +241,7 @@ export default function CandidatesPage() {
             ) : visible.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className="p-2.5 text-center text-sm text-muted">
-                  Nenhum candidato encontrado.
+                  {admin.candidates.empty}
                 </td>
               </tr>
             ) : null}
@@ -244,8 +250,12 @@ export default function CandidatesPage() {
         <CardFooter>
           <span className="text-xs text-muted">
             {visible.length === 0
-              ? "0 resultados"
-              : `${start + 1}–${start + visible.length} de ${filtered.length}`}
+              ? admin.common.noResults
+              : admin.common.range(
+                  start + 1,
+                  start + visible.length,
+                  filtered.length,
+                )}
           </span>
           <Pagination page={current} pageCount={pageCount} onPage={setPage} />
         </CardFooter>

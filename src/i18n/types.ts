@@ -53,3 +53,280 @@ export interface Landing {
     rights: string;
   };
 }
+
+/** Textos do painel administrativo (area logada) do disys. */
+export interface Admin {
+  nav: {
+    dashboard: string;
+    companies: string;
+    jobs: string;
+    candidates: string;
+    pipeline: string;
+    team: string;
+  };
+  sidebar: {
+    subtitle: string;
+    collapse: string;
+    account: string;
+    openMenu: string;
+    closeMenu: string;
+    userFallback: string;
+  };
+  common: {
+    search: string;
+    add: string;
+    edit: string;
+    remove: string;
+    save: string;
+    cancel: string;
+    saving: string;
+    saved: string;
+    confirm: string;
+    loading: string;
+    noResults: string;
+    clearFilters: string;
+    filters: string;
+    export: string;
+    exportExcel: string;
+    back: string;
+    close: string;
+    select: string;
+    selectAll: string;
+    actions: string;
+    status: string;
+    previous: string;
+    next: string;
+    selectToExport: string;
+    markToExport: string;
+    range(from: number, to: number, total: number): string;
+    totalCount(n: number): string;
+    selectedCount(n: number): string;
+  };
+  /** Rotulos de exibicao das etapas do pipeline, indexados pelo valor canonico PT. */
+  stages: Record<string, string>;
+  /** Rotulos de exibicao dos status, indexados pelo valor canonico PT. */
+  status: Record<string, string>;
+  /** Rotulos de exibicao dos niveis de vaga, indexados pelo valor canonico PT. */
+  levels: Record<string, string>;
+  /** Rotulos de exibicao das modalidades de vaga, indexados pelo valor canonico PT. */
+  jobTypes: Record<string, string>;
+  /** Rotulos das acoes de permissao (view/create/edit/delete). */
+  permissionActions: Record<string, string>;
+  dashboard: {
+    cards: {
+      activeCompanies: string;
+      openJobs: string;
+      candidates: string;
+      activePipeline: string;
+    };
+    deltaTalent: string;
+    deltaInProgress: string;
+    funnelTitle: string;
+    funnelSubtitle: string;
+    totalInProcess: string;
+    candidatesCount(n: number): string;
+    activityTitle: string;
+    activitySubtitle: string;
+    movedTo(stage: string): string;
+    noActivity: string;
+    noMovements: string;
+  };
+  companies: {
+    searchPlaceholder: string;
+    add: string;
+    allSectors: string;
+    allStatuses: string;
+    listTitle: string;
+    empty: string;
+    fileName: string;
+    cols: {
+      name: string;
+      sector: string;
+      location: string;
+      openings: string;
+      status: string;
+    };
+  };
+  jobs: {
+    searchPlaceholder: string;
+    add: string;
+    allLevels: string;
+    allTypes: string;
+    allStatuses: string;
+    candidatesLabel: string;
+    empty: string;
+    fileName: string;
+    range(from: number, to: number, total: number): string;
+    cols: {
+      title: string;
+      company: string;
+      level: string;
+      type: string;
+      applicants: string;
+      status: string;
+    };
+  };
+  candidates: {
+    searchPlaceholder: string;
+    add: string;
+    allStages: string;
+    allRoles: string;
+    listTitle: string;
+    count(n: number): string;
+    empty: string;
+    fileName: string;
+    cols: {
+      name: string;
+      email: string;
+      role: string;
+      stage: string;
+      modifiedAt: string;
+    };
+  };
+  pipeline: {
+    searchPlaceholder: string;
+    add: string;
+    dropHere: string;
+    fileName: string;
+    cols: {
+      name: string;
+      job: string;
+      company: string;
+      stage: string;
+    };
+  };
+  team: {
+    searchPlaceholder: string;
+    add: string;
+    allRoles: string;
+    listTitle: string;
+    withAccess(n: number): string;
+    noAccess: string;
+    permissions(n: number): string;
+    empty: string;
+    fileName: string;
+    footerRange(shown: number, total: number): string;
+    cols: {
+      member: string;
+      role: string;
+      pageAccess: string;
+    };
+    exportCols: {
+      name: string;
+      email: string;
+      role: string;
+      pages: string;
+      permissionsTotal: string;
+    };
+  };
+  account: {
+    changePhoto: string;
+    photoAlt: string;
+    clickPhoto: string;
+    fieldName: string;
+    fieldPhone: string;
+    fieldRole: string;
+    keepUpdated: string;
+    saveChanges: string;
+    themeTitle: string;
+    themeSubtitle: string;
+    currentColor(label: string): string;
+    saveTheme: string;
+    languageTitle: string;
+    languageSubtitle: string;
+    languageLabel: string;
+    connectedAccount: string;
+    dangerTitle: string;
+    dangerSubtitle: string;
+    deleteAccount: string;
+    deleteAccountDesc: string;
+    confirmDelete: string;
+    signOutTitle: string;
+    signOutDesc: string;
+  };
+  modals: {
+    select: string;
+    confirmMessage: string;
+    permissionsByPage: string;
+    page: string;
+    selectOnePermission: string;
+    company: {
+      editTitle: string;
+      newTitle: string;
+      editSubtitle: string;
+      newSubtitle: string;
+      name: string;
+      sector: string;
+      country: string;
+      cnpj: string;
+      state: string;
+      city: string;
+      taxId: string;
+      stateProvince: string;
+      openings: string;
+      status: string;
+      selectCity: string;
+      selectStateFirst: string;
+      taxIdPlaceholder: string;
+    };
+    job: {
+      editTitle: string;
+      newTitle: string;
+      editSubtitle: string;
+      newSubtitle: string;
+      title: string;
+      company: string;
+      level: string;
+      type: string;
+      applicants: string;
+      status: string;
+      salaryRange: string;
+      salaryFrom: string;
+      salaryTo: string;
+      salaryOrderError: string;
+    };
+    candidate: {
+      editTitle: string;
+      newTitle: string;
+      editSubtitle: string;
+      newSubtitle: string;
+      fullName: string;
+      email: string;
+      desiredRole: string;
+      linkedin: string;
+      stage: string;
+      linkedinPlaceholder: string;
+    };
+    process: {
+      editTitle: string;
+      newTitle: string;
+      editSubtitle: string;
+      newSubtitle: string;
+      candidate: string;
+      job: string;
+      company: string;
+      stage: string;
+    };
+    member: {
+      editTitle: string;
+      inviteTitle: string;
+      editSubtitle: string;
+      inviteSubtitle: string;
+      email: string;
+      name: string;
+      role: string;
+      emailPlaceholder: string;
+      namePlaceholder: string;
+      rolePlaceholder: string;
+    };
+  };
+  shareJobs: {
+    button: string;
+    title: string;
+    subtitle: string;
+    generating: string;
+    copy: string;
+    copied: string;
+    openPublic: string;
+  };
+}

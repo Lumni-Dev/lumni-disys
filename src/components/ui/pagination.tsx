@@ -1,4 +1,7 @@
+"use client";
+
 import { cx, ACTIVE } from "@/lib/utils";
+import { useI18n } from "@/i18n/context";
 
 export function Pagination({
   page,
@@ -9,6 +12,7 @@ export function Pagination({
   pageCount: number;
   onPage: (p: number) => void;
 }) {
+  const { admin } = useI18n();
   if (pageCount <= 1) return null;
 
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
@@ -21,7 +25,7 @@ export function Pagination({
         onClick={() => onPage(page - 1)}
         className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted transition-all duration-200 hover:border-white/[0.15] hover:bg-surface-2 hover:text-foreground active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
       >
-        Anterior
+        {admin.common.previous}
       </button>
       {pages.map((p) => (
         <button
@@ -44,7 +48,7 @@ export function Pagination({
         onClick={() => onPage(page + 1)}
         className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted transition-all duration-200 hover:border-white/[0.15] hover:bg-surface-2 hover:text-foreground active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
       >
-        Próxima
+        {admin.common.next}
       </button>
     </div>
   );

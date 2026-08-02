@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { cx, initials, ACTIVE } from "@/lib/utils";
+import { useI18n } from "@/i18n/context";
 import { Avatar } from "@/components/ui/avatar";
 import { useSidebar } from "./sidebar-context";
 import { useProfile } from "./profile-context";
@@ -17,24 +18,30 @@ import {
   IconChevronLeft,
   IconClose,
 } from "@/components/ui/icons";
+import type { Admin } from "@/i18n/types";
 
-const nav = [
-  { href: "/dashboard", label: "Dashboard", Icon: IconDashboard },
-  { href: "/companies", label: "Empresas", Icon: IconBuilding },
-  { href: "/jobs", label: "Vagas", Icon: IconBriefcase },
-  { href: "/candidates", label: "Candidatos", Icon: IconUsers },
-  { href: "/pipeline", label: "Processos", Icon: IconFile },
-  { href: "/team", label: "Colaboradores", Icon: IconShield },
+const nav: {
+  href: string;
+  key: keyof Admin["nav"];
+  Icon: typeof IconDashboard;
+}[] = [
+  { href: "/dashboard", key: "dashboard", Icon: IconDashboard },
+  { href: "/companies", key: "companies", Icon: IconBuilding },
+  { href: "/jobs", key: "jobs", Icon: IconBriefcase },
+  { href: "/candidates", key: "candidates", Icon: IconUsers },
+  { href: "/pipeline", key: "pipeline", Icon: IconFile },
+  { href: "/team", key: "team", Icon: IconShield },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { admin } = useI18n();
   const { data: session } = useSession();
   const { photo } = useProfile();
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } =
     useSidebar();
   const accountActive = pathname.startsWith("/account");
-  const userName = session?.user?.name ?? "Usuário";
+  const userName = session?.user?.name ?? admin.sidebar.userFallback;
   const userEmail = session?.user?.email ?? "";
   const userImage = photo ?? session?.user?.image ?? null;
   const hide = collapsed ? "lg:hidden" : "";
@@ -73,11 +80,13 @@ export function Sidebar() {
             <p className="truncate text-base font-normal tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
               DISYS
             </p>
-            <p className="truncate text-xs text-muted">Recursos Humanos</p>
+            <p className="truncate text-xs text-muted">
+              {admin.sidebar.subtitle}
+            </p>
           </div>
           <button
             onClick={close}
-            aria-label="Fechar menu"
+            aria-label={admin.sidebar.closeMenu}
             className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:hidden"
           >
             <IconClose className="h-5 w-5" />
@@ -85,7 +94,8 @@ export function Sidebar() {
         </div>
 
         <nav className="scroll-thin flex flex-1 flex-col gap-1 overflow-y-auto p-2.5">
-          {nav.map(({ href, label, Icon }) => {
+          {nav.map(({ href, key, Icon }) => {
+            const label = admin.nav[key];
             const active =
               href === "/dashboard"
                 ? pathname === "/dashboard"
@@ -126,14 +136,14 @@ export function Sidebar() {
               collapsed && "rotate-180",
             )}
           />
-          <span className={hide}>Recolher</span>
+          <span className={hide}>{admin.sidebar.collapse}</span>
         </button>
 
         <div className="shrink-0 border-t border-white/[0.05] p-2.5">
           <Link
             href="/account"
             onClick={close}
-            title={collapsed ? "Minha conta" : undefined}
+            title={collapsed ? admin.sidebar.account : undefined}
             className={cx(
               "flex items-center gap-2.5 rounded-lg p-2 transition-colors",
               collapsed && "lg:mx-auto lg:h-10 lg:w-10 lg:justify-center lg:p-0",

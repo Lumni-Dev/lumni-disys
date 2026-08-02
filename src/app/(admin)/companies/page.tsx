@@ -21,18 +21,19 @@ import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 10;
 
-const COLUMNS = [
-  { key: "name", label: "Empresa" },
-  { key: "sector", label: "Setor" },
-  { key: "location", label: "Localização" },
-  { key: "openings", label: "Vagas" },
-  { key: "status", label: "Status" },
-] as const;
-
 export default function CompaniesPage() {
+  const { admin } = useI18n();
+  const COLUMNS: { key: keyof Company; label: string }[] = [
+    { key: "name", label: admin.companies.cols.name },
+    { key: "sector", label: admin.companies.cols.sector },
+    { key: "location", label: admin.companies.cols.location },
+    { key: "openings", label: admin.companies.cols.openings },
+    { key: "status", label: admin.companies.cols.status },
+  ];
   const [list, setList] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -87,7 +88,7 @@ export default function CompaniesPage() {
   }
 
   function exportSelected() {
-    downloadExcel("empresas", [...COLUMNS], sel.selected);
+    downloadExcel(admin.companies.fileName, COLUMNS, sel.selected);
     sel.cancel();
   }
 
@@ -104,10 +105,12 @@ export default function CompaniesPage() {
       action={
         <>
           <ExportButton onClick={sel.start} />
-          <AddButton onClick={() => setAddOpen(true)}>Nova empresa</AddButton>
+          <AddButton onClick={() => setAddOpen(true)}>
+            {admin.companies.add}
+          </AddButton>
         </>
       }
-      searchPlaceholder="Buscar empresas..."
+      searchPlaceholder={admin.companies.searchPlaceholder}
       searchValue={query}
       onSearchChange={(v) => {
         setQuery(v);
@@ -121,7 +124,7 @@ export default function CompaniesPage() {
             setFSector(v);
             setPage(1);
           }}
-          placeholder="Todos os setores"
+          placeholder={admin.companies.allSectors}
           options={sectors}
         />
         <FilterSelect
@@ -130,18 +133,25 @@ export default function CompaniesPage() {
             setFStatus(v);
             setPage(1);
           }}
-          placeholder="Todos os status"
-          options={["Ativa", "Pausada"]}
+          placeholder={admin.companies.allStatuses}
+          options={[
+            { value: "Ativa", label: admin.status["Ativa"] },
+            { value: "Pausada", label: admin.status["Pausada"] },
+          ]}
         />
       </FilterBar>
 
       <Card>
         <CardHeader
-          title={sel.active ? "Selecione para exportar" : "Empresas cadastradas"}
+          title={
+            sel.active
+              ? admin.common.selectToExport
+              : admin.companies.listTitle
+          }
           subtitle={
             sel.active
-              ? "Marque os itens e clique em Exportar"
-              : `${filtered.length} no total`
+              ? admin.common.markToExport
+              : admin.common.totalCount(filtered.length)
           }
           action={
             sel.active ? (
@@ -160,12 +170,12 @@ export default function CompaniesPage() {
                 <Checkbox checked={sel.all} onChange={sel.toggleAll} />
               </Th>
             )}
-            <Th>Empresa</Th>
-            <Th>Setor</Th>
-            <Th>Localização</Th>
-            <Th>Vagas</Th>
-            <Th>Status</Th>
-            <Th>Ações</Th>
+            <Th>{admin.companies.cols.name}</Th>
+            <Th>{admin.companies.cols.sector}</Th>
+            <Th>{admin.companies.cols.location}</Th>
+            <Th>{admin.companies.cols.openings}</Th>
+            <Th>{admin.companies.cols.status}</Th>
+            <Th>{admin.common.actions}</Th>
           </Thead>
           <Tbody>
             {visible.map((e) => (
@@ -193,23 +203,22 @@ export default function CompaniesPage() {
                 <Td className="text-foreground">{e.openings}</Td>
                 <Td>
                   <Badge tone={e.status === "Ativa" ? "green" : "amber"}>
-                    {e.status}
+                    {admin.status[e.status] ?? e.status}
                   </Badge>
                 </Td>
                 <Td>
                   <div className="flex items-center gap-1.5">
-                    <Tooltip label="Editar">
+                    <Tooltip label={admin.common.edit}>
                       <Button
                         variant="outline"
-                        aria-label="Editar"
+                        aria-label={admin.common.edit}
                         icon={<IconPencil className="h-4 w-4" />}
                         onClick={() => setEditing(e)}
                       />
                     </Tooltip>
                     <ConfirmAction
-                      label="Remover"
+                      label={admin.common.remove}
                       icon={<IconTrash className="h-4 w-4" />}
-                      confirmLabel="Confirmar"
                       onConfirm={() => remove(e.id)}
                     />
                   </div>
@@ -221,7 +230,7 @@ export default function CompaniesPage() {
             ) : visible.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className="p-2.5 text-center text-sm text-muted">
-                  Nenhuma empresa encontrada.
+                  {admin.companies.empty}
                 </td>
               </tr>
             ) : null}
@@ -230,8 +239,12 @@ export default function CompaniesPage() {
         <CardFooter>
           <span className="text-xs text-muted">
             {visible.length === 0
-              ? "0 resultados"
-              : `${start + 1}–${start + visible.length} de ${filtered.length}`}
+              ? admin.common.noResults
+              : admin.common.range(
+                  start + 1,
+                  start + visible.length,
+                  filtered.length,
+                )}
           </span>
           <Pagination page={current} pageCount={pageCount} onPage={setPage} />
         </CardFooter>

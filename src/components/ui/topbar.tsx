@@ -2,12 +2,13 @@
 
 import type { ReactNode } from "react";
 import { cx } from "@/lib/utils";
+import { useI18n } from "@/i18n/context";
 import { IconSearch, IconMenu } from "./icons";
 import { useSidebar } from "@/components/sidebar-context";
 
 export function Topbar({
   action,
-  searchPlaceholder = "Buscar...",
+  searchPlaceholder,
   showSearch = true,
   searchValue,
   onSearchChange,
@@ -18,7 +19,9 @@ export function Topbar({
   searchValue?: string;
   onSearchChange?: (value: string) => void;
 }) {
+  const { admin } = useI18n();
   const { setMobileOpen } = useSidebar();
+  const placeholder = searchPlaceholder ?? admin.common.search;
   const emptyOnDesktop = !showSearch && !action;
 
   return (
@@ -30,7 +33,7 @@ export function Topbar({
     >
       <button
         onClick={() => setMobileOpen(true)}
-        aria-label="Abrir menu"
+        aria-label={admin.sidebar.openMenu}
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:text-foreground active:scale-[0.98] lg:hidden"
       >
         <IconMenu className="h-5 w-5" />
@@ -42,7 +45,7 @@ export function Topbar({
           <input
             type="text"
             maxLength={80}
-            placeholder={searchPlaceholder}
+            placeholder={placeholder}
             value={searchValue ?? ""}
             onChange={(e) => onSearchChange?.(e.target.value)}
             className="w-full rounded-lg border border-border bg-surface-2/70 py-1.5 pl-8 pr-2.5 text-sm text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] outline-none transition-colors placeholder:text-muted focus:border-white/40 focus:bg-surface-2 focus:ring-2 focus:ring-white/10"

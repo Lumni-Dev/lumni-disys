@@ -22,8 +22,10 @@ import {
 import { initials, cx } from "@/lib/utils";
 import { THEMES } from "@/lib/themes";
 import { isPhone } from "@/lib/validation";
+import { useI18n } from "@/i18n/context";
 
 export default function AccountPage() {
+  const { admin } = useI18n();
   const { data: session } = useSession();
   const { photo, setPhoto, theme, setTheme, saveTheme } = useProfile();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -38,7 +40,7 @@ export default function AccountPage() {
     setTimeout(() => setThemeSaved(false), 2000);
   }
 
-  const name = session?.user?.name ?? "Usuário";
+  const name = session?.user?.name ?? admin.sidebar.userFallback;
   const email = session?.user?.email ?? "";
   const image = photo ?? session?.user?.image ?? null;
 
@@ -114,12 +116,12 @@ export default function AccountPage() {
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 className="group relative h-12 w-12 shrink-0 overflow-hidden rounded-lg"
-                aria-label="Trocar foto de perfil"
+                aria-label={admin.account.changePhoto}
               >
                 {image ? (
                   <img
                     src={image}
-                    alt="Foto de perfil"
+                    alt={admin.account.photoAlt}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -140,10 +142,12 @@ export default function AccountPage() {
               />
               <div className="min-w-0 leading-tight">
                 <p className="truncate text-sm font-medium text-foreground">{name}</p>
-                <p className="text-xs text-muted">Clique na foto para alterar</p>
+                <p className="text-xs text-muted">
+                  {admin.account.clickPhoto}
+                </p>
               </div>
             </div>
-            <Field label="Nome completo" req>
+            <Field label={admin.account.fieldName} req>
               <Input
                 value={fullName}
                 onChange={(e) => setNameEdit(e.target.value)}
@@ -151,7 +155,7 @@ export default function AccountPage() {
                 maxLength={160}
               />
             </Field>
-            <Field label="Telefone" req>
+            <Field label={admin.account.fieldPhone} req>
               <PhoneInput
                 value={phone}
                 onChange={setPhone}
@@ -159,7 +163,7 @@ export default function AccountPage() {
                 placeholder="+55 11 99999-9999"
               />
             </Field>
-            <Field label="Cargo" req>
+            <Field label={admin.account.fieldRole} req>
               <Input
                 value={cargo}
                 onChange={(e) => setCargo(e.target.value)}
@@ -170,14 +174,14 @@ export default function AccountPage() {
           </CardBody>
           <CardFooter>
             <span className="text-xs text-muted">
-              Mantenha seus dados atualizados
+              {admin.account.keepUpdated}
             </span>
             <Button type="submit" disabled={savingProfile}>
               {savingProfile
-                ? "Gravando..."
+                ? admin.common.saving
                 : profileSaved
-                  ? "Gravado!"
-                  : "Gravar alterações"}
+                  ? admin.common.saved
+                  : admin.account.saveChanges}
             </Button>
           </CardFooter>
         </form>
@@ -185,8 +189,8 @@ export default function AccountPage() {
 
       <Card>
         <CardHeader
-          title="Tema"
-          subtitle="Escolha a cor de destaque do sistema"
+          title={admin.account.themeTitle}
+          subtitle={admin.account.themeSubtitle}
         />
         <CardBody className="flex flex-wrap items-center gap-2.5">
           {THEMES.map((t) => (
@@ -209,21 +213,29 @@ export default function AccountPage() {
         </CardBody>
         <CardFooter>
           <span className="text-xs text-muted">
-            Cor atual: {THEMES.find((t) => t.key === theme)?.label}
+            {admin.account.currentColor(
+              THEMES.find((t) => t.key === theme)?.label ?? "",
+            )}
           </span>
           <Button onClick={onSaveTheme} disabled={savingTheme}>
-            {savingTheme ? "Gravando..." : themeSaved ? "Gravado!" : "Gravar tema"}
+            {savingTheme
+              ? admin.common.saving
+              : themeSaved
+                ? admin.common.saved
+                : admin.account.saveTheme}
           </Button>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader
-          title="Idioma"
-          subtitle="Escolha o idioma do site (salvo neste navegador)"
+          title={admin.account.languageTitle}
+          subtitle={admin.account.languageSubtitle}
         />
         <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-          <span className="text-sm text-muted">Idioma do site</span>
+          <span className="text-sm text-muted">
+            {admin.account.languageLabel}
+          </span>
           <LanguageSwitcher variant="card" />
         </CardBody>
       </Card>
@@ -236,7 +248,7 @@ export default function AccountPage() {
             </div>
             <div className="min-w-0 leading-tight">
               <p className="text-sm font-medium text-foreground">
-                Conta conectada
+                {admin.account.connectedAccount}
               </p>
               <p className="truncate text-xs text-muted">{email}</p>
             </div>
@@ -245,18 +257,23 @@ export default function AccountPage() {
       </Card>
 
       <Card className="border-white/30">
-        <CardHeader title="Zona de perigo" subtitle="Ações irreversíveis" />
+        <CardHeader
+          title={admin.account.dangerTitle}
+          subtitle={admin.account.dangerSubtitle}
+        />
         <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
           <div className="leading-tight">
-            <p className="text-sm font-medium text-foreground">Excluir conta</p>
+            <p className="text-sm font-medium text-foreground">
+              {admin.account.deleteAccount}
+            </p>
             <p className="text-xs text-muted">
-              Remove permanentemente sua conta e todos os dados associados.
+              {admin.account.deleteAccountDesc}
             </p>
           </div>
           <ConfirmAction
-            label="Excluir conta"
+            label={admin.account.deleteAccount}
             icon={<IconTrash className="h-4 w-4" />}
-            confirmLabel="Confirmar exclusão"
+            confirmLabel={admin.account.confirmDelete}
             onConfirm={() => {}}
           />
         </CardBody>
@@ -265,15 +282,17 @@ export default function AccountPage() {
       <Card>
         <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
           <div className="leading-tight">
-            <p className="text-sm font-medium text-foreground">Sair da conta</p>
+            <p className="text-sm font-medium text-foreground">
+              {admin.account.signOutTitle}
+            </p>
             <p className="text-xs text-muted">
-              Encerrar sua sessão neste dispositivo.
+              {admin.account.signOutDesc}
             </p>
           </div>
-          <Tooltip label="Sair da conta">
+          <Tooltip label={admin.account.signOutTitle}>
             <Button
               variant="outline"
-              aria-label="Sair da conta"
+              aria-label={admin.account.signOutTitle}
               icon={<IconLogout className="h-4 w-4" />}
               onClick={() => signOut({ redirectTo: "/login" })}
             />

@@ -9,7 +9,6 @@ import {
   type ReactNode,
 } from "react";
 import {
-  DEFAULT_LOCALE,
   LOCALES,
   STORAGE_KEY,
   isLocale,
@@ -17,7 +16,8 @@ import {
   type LocaleCode,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import type { Landing } from "@/i18n/types";
+import { getAdmin } from "@/i18n/dictionaries/admin";
+import type { Admin, Landing } from "@/i18n/types";
 
 // Store externo simples para o idioma: fonte da verdade e o localStorage,
 // com useSyncExternalStore lendo dele (sem mismatch de hidratacao e sem
@@ -34,13 +34,35 @@ function subscribe(callback: () => void): () => void {
   };
 }
 
+// Quando nao ha escolha salva, o fallback e o ingles.
+const FALLBACK_LOCALE: LocaleCode = "en";
+
+// Detecta o idioma pelo navegador (pt-BR -> pt, en-US -> en, ...), se for um
+// dos suportados; senao null.
+function detectBrowserLocale(): LocaleCode | null {
+  if (typeof navigator === "undefined") return null;
+  const langs =
+    navigator.languages && navigator.languages.length
+      ? navigator.languages
+      : [navigator.language];
+  for (const lang of langs) {
+    if (!lang) continue;
+    const primary = lang.toLowerCase().split("-")[0];
+    const match = LOCALES.find((loc) => loc.code === primary);
+    if (match) return match.code;
+  }
+  return null;
+}
+
+// Ordem: escolha manual (localStorage) > idioma do navegador > ingles.
 function getSnapshot(): LocaleCode {
   const stored = window.localStorage.getItem(STORAGE_KEY);
-  return isLocale(stored) ? stored : DEFAULT_LOCALE;
+  if (isLocale(stored)) return stored;
+  return detectBrowserLocale() ?? FALLBACK_LOCALE;
 }
 
 function getServerSnapshot(): LocaleCode {
-  return DEFAULT_LOCALE;
+  return FALLBACK_LOCALE;
 }
 
 function persistLocale(code: LocaleCode): void {
@@ -57,6 +79,7 @@ interface I18nValue {
   locale: LocaleCode;
   setLocale: (code: LocaleCode) => void;
   dict: Landing;
+  admin: Admin;
   locales: typeof LOCALES;
 }
 
@@ -80,7 +103,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   return (
     <I18nContext.Provider
-      value={{ locale, setLocale, dict: getDictionary(locale), locales: LOCALES }}
+      value={{
+        locale,
+        setLocale,
+        dict: getDictionary(locale),
+        admin: getAdmin(locale),
+        locales: LOCALES,
+      }}
     >
       {children}
     </I18nContext.Provider>

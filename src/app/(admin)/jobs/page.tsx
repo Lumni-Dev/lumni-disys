@@ -20,22 +20,23 @@ import { useSelection } from "@/lib/use-selection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cx } from "@/lib/utils";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 9;
-
-const COLUMNS = [
-  { key: "title", label: "Vaga" },
-  { key: "company", label: "Empresa" },
-  { key: "level", label: "Nível" },
-  { key: "type", label: "Modalidade" },
-  { key: "applicants", label: "Candidatos" },
-  { key: "status", label: "Status" },
-] as const;
 
 const tone = (s: string): Tone =>
   s === "Aberta" ? "green" : s === "Fechada" ? "red" : "amber";
 
 export default function JobsPage() {
+  const { admin } = useI18n();
+  const COLUMNS: { key: keyof Job; label: string }[] = [
+    { key: "title", label: admin.jobs.cols.title },
+    { key: "company", label: admin.jobs.cols.company },
+    { key: "level", label: admin.jobs.cols.level },
+    { key: "type", label: admin.jobs.cols.type },
+    { key: "applicants", label: admin.jobs.cols.applicants },
+    { key: "status", label: admin.jobs.cols.status },
+  ];
   const [list, setList] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -95,7 +96,7 @@ export default function JobsPage() {
   }
 
   function exportSelected() {
-    downloadExcel("vagas", [...COLUMNS], sel.selected);
+    downloadExcel(admin.jobs.fileName, COLUMNS, sel.selected);
     sel.cancel();
   }
 
@@ -112,10 +113,10 @@ export default function JobsPage() {
         <>
           <ShareJobs />
           <ExportButton onClick={sel.start} />
-          <AddButton onClick={() => setAddOpen(true)}>Nova vaga</AddButton>
+          <AddButton onClick={() => setAddOpen(true)}>{admin.jobs.add}</AddButton>
         </>
       }
-      searchPlaceholder="Buscar vagas..."
+      searchPlaceholder={admin.jobs.searchPlaceholder}
       searchValue={query}
       onSearchChange={(v) => {
         setQuery(v);
@@ -129,8 +130,8 @@ export default function JobsPage() {
             setFLevel(v);
             setPage(1);
           }}
-          placeholder="Todos os níveis"
-          options={levels}
+          placeholder={admin.jobs.allLevels}
+          options={levels.map((v) => ({ value: v, label: admin.levels[v] ?? v }))}
         />
         <FilterSelect
           value={fType}
@@ -138,8 +139,11 @@ export default function JobsPage() {
             setFType(v);
             setPage(1);
           }}
-          placeholder="Todas as modalidades"
-          options={types}
+          placeholder={admin.jobs.allTypes}
+          options={types.map((v) => ({
+            value: v,
+            label: admin.jobTypes[v] ?? v,
+          }))}
         />
         <FilterSelect
           value={fStatus}
@@ -147,8 +151,11 @@ export default function JobsPage() {
             setFStatus(v);
             setPage(1);
           }}
-          placeholder="Todos os status"
-          options={["Aberta", "Em análise", "Fechada"]}
+          placeholder={admin.jobs.allStatuses}
+          options={["Aberta", "Em análise", "Fechada"].map((v) => ({
+            value: v,
+            label: admin.status[v] ?? v,
+          }))}
         />
       </FilterBar>
 
@@ -158,7 +165,7 @@ export default function JobsPage() {
             <Checkbox
               checked={sel.all}
               onChange={sel.toggleAll}
-              label="Selecionar tudo"
+              label={admin.common.selectAll}
             />
             <SelectionBar
               count={sel.count}
@@ -208,13 +215,15 @@ export default function JobsPage() {
                       className="pointer-events-none"
                     />
                   ) : (
-                    <Badge tone={tone(v.status)}>{v.status}</Badge>
+                    <Badge tone={tone(v.status)}>
+                      {admin.status[v.status] ?? v.status}
+                    </Badge>
                   )
                 }
               />
               <CardBody className="flex flex-wrap gap-2.5">
-                <Badge>{v.type}</Badge>
-                <Badge>{v.level}</Badge>
+                <Badge>{admin.jobTypes[v.type] ?? v.type}</Badge>
+                <Badge>{admin.levels[v.level] ?? v.level}</Badge>
               </CardBody>
             </button>
             <CardFooter>
@@ -223,12 +232,11 @@ export default function JobsPage() {
                 <span className="font-medium text-foreground">
                   {v.applicants}
                 </span>
-                candidatos
+                {admin.jobs.candidatesLabel}
               </span>
               <ConfirmAction
-                label="Remover"
+                label={admin.common.remove}
                 icon={<IconTrash className="h-4 w-4" />}
-                confirmLabel="Confirmar"
                 onConfirm={() => remove(v.id)}
               />
             </CardFooter>
@@ -239,7 +247,7 @@ export default function JobsPage() {
       {!loading && visible.length === 0 && (
         <Card>
           <p className="p-2.5 text-center text-sm text-muted">
-            Nenhuma vaga encontrada.
+            {admin.jobs.empty}
           </p>
         </Card>
       )}
@@ -248,8 +256,12 @@ export default function JobsPage() {
         <div className="flex items-center justify-between gap-2.5 p-2.5">
           <span className="text-xs text-muted">
             {visible.length === 0
-              ? "0 resultados"
-              : `${start + 1}–${start + visible.length} de ${filtered.length} vagas`}
+              ? admin.common.noResults
+              : admin.jobs.range(
+                  start + 1,
+                  start + visible.length,
+                  filtered.length,
+                )}
           </span>
           <Pagination page={current} pageCount={pageCount} onPage={setPage} />
         </div>

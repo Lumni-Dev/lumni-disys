@@ -5,6 +5,8 @@ import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { isEmail } from "@/lib/validation";
+import { useI18n } from "@/i18n/context";
+import type { Admin } from "@/i18n/types";
 import {
   MODULES,
   ACTIONS,
@@ -20,6 +22,8 @@ function PermissionsMatrix({
   value: Permissions;
   onChange: (v: Permissions) => void;
 }) {
+  const { admin } = useI18n();
+
   function toggle(module: string, action: string, checked: boolean) {
     onChange({
       ...value,
@@ -37,10 +41,10 @@ function PermissionsMatrix({
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-border text-xs uppercase tracking-wider text-muted">
-            <th className="p-2.5 font-medium">Página</th>
+            <th className="p-2.5 font-medium">{admin.modals.page}</th>
             {ACTIONS.map((a) => (
               <th key={a.key} className="p-2.5 text-center font-medium">
-                {a.label}
+                {admin.permissionActions[a.key] ?? a.label}
               </th>
             ))}
           </tr>
@@ -55,7 +59,7 @@ function PermissionsMatrix({
                   <Checkbox
                     checked={allChecked}
                     onChange={(c) => toggleRow(m.key, c)}
-                    label={m.label}
+                    label={admin.nav[m.key as keyof Admin["nav"]] ?? m.label}
                   />
                 </td>
                 {ACTIONS.map((a) => (
@@ -87,6 +91,8 @@ export function MemberModal({
   onSave: (m: Member) => void;
   member?: Member | null;
 }) {
+  const { admin } = useI18n();
+  const t = admin.modals.member;
   const editing = !!member;
   const [email, setEmail] = useState(member?.email ?? "");
   const [name, setName] = useState(member?.name ?? "");
@@ -129,41 +135,37 @@ export function MemberModal({
       open={open}
       onClose={onClose}
       size="lg"
-      title={editing ? "Editar colaborador" : "Convidar colaborador"}
-      subtitle={
-        editing
-          ? "Ajuste os dados e as permissões de acesso"
-          : "Adicione uma pessoa por e-mail e defina o que ela pode fazer"
-      }
+      title={editing ? t.editTitle : t.inviteTitle}
+      subtitle={editing ? t.editSubtitle : t.inviteSubtitle}
     >
       <form onSubmit={submit}>
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <Field label="E-mail" full req>
+            <Field label={t.email} full req>
               <Input
                 type="email"
                 invalid={invalid("email")}
                 maxLength={200}
                 readOnly={editing}
-                placeholder="pessoa@empresa.com"
+                placeholder={t.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Field>
-            <Field label="Nome" req>
+            <Field label={t.name} req>
               <Input
                 invalid={invalid("name")}
                 maxLength={160}
-                placeholder="Ex.: Ana Ribeiro"
+                placeholder={t.namePlaceholder}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Field>
-            <Field label="Cargo" req>
+            <Field label={t.role} req>
               <Input
                 invalid={invalid("role")}
                 maxLength={120}
-                placeholder="Ex.: Recrutadora"
+                placeholder={t.rolePlaceholder}
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               />
@@ -172,12 +174,13 @@ export function MemberModal({
 
           <div>
             <p className="mb-1.5 text-xs font-medium text-muted">
-              Permissões por página <span className="text-accent">*</span>
+              {admin.modals.permissionsByPage}{" "}
+              <span className="text-accent">*</span>
             </p>
             <PermissionsMatrix value={permissions} onChange={setPermissions} />
             {errs.permissions && (
               <p className="mt-1.5 text-xs text-accent">
-                Selecione ao menos uma permissão.
+                {admin.modals.selectOnePermission}
               </p>
             )}
           </div>

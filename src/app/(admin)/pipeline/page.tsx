@@ -12,10 +12,12 @@ import { ProcessModal } from "@/components/entity-modals";
 import { type Column, type PipelineCard } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 type DropTarget = { stage: string; beforeId: number | null };
 
 export default function PipelinePage() {
+  const { admin } = useI18n();
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -117,19 +119,19 @@ export default function PipelinePage() {
 
   function exportAll() {
     downloadExcel(
-      "processos",
+      admin.pipeline.fileName,
       [
-        { key: "name", label: "Candidato" },
-        { key: "job", label: "Vaga" },
-        { key: "company", label: "Empresa" },
-        { key: "stage", label: "Etapa" },
+        { key: "name", label: admin.pipeline.cols.name },
+        { key: "job", label: admin.pipeline.cols.job },
+        { key: "company", label: admin.pipeline.cols.company },
+        { key: "stage", label: admin.pipeline.cols.stage },
       ],
       columns.flatMap((c) =>
         c.cards.map((x) => ({
           name: x.name,
           job: x.job,
           company: x.company,
-          stage: c.stage,
+          stage: admin.stages[c.stage] ?? c.stage,
         })),
       ),
     );
@@ -140,10 +142,12 @@ export default function PipelinePage() {
       action={
         <>
           <ExportButton onClick={exportAll} />
-          <AddButton onClick={() => setAddOpen(true)}>Novo processo</AddButton>
+          <AddButton onClick={() => setAddOpen(true)}>
+            {admin.pipeline.add}
+          </AddButton>
         </>
       }
-      searchPlaceholder="Buscar processos..."
+      searchPlaceholder={admin.pipeline.searchPlaceholder}
       searchValue={query}
       onSearchChange={setQuery}
     >
@@ -179,7 +183,7 @@ export default function PipelinePage() {
           {visibleColumns.map((col) => (
             <Card key={col.stage} className="flex min-w-56 flex-1 flex-col">
               <CardHeader
-                title={col.stage}
+                title={admin.stages[col.stage] ?? col.stage}
                 action={
                   <span className="rounded-lg border border-white/[0.06] bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted shadow-[0_1px_2px_rgba(0,0,0,0.25)]">
                     {col.cards.length}
@@ -238,7 +242,7 @@ export default function PipelinePage() {
                 )}
                 {col.cards.length === 0 && !drop && (
                   <p className="flex flex-1 items-center justify-center py-2.5 text-center text-xs text-muted">
-                    Solte um candidato aqui
+                    {admin.pipeline.dropHere}
                   </p>
                 )}
               </CardBody>

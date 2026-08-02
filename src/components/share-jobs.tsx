@@ -5,9 +5,12 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { IconShare } from "@/components/ui/icons";
+import { useI18n } from "@/i18n/context";
 import { api } from "@/lib/api-client";
 
 export function ShareJobs() {
+  const { admin } = useI18n();
+  const t = admin.shareJobs;
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
@@ -36,10 +39,10 @@ export function ShareJobs() {
 
   return (
     <>
-      <Tooltip label="Compartilhar vagas">
+      <Tooltip label={t.button}>
         <Button
           variant="outline"
-          aria-label="Compartilhar vagas"
+          aria-label={t.button}
           icon={<IconShare className="h-4 w-4" />}
           onClick={openShare}
         />
@@ -48,20 +51,20 @@ export function ShareJobs() {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Compartilhar vagas publicamente"
-        subtitle="Qualquer pessoa com o link ve as vagas abertas do seu projeto"
+        title={t.title}
+        subtitle={t.subtitle}
       >
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="flex gap-2.5">
             <input
               readOnly
               value={url}
-              placeholder="Gerando link..."
+              placeholder={t.generating}
               onFocus={(e) => e.target.select()}
               className="w-full rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-foreground outline-none"
             />
             <Button onClick={copy} disabled={!url}>
-              {copied ? "Copiado!" : "Copiar"}
+              {copied ? t.copied : t.copy}
             </Button>
           </div>
           {url && (
@@ -71,7 +74,7 @@ export function ShareJobs() {
               rel="noopener noreferrer"
               className="text-sm font-medium text-foreground hover:underline"
             >
-              Abrir pagina publica
+              {t.openPublic}
             </a>
           )}
         </div>

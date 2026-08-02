@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Topbar } from "@/components/ui/topbar";
 import { type Candidate } from "@/lib/data";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 type Trend = number[];
 
@@ -28,20 +29,23 @@ type DashboardData = {
   };
 };
 
-const CARD_META = [
-  { label: "Empresas ativas", href: "/companies" },
-  { label: "Vagas abertas", href: "/jobs" },
-  { label: "Candidatos", href: "/candidates" },
-  { label: "Processos ativos", href: "/pipeline" },
-];
+const CARD_HREFS = ["/companies", "/jobs", "/candidates", "/pipeline"];
 
 const ACTIVITY_PAGE_SIZE = 20;
 
 export default function Home() {
+  const { admin } = useI18n();
   const [data, setData] = useState<DashboardData | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [candLoaded, setCandLoaded] = useState(false);
   const [page, setPage] = useState(1);
+
+  const cardMeta = [
+    { label: admin.dashboard.cards.activeCompanies, href: CARD_HREFS[0] },
+    { label: admin.dashboard.cards.openJobs, href: CARD_HREFS[1] },
+    { label: admin.dashboard.cards.candidates, href: CARD_HREFS[2] },
+    { label: admin.dashboard.cards.activePipeline, href: CARD_HREFS[3] },
+  ];
 
   useEffect(() => {
     api
@@ -58,27 +62,27 @@ export default function Home() {
   const cards = data
     ? [
         {
-          ...CARD_META[0],
+          ...cardMeta[0],
           value: String(data.stats.companies.active),
-          delta: `${data.stats.companies.total} no total`,
+          delta: admin.common.totalCount(data.stats.companies.total),
           data: data.trends.companies,
         },
         {
-          ...CARD_META[1],
+          ...cardMeta[1],
           value: String(data.stats.jobs.open),
-          delta: `${data.stats.jobs.total} no total`,
+          delta: admin.common.totalCount(data.stats.jobs.total),
           data: data.trends.jobs,
         },
         {
-          ...CARD_META[2],
+          ...cardMeta[2],
           value: String(data.stats.candidates.total),
-          delta: "no banco de talentos",
+          delta: admin.dashboard.deltaTalent,
           data: data.trends.candidates,
         },
         {
-          ...CARD_META[3],
+          ...cardMeta[3],
           value: String(data.stats.pipeline.total),
-          delta: "em andamento",
+          delta: admin.dashboard.deltaInProgress,
           data: data.trends.pipeline,
         },
       ]
@@ -90,7 +94,7 @@ export default function Home() {
 
   const activities = candidates.map((c) => ({
     who: c.name,
-    what: `movido para ${c.stage}`,
+    what: admin.dashboard.movedTo(admin.stages[c.stage] ?? c.stage),
     role: c.role,
     time: c.modifiedAt,
   }));
@@ -118,8 +122,8 @@ export default function Home() {
 
         <Card>
           <CardHeader
-            title="Funil de recrutamento"
-            subtitle="Candidatos por etapa"
+            title={admin.dashboard.funnelTitle}
+            subtitle={admin.dashboard.funnelSubtitle}
           />
           <CardBody className="space-y-2.5">
             {!data &&
@@ -135,7 +139,9 @@ export default function Home() {
             {funnel.map((f) => (
               <div key={f.stage}>
                 <div className="mb-1.5 flex items-center justify-between text-sm">
-                  <span className="text-foreground">{f.stage}</span>
+                  <span className="text-foreground">
+                    {admin.stages[f.stage] ?? f.stage}
+                  </span>
                   <span className="text-muted">{f.count}</span>
                 </div>
                 <Progress value={(f.count / maxCount) * 100} />
@@ -143,17 +149,19 @@ export default function Home() {
             ))}
           </CardBody>
           <CardFooter>
-            <span className="text-xs text-muted">Total em processo</span>
+            <span className="text-xs text-muted">
+              {admin.dashboard.totalInProcess}
+            </span>
             <span className="text-xs font-medium text-foreground">
-              {totalInProcess} candidatos
+              {admin.dashboard.candidatesCount(totalInProcess)}
             </span>
           </CardFooter>
         </Card>
 
         <Card>
           <CardHeader
-            title="Atividade recente"
-            subtitle="Últimas movimentações"
+            title={admin.dashboard.activityTitle}
+            subtitle={admin.dashboard.activitySubtitle}
           />
           {!candLoaded ? (
             <ul className="grid grid-cols-1 divide-y divide-white/[0.07] sm:grid-cols-2">
@@ -181,7 +189,7 @@ export default function Home() {
           )}
           {candLoaded && visible.length === 0 && (
             <p className="p-2.5 text-center text-sm text-muted">
-              Nenhuma atividade recente por enquanto.
+              {admin.dashboard.noActivity}
             </p>
           )}
           <CardFooter>
@@ -190,8 +198,12 @@ export default function Home() {
             ) : (
               <span className="text-xs text-muted">
                 {activities.length === 0
-                  ? "0 movimentações"
-                  : `${start + 1}–${start + visible.length} de ${activities.length}`}
+                  ? admin.dashboard.noMovements
+                  : admin.common.range(
+                      start + 1,
+                      start + visible.length,
+                      activities.length,
+                    )}
               </span>
             )}
             <Pagination page={page} pageCount={pageCount} onPage={setPage} />
