@@ -41,6 +41,7 @@ export default function CandidatesPage() {
     { key: "email", label: admin.candidates.cols.email },
     { key: "role", label: admin.candidates.cols.role },
     { key: "stage", label: admin.candidates.cols.stage },
+    { key: "matchScore", label: admin.candidates.cols.match },
     { key: "modifiedAt", label: admin.candidates.cols.modifiedAt },
   ];
   const [list, setList] = useState<Candidate[]>([]);
@@ -105,7 +106,7 @@ export default function CandidatesPage() {
     setPage(1);
   }
 
-  const colSpan = 5 + (sel.active ? 1 : 0);
+  const colSpan = 6 + (sel.active ? 1 : 0);
 
   return (
     <PageShell
@@ -183,6 +184,7 @@ export default function CandidatesPage() {
             <Th>{admin.candidates.cols.name}</Th>
             <Th>{admin.candidates.cols.role}</Th>
             <Th>{admin.candidates.cols.stage}</Th>
+            <Th>{admin.candidates.cols.match}</Th>
             <Th>{admin.candidates.cols.modifiedAt}</Th>
             <Th>{admin.common.actions}</Th>
           </Thead>
@@ -215,6 +217,23 @@ export default function CandidatesPage() {
                   <Badge tone={stageTone[c.stage]}>
                     {admin.stages[c.stage] ?? c.stage}
                   </Badge>
+                </Td>
+                <Td>
+                  {typeof c.matchScore === "number" ? (
+                    <Badge
+                      tone={
+                        c.matchScore >= 70
+                          ? "green"
+                          : c.matchScore >= 40
+                            ? "amber"
+                            : "red"
+                      }
+                    >
+                      {c.matchScore}%
+                    </Badge>
+                  ) : (
+                    <span className="text-xs text-muted">-</span>
+                  )}
                 </Td>
                 <Td className="text-muted">{c.modifiedAt}</Td>
                 <Td>

@@ -154,6 +154,7 @@ const ja: Admin = {
       email: "メールアドレス",
       role: "希望職種",
       stage: "ステージ",
+      match: "適合度",
       modifiedAt: "最終更新",
     },
   },

@@ -155,6 +155,7 @@ const ar: Admin = {
       email: "البريد الإلكتروني",
       role: "الدور المطلوب",
       stage: "المرحلة",
+      match: "التوافق",
       modifiedAt: "آخر تعديل",
     },
   },

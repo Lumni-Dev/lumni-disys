@@ -154,6 +154,7 @@ const de: Admin = {
       email: "E-Mail",
       role: "Gewünschte Rolle",
       stage: "Phase",
+      match: "Übereinstimmung",
       modifiedAt: "Zuletzt geändert",
     },
   },

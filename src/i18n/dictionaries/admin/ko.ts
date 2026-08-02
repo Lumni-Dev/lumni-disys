@@ -154,6 +154,7 @@ const ko: Admin = {
       email: "이메일",
       role: "희망 직무",
       stage: "단계",
+      match: "적합도",
       modifiedAt: "최종 수정",
     },
   },

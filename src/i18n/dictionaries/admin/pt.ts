@@ -154,6 +154,7 @@ const pt: Admin = {
       email: "E-mail",
       role: "Cargo pretendido",
       stage: "Etapa",
+      match: "Compatibilidade",
       modifiedAt: "Última modificação",
     },
   },
