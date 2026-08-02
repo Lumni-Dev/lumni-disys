@@ -75,7 +75,9 @@ export function Sidebar() {
 
       <aside
         className={cx(
-          "fixed inset-y-0 left-0 z-50 flex h-screen w-56 shrink-0 flex-col border-r border-white/[0.05] bg-surface/70 shadow-[8px_0_24px_-16px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200",
+          // h-dvh (nao h-screen): no iOS o 100vh fica atras da barra do
+          // Safari e esconderia o rodape do menu (perfil).
+          "fixed inset-y-0 left-0 z-50 flex h-dvh w-56 shrink-0 flex-col border-r border-white/[0.05] bg-surface/70 shadow-[8px_0_24px_-16px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:sticky lg:top-0 lg:translate-x-0",
           collapsed ? "lg:w-16" : "lg:w-56",
