@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
@@ -8,6 +8,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
 import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
 import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
+import { fetchCnpj, sameCity } from "@/lib/cnpj";
 import { api } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 import type { Company, Job, Candidate, PipelineCard } from "@/lib/data";
@@ -141,6 +142,8 @@ export function CompanyModal({
   const [countries, setCountries] = useState<string[]>([]);
   const [states, setStates] = useState<UF[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [cnpjLoading, setCnpjLoading] = useState(false);
+  const lastCnpj = useRef("");
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.company;
@@ -164,6 +167,27 @@ export function CompanyModal({
     setCity("");
     setStateText("");
     setCityText("");
+    lastCnpj.current = "";
+  }
+
+  // CNPJ completo: busca na BrasilAPI e preenche pais, estado e cidade
+  // (e o nome, se ainda estiver em branco).
+  async function changeCnpj(v: string) {
+    setCnpj(v);
+    const digits = v.replace(/\D/g, "");
+    if (digits.length !== 14 || digits === lastCnpj.current) return;
+    lastCnpj.current = digits;
+    setCnpjLoading(true);
+    const info = await fetchCnpj(digits);
+    setCnpjLoading(false);
+    if (!info) return;
+    setCountry("Brasil");
+    if (info.uf) {
+      setUf(info.uf);
+      const list = await fetchCities(info.uf);
+      setCity(list.find((c) => sameCity(c, info.city)) ?? "");
+    }
+    if (info.name) setName((cur) => (cur.trim() ? cur : info.name));
   }
 
   return (
@@ -218,6 +242,30 @@ export function CompanyModal({
           onChange={(e) => setSector(e.target.value)}
         />
       </Field>
+      {isBrazil ? (
+        <Field label={t.cnpj} req>
+          <CnpjInput
+            invalid={invalid("cnpj")}
+            placeholder="00.000.000/0000-00"
+            value={cnpj}
+            onChange={changeCnpj}
+          />
+          {cnpjLoading && (
+            <span className="text-xs text-muted">{t.cnpjLookup}</span>
+          )}
+        </Field>
+      ) : (
+        <Field label={t.taxId} req>
+          <Input
+            invalid={invalid("taxId")}
+            maxLength={40}
+            placeholder={t.taxIdPlaceholder}
+            value={taxId}
+            onChange={(e) => setTaxId(e.target.value)}
+          />
+        </Field>
+      )}
+
       <Field label={t.country} req>
         <Select
           value={country}
@@ -230,14 +278,6 @@ export function CompanyModal({
 
       {isBrazil ? (
         <>
-          <Field label={t.cnpj} req>
-            <CnpjInput
-              invalid={invalid("cnpj")}
-              placeholder="00.000.000/0000-00"
-              value={cnpj}
-              onChange={setCnpj}
-            />
-          </Field>
           <Field label={t.state} req>
             <Select
               value={uf}
@@ -263,15 +303,6 @@ export function CompanyModal({
         </>
       ) : (
         <>
-          <Field label={t.taxId} req>
-            <Input
-              invalid={invalid("taxId")}
-              maxLength={40}
-              placeholder={t.taxIdPlaceholder}
-              value={taxId}
-              onChange={(e) => setTaxId(e.target.value)}
-            />
-          </Field>
           <Field label={t.stateProvince} req>
             <Input
               invalid={invalid("stateText")}

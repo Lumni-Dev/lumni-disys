@@ -231,6 +231,7 @@ const ja: Admin = {
       sector: "業種",
       country: "国",
       cnpj: "CNPJ",
+      cnpjLookup: "CNPJ情報を取得中...",
       state: "州",
       city: "市区町村",
       taxId: "税務登録番号",

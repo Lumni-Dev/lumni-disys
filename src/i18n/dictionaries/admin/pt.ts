@@ -231,6 +231,7 @@ const pt: Admin = {
       sector: "Setor",
       country: "País",
       cnpj: "CNPJ",
+      cnpjLookup: "Buscando dados do CNPJ...",
       state: "Estado",
       city: "Cidade",
       taxId: "Registro fiscal",

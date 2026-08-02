@@ -231,6 +231,7 @@ const nl: Admin = {
       sector: "Sector",
       country: "Land",
       cnpj: "CNPJ",
+      cnpjLookup: "CNPJ-gegevens ophalen...",
       state: "Staat",
       city: "Stad",
       taxId: "Fiscale registratie",

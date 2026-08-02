@@ -231,6 +231,7 @@ const de: Admin = {
       sector: "Branche",
       country: "Land",
       cnpj: "CNPJ",
+      cnpjLookup: "CNPJ-Daten werden abgerufen...",
       state: "Bundesland",
       city: "Stadt",
       taxId: "Steuerregistrierung",

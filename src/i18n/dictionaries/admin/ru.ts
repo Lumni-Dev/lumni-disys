@@ -241,6 +241,7 @@ const ru: Admin = {
       sector: "Отрасль",
       country: "Страна",
       cnpj: "CNPJ",
+      cnpjLookup: "Поиск данных по CNPJ...",
       state: "Регион",
       city: "Город",
       taxId: "Налоговый регистрационный номер",

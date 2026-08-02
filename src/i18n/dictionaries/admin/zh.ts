@@ -230,6 +230,7 @@ const zh: Admin = {
       sector: "行业",
       country: "国家",
       cnpj: "CNPJ",
+      cnpjLookup: "正在查询 CNPJ 信息...",
       state: "州/省",
       city: "城市",
       taxId: "税务登记号",

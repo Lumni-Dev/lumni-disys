@@ -230,6 +230,7 @@ const ko: Admin = {
       sector: "업종",
       country: "국가",
       cnpj: "CNPJ",
+      cnpjLookup: "CNPJ 정보 조회 중...",
       state: "주",
       city: "도시",
       taxId: "사업자 등록번호",
