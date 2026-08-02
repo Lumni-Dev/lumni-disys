@@ -40,24 +40,61 @@ export async function POST(req: Request) {
       ? body.cvData
       : "";
 
-  await db.insert(schema.candidates).values({
-    accountId: account.id,
-    name: name.slice(0, 160),
-    role,
-    email: email.slice(0, 200),
-    stage: "Triagem",
-    linkedin: String(body.linkedin ?? "").slice(0, 300),
-    cvName: cvData ? String(body.cvName ?? "").slice(0, 200) : "",
-    cvBase64: cvData,
-  });
+  const [candidate] = await db
+    .insert(schema.candidates)
+    .values({
+      accountId: account.id,
+      name: name.slice(0, 160),
+      role,
+      email: email.slice(0, 200),
+      stage: "Triagem",
+      linkedin: String(body.linkedin ?? "").slice(0, 300),
+      cvName: cvData ? String(body.cvName ?? "").slice(0, 200) : "",
+      cvBase64: cvData,
+    })
+    .returning({ id: schema.candidates.id });
 
+  // Empresa da vaga (para o card) + contador de candidatos da vaga.
   const jobId = Number(body.jobId);
+  let jobCompany = "";
   if (Number.isFinite(jobId)) {
-    await db
-      .update(schema.jobs)
-      .set({ applicants: sql`${schema.jobs.applicants} + 1` })
-      .where(and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)));
+    const [job] = await db
+      .select({ company: schema.jobs.company })
+      .from(schema.jobs)
+      .where(
+        and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
+      );
+    if (job) {
+      jobCompany = job.company;
+      await db
+        .update(schema.jobs)
+        .set({ applicants: sql`${schema.jobs.applicants} + 1` })
+        .where(
+          and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
+        );
+    }
   }
+
+  // A candidatura ja entra no kanban de processos, no fim da Triagem,
+  // vinculada ao candidato (mover o card depois atualiza a etapa dele).
+  const inStage = await db
+    .select({ id: schema.pipelineCards.id })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.accountId, account.id),
+        eq(schema.pipelineCards.stage, "Triagem"),
+      ),
+    );
+  await db.insert(schema.pipelineCards).values({
+    accountId: account.id,
+    candidateId: candidate?.id ?? null,
+    name: name.slice(0, 160),
+    job: role,
+    company: jobCompany.slice(0, 160),
+    stage: "Triagem",
+    position: inStage.length,
+  });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
