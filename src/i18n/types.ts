@@ -252,6 +252,8 @@ export interface Admin {
     signOutDesc: string;
     leaveTitle: string;
     leaveDesc: string;
+    createWorkspace: string;
+    noOwnWorkspace: string;
   };
   modals: {
     select: string;

@@ -219,6 +219,9 @@ const nl: Admin = {
     leaveTitle: "Workspace verlaten",
     leaveDesc:
       "Je verliest de toegang tot deze workspace. De eigenaar kan je opnieuw uitnodigen.",
+    createWorkspace: "Mijn workspace aanmaken",
+    noOwnWorkspace:
+      "Je neemt deel als gast en hebt nog geen eigen workspace.",
   },
   modals: {
     select: "Selecteren",

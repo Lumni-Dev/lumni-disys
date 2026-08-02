@@ -23,7 +23,7 @@ import {
 import { initials, cx } from "@/lib/utils";
 import { THEMES } from "@/lib/themes";
 import { isPhone } from "@/lib/validation";
-import { useAccess } from "@/lib/access";
+import { useAccess, useWorkspaces } from "@/lib/access";
 import { useI18n } from "@/i18n/context";
 
 export default function AccountPage() {
@@ -38,6 +38,9 @@ export default function AccountPage() {
   const access = useAccess();
   const isOwner = !!access?.owner;
   const isMember = !!access && !access.owner;
+  // Convidado sem workspace proprio pode criar o seu.
+  const workspaces = useWorkspaces();
+  const hasOwn = workspaces ? workspaces.some((w) => w.owner) : true;
 
   async function onSaveTheme() {
     setSavingTheme(true);
@@ -293,6 +296,31 @@ export default function AccountPage() {
                   .catch(() => {});
               }}
             />
+          </CardBody>
+        </Card>
+      )}
+
+      {!hasOwn && (
+        <Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
+            <div className="leading-tight">
+              <p className="text-sm font-medium text-foreground">
+                {admin.account.createWorkspace}
+              </p>
+              <p className="text-xs text-muted">
+                {admin.account.noOwnWorkspace}
+              </p>
+            </div>
+            <Button
+              onClick={() => {
+                void api
+                  .post("/api/workspaces", {})
+                  .then(() => window.location.assign("/dashboard"))
+                  .catch(() => {});
+              }}
+            >
+              {admin.account.createWorkspace}
+            </Button>
           </CardBody>
         </Card>
       )}

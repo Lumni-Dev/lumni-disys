@@ -219,6 +219,9 @@ const fr: Admin = {
     leaveTitle: "Quitter l'espace de travail",
     leaveDesc:
       "Vous perdrez l'accès à cet espace de travail. Le propriétaire peut vous réinviter.",
+    createWorkspace: "Créer mon espace de travail",
+    noOwnWorkspace:
+      "Vous participez en tant qu'invité et n'avez pas encore votre propre espace de travail.",
   },
   modals: {
     select: "Sélectionner",

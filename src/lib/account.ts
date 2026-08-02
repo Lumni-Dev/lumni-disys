@@ -144,6 +144,18 @@ export async function accountForEmail(email: string): Promise<Account> {
   }
 
   // 4) Primeiro acesso: cria a conta propria com os exemplos.
+  return ensureOwnAccount(email);
+}
+
+/**
+ * Conta propria do e-mail: retorna a existente ou cria uma nova com os
+ * exemplos (tambem usada pelo botao "Criar meu workspace" de quem so
+ * participa como convidado).
+ */
+export async function ensureOwnAccount(email: string): Promise<Account> {
+  const owned = await ownedAccount(email);
+  if (owned) return owned;
+
   const [created] = await db
     .insert(schema.accounts)
     .values({ ownerEmail: email, publicToken: newToken() })

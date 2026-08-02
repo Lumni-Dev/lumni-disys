@@ -219,6 +219,9 @@ const it: Admin = {
     leaveTitle: "Lascia il workspace",
     leaveDesc:
       "Perderai l'accesso a questo workspace. Il proprietario può invitarti di nuovo.",
+    createWorkspace: "Crea il mio workspace",
+    noOwnWorkspace:
+      "Partecipi come ospite e non hai ancora un workspace tuo.",
   },
   modals: {
     select: "Seleziona",
