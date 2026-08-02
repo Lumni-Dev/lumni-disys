@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { asc, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
-import { currentAccount } from "@/lib/account";
+import { authorize } from "@/lib/authz";
 
 type PermInput = Record<string, Record<string, boolean>>;
 
@@ -17,9 +17,8 @@ function permissionRows(memberId: number, permissions: PermInput = {}) {
 }
 
 export async function GET() {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("team", "view");
+  if (!account) return response;
 
   const members = await db
     .select()
@@ -51,9 +50,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("team", "create");
+  if (!account) return response;
 
   const body = await req.json();
   const [member] = await db

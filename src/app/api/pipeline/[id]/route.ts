@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
-import { currentAccount } from "@/lib/account";
+import { authorize } from "@/lib/authz";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PUT(req: Request, { params }: Params) {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("pipeline", "edit");
+  if (!account) return response;
 
   const id = Number((await params).id);
   const body = await req.json();
@@ -56,9 +55,8 @@ export async function PUT(req: Request, { params }: Params) {
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("pipeline", "delete");
+  if (!account) return response;
 
   const id = Number((await params).id);
   await db
