@@ -123,6 +123,7 @@ const it: Admin = {
     allTypes: "Tutte le modalità di lavoro",
     allStatuses: "Tutti gli stati",
     candidatesLabel: "candidati",
+    shareJob: "Copia link della posizione",
     openingsCount: (n) => (n === 1 ? "1 posto" : `${n} posti`),
     empty: "Nessuna posizione trovata.",
     fileName: "posizioni",
@@ -344,6 +345,8 @@ const it: Admin = {
     emailPlaceholder: "tu@email.com",
     invalidLink:
       "Questo link non è valido. Chiedi all'azienda il link completo delle posizioni.",
+    jobNotFound: "Questa posizione non è più disponibile.",
+    viewAll: "Vedi tutte le posizioni",
     goHome: "Vai alla home",
   },
   login: {

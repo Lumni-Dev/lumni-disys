@@ -123,6 +123,7 @@ const ko: Admin = {
     allTypes: "모든 근무 형태",
     allStatuses: "모든 상태",
     candidatesLabel: "지원자",
+    shareJob: "공고 링크 복사",
     openingsCount: (n) => `${n}명 모집`,
     empty: "채용 공고를 찾을 수 없습니다.",
     fileName: "채용공고",
@@ -337,6 +338,8 @@ const ko: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink:
       "이 채용 링크는 유효하지 않습니다. 회사에 전체 링크를 요청하세요.",
+    jobNotFound: "이 공고는 더 이상 지원할 수 없습니다.",
+    viewAll: "모든 공고 보기",
     goHome: "홈으로",
   },
   login: {

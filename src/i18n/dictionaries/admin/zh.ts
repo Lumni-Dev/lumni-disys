@@ -123,6 +123,7 @@ const zh: Admin = {
     allTypes: "所有工作模式",
     allStatuses: "所有状态",
     candidatesLabel: "名候选人",
+    shareJob: "复制职位链接",
     openingsCount: (n) => `招聘${n}人`,
     empty: "未找到职位。",
     fileName: "jobs",
@@ -335,6 +336,8 @@ const zh: Admin = {
     namePlaceholder: "例: 王小明",
     emailPlaceholder: "you@email.com",
     invalidLink: "此招聘链接无效。请向公司索取完整链接。",
+    jobNotFound: "该职位已不再开放。",
+    viewAll: "查看所有职位",
     goHome: "返回首页",
   },
   login: {

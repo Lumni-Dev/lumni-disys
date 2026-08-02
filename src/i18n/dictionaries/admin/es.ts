@@ -123,6 +123,7 @@ const es: Admin = {
     allTypes: "Todas las modalidades",
     allStatuses: "Todos los estados",
     candidatesLabel: "candidatos",
+    shareJob: "Copiar enlace de la vacante",
     openingsCount: (n) => `${n} vacante${n === 1 ? "" : "s"}`,
     empty: "No se encontraron vacantes.",
     fileName: "vacantes",
@@ -343,6 +344,8 @@ const es: Admin = {
     emailPlaceholder: "tu@email.com",
     invalidLink:
       "Este enlace de vacantes no es válido. Pide a la empresa su enlace completo.",
+    jobNotFound: "Esta vacante ya no está disponible.",
+    viewAll: "Ver todas las vacantes",
     goHome: "Ir al inicio",
   },
   login: {

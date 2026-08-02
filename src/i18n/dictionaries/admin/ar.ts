@@ -123,6 +123,7 @@ const ar: Admin = {
     allTypes: "جميع نماذج العمل",
     allStatuses: "جميع الحالات",
     candidatesLabel: "مرشحون",
+    shareJob: "نسخ رابط الوظيفة",
     openingsCount: (n) =>
       n === 1 ? "وظيفة واحدة" : n === 2 ? "وظيفتان" : `${n} وظائف`,
     empty: "لم يتم العثور على وظائف.",
@@ -343,6 +344,8 @@ const ar: Admin = {
     namePlaceholder: "مثال: سارة أحمد",
     emailPlaceholder: "you@email.com",
     invalidLink: "رابط الوظائف هذا غير صالح. اطلب من الشركة الرابط الكامل.",
+    jobNotFound: "هذه الوظيفة لم تعد متاحة.",
+    viewAll: "عرض جميع الوظائف",
     goHome: "الذهاب إلى الرئيسية",
   },
   login: {

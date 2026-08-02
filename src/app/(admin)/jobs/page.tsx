@@ -6,12 +6,14 @@ import { Card, CardHeader, CardBody, CardFooter } from "@/components/ui/card";
 import { Badge, type Tone } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pagination } from "@/components/ui/pagination";
-import { AddButton } from "@/components/ui/button";
+import { AddButton, Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
-import { IconUsers, IconTrash } from "@/components/ui/icons";
+import { Tooltip } from "@/components/ui/tooltip";
+import { IconUsers, IconShare, IconTrash } from "@/components/ui/icons";
+import { useAccess } from "@/lib/access";
 import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
 import { type Job } from "@/lib/data";
@@ -47,6 +49,18 @@ export default function JobsPage() {
   const [fLevel, setFLevel] = useState("");
   const [fType, setFType] = useState("");
   const [fStatus, setFStatus] = useState("");
+  const access = useAccess();
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+
+  // Copia o link publico direto desta vaga (token da conta + id).
+  function shareJob(id: number) {
+    if (!access?.token) return;
+    const url = `${window.location.origin}/careers/${access.token}/${id}`;
+    void navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    });
+  }
 
   useEffect(() => {
     api
@@ -236,11 +250,27 @@ export default function JobsPage() {
                 </span>
                 {admin.jobs.candidatesLabel}
               </span>
-              <ConfirmAction
-                label={admin.common.remove}
-                icon={<IconTrash className="h-4 w-4" />}
-                onConfirm={() => remove(v.id)}
-              />
+              <div className="flex items-center gap-1.5">
+                <Tooltip
+                  label={
+                    copiedId === v.id
+                      ? admin.shareJobs.copied
+                      : admin.jobs.shareJob
+                  }
+                >
+                  <Button
+                    variant="outline"
+                    aria-label={admin.jobs.shareJob}
+                    icon={<IconShare className="h-4 w-4" />}
+                    onClick={() => shareJob(v.id)}
+                  />
+                </Tooltip>
+                <ConfirmAction
+                  label={admin.common.remove}
+                  icon={<IconTrash className="h-4 w-4" />}
+                  onConfirm={() => remove(v.id)}
+                />
+              </div>
             </CardFooter>
           </Card>
         ))}
