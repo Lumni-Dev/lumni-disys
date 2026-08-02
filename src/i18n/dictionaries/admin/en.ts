@@ -136,6 +136,7 @@ const en: Admin = {
       openings: "Number of openings",
       applicants: "Candidates",
       status: "Status",
+      description: "Description",
     },
   },
   candidates: {
@@ -263,6 +264,7 @@ const en: Admin = {
       type: "Work model",
       openings: "Number of openings",
       status: "Status",
+      description: "Job description",
       salaryRange: "Salary range",
       salaryFrom: "Salary from",
       salaryTo: "Salary to",

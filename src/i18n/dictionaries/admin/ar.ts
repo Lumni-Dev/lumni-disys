@@ -137,6 +137,7 @@ const ar: Admin = {
       openings: "عدد الوظائف",
       applicants: "المرشحون",
       status: "الحالة",
+      description: "الوصف",
     },
   },
   candidates: {
@@ -263,6 +264,7 @@ const ar: Admin = {
       type: "نموذج العمل",
       openings: "عدد الوظائف",
       status: "الحالة",
+      description: "وصف الوظيفة",
       salaryRange: "نطاق الراتب",
       salaryFrom: "الراتب من",
       salaryTo: "الراتب إلى",

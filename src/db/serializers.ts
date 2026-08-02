@@ -30,6 +30,7 @@ type JobRow = {
   id: number;
   title: string;
   company: string;
+  description: string;
   type: string;
   level: string;
   openings: number;
@@ -42,6 +43,7 @@ export function serializeJob(r: JobRow) {
     id: r.id,
     title: r.title,
     company: r.company,
+    description: r.description,
     type: r.type,
     level: r.level,
     openings: r.openings,

@@ -171,6 +171,7 @@ export interface Admin {
       openings: string;
       applicants: string;
       status: string;
+      description: string;
     };
   };
   candidates: {
@@ -295,6 +296,8 @@ export interface Admin {
       newSubtitle: string;
       title: string;
       company: string;
+      /** Descricao da vaga (opcional, ate 5000 caracteres). */
+      description: string;
       level: string;
       type: string;
       openings: string;

@@ -146,6 +146,7 @@ const ru: Admin = {
       openings: "Количество вакансий",
       applicants: "Кандидаты",
       status: "Статус",
+      description: "Описание",
     },
   },
   candidates: {
@@ -273,6 +274,7 @@ const ru: Admin = {
       type: "Формат работы",
       openings: "Количество вакансий",
       status: "Статус",
+      description: "Описание вакансии",
       salaryRange: "Диапазон зарплаты",
       salaryFrom: "Зарплата от",
       salaryTo: "Зарплата до",

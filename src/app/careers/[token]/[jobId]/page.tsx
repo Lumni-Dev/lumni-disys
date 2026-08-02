@@ -95,6 +95,11 @@ export default function JobPage() {
                 <Badge>{admin.jobTypes[job.type] ?? job.type}</Badge>
                 <Badge>{admin.jobs.openingsCount(job.openings)}</Badge>
               </div>
+              {job.description && (
+                <p className="max-h-64 overflow-y-auto whitespace-pre-line text-sm leading-relaxed text-muted scroll-thin">
+                  {job.description}
+                </p>
+              )}
               {job.postedAt && (
                 <p className="text-xs text-muted">{t.postedAt(job.postedAt)}</p>
               )}

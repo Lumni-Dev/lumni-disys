@@ -78,6 +78,13 @@
       "when": 1785697638820,
       "tag": "0010_candidate_cv",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1785701721157,
+      "tag": "0011_job_description",
+      "breakpoints": true
     }
   ]
 }

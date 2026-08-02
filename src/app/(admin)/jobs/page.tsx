@@ -39,6 +39,7 @@ export default function JobsPage() {
     { key: "openings", label: admin.jobs.cols.openings },
     { key: "applicants", label: admin.jobs.cols.applicants },
     { key: "status", label: admin.jobs.cols.status },
+    { key: "description", label: admin.jobs.cols.description },
   ];
   const [list, setList] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -240,6 +241,11 @@ export default function JobsPage() {
                 <Badge>{admin.jobTypes[v.type] ?? v.type}</Badge>
                 <Badge>{admin.levels[v.level] ?? v.level}</Badge>
                 <Badge>{admin.jobs.openingsCount(v.openings)}</Badge>
+                {v.description && (
+                  <p className="line-clamp-2 w-full text-xs text-muted">
+                    {v.description}
+                  </p>
+                )}
               </CardBody>
             </button>
             <CardFooter>

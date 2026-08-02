@@ -136,6 +136,7 @@ const zh: Admin = {
       openings: "职位数量",
       applicants: "候选人",
       status: "状态",
+      description: "描述",
     },
   },
   candidates: {
@@ -260,6 +261,7 @@ const zh: Admin = {
       type: "工作模式",
       openings: "职位数量",
       status: "状态",
+      description: "职位描述",
       salaryRange: "薪资范围",
       salaryFrom: "最低薪资",
       salaryTo: "最高薪资",

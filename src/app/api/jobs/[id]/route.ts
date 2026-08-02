@@ -17,6 +17,7 @@ export async function PUT(req: Request, { params }: Params) {
     .set({
       title: body.title,
       company: body.company ?? "",
+      description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
       openings: Number(body.openings) || 1,

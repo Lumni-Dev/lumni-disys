@@ -136,6 +136,7 @@ const ja: Admin = {
       openings: "募集人数",
       applicants: "候補者",
       status: "ステータス",
+      description: "説明",
     },
   },
   candidates: {
@@ -263,6 +264,7 @@ const ja: Admin = {
       type: "勤務形態",
       openings: "募集人数",
       status: "ステータス",
+      description: "求人の説明",
       salaryRange: "給与範囲",
       salaryFrom: "給与（下限）",
       salaryTo: "給与（上限）",

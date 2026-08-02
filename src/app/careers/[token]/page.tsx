@@ -147,6 +147,11 @@ export default function CareersPage() {
                 <Badge tone="red">{admin.levels[v.level] ?? v.level}</Badge>
                 <Badge>{admin.jobTypes[v.type] ?? v.type}</Badge>
                 <Badge>{admin.jobs.openingsCount(v.openings)}</Badge>
+                {v.description && (
+                  <p className="line-clamp-3 w-full text-xs text-muted">
+                    {v.description}
+                  </p>
+                )}
               </CardBody>
               <CardFooter>
                 <span className="text-xs text-muted">

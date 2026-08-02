@@ -38,6 +38,7 @@ async function main() {
       company: j.company,
       type: j.type,
       level: j.level,
+      description: j.description,
       openings: j.openings,
       applicants: j.applicants,
       status: j.status,

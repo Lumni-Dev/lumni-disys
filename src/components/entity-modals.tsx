@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
-import { Field, Input } from "@/components/ui/form";
+import { Field, Input, Textarea } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
 import { Combobox } from "@/components/ui/combobox";
 import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
@@ -357,6 +357,7 @@ export function JobModal({
 }) {
   const [title, setTitle] = useState(job?.title ?? "");
   const [company, setCompany] = useState(job?.company ?? "");
+  const [description, setDescription] = useState(job?.description ?? "");
   const [level, setLevel] = useState(job?.level ?? "");
   const [type, setType] = useState(job?.type ?? "");
   const [openings, setOpenings] = useState(String(job?.openings ?? ""));
@@ -394,6 +395,7 @@ export function JobModal({
           id: job?.id ?? 0,
           title: title.trim(),
           company: company.trim(),
+          description: description.trim(),
           level,
           type,
           openings: Number(openings) || 0,
@@ -420,6 +422,14 @@ export function JobModal({
           onChange={setCompany}
           options={companyNames}
           placeholder={admin.modals.searchOrType}
+        />
+      </Field>
+      <Field label={t.description} full>
+        <Textarea
+          rows={5}
+          maxLength={5000}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </Field>
       <Field label={t.level} req>

@@ -79,6 +79,7 @@ export type Job = {
   id: number;
   title: string;
   company: string;
+  description: string;
   type: string;
   level: string;
   openings: number;
@@ -91,6 +92,7 @@ export const jobs: Job[] = range(30).map((i) => ({
   id: i + 1,
   title: roles[i % roles.length],
   company: companyNames[i % companyNames.length],
+  description: "",
   type: jobTypes[i % jobTypes.length],
   level: levels[i % levels.length],
   openings: (i % 4) + 1,

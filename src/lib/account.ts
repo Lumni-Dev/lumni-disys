@@ -26,6 +26,8 @@ async function seedExampleData(accountId: number): Promise<void> {
       accountId,
       title: "Desenvolvedor(a) Full Stack (exemplo)",
       company: "Empresa Lumni Dev (exemplo)",
+      description:
+        "Vaga de exemplo: desenvolvimento de aplicacoes web modernas, do banco de dados a interface. Edite ou exclua este registro quando quiser.",
       type: "Remoto",
       level: "Pleno",
       openings: 2,
