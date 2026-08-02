@@ -76,7 +76,7 @@ export function Textarea({
   const ref = useShake<HTMLTextAreaElement>(invalid);
   const len = typeof value === "string" ? value.length : 0;
   return (
-    <div className="relative">
+    <div className="flex flex-col gap-1">
       <textarea
         ref={ref}
         value={value}
@@ -85,14 +85,14 @@ export function Textarea({
         className={cx(
           controlClass,
           "resize-none",
-          maxLength != null && "pb-6",
           !!invalid && "ring-1 ring-accent",
           className,
         )}
         style={invalidStyle(invalid, style)}
       />
+      {/* Contador fora do campo: nao sobrepoe o texto nem a rolagem. */}
       {maxLength != null && (
-        <span className="pointer-events-none absolute bottom-1.5 right-2.5 text-[11px] text-muted">
+        <span className="self-end text-[11px] tabular-nums leading-none text-muted/70">
           {len}/{maxLength}
         </span>
       )}
