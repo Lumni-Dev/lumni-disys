@@ -219,6 +219,9 @@ const ja: Admin = {
     leaveTitle: "ワークスペースから退出",
     leaveDesc:
       "このワークスペースへのアクセスを失います。オーナーは再度招待できます。",
+    createWorkspace: "マイワークスペースを作成",
+    noOwnWorkspace:
+      "ゲストとして参加しており、まだ自分のワークスペースがありません。",
   },
   modals: {
     select: "選択",

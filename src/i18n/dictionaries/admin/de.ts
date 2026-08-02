@@ -219,6 +219,9 @@ const de: Admin = {
     leaveTitle: "Workspace verlassen",
     leaveDesc:
       "Sie verlieren den Zugriff auf diesen Workspace. Der Inhaber kann Sie erneut einladen.",
+    createWorkspace: "Meinen Workspace erstellen",
+    noOwnWorkspace:
+      "Sie sind hier Gast und haben noch keinen eigenen Workspace.",
   },
   modals: {
     select: "Auswählen",

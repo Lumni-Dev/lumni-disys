@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
-import { accountForEmail } from "@/lib/account";
+import { accountForEmail, ensureOwnAccount } from "@/lib/account";
 
 // Workspaces do usuario: a conta propria (se existir) + todas em que ele e
 // colaborador. Usado pelo seletor do sidebar.
@@ -64,6 +64,26 @@ export async function GET() {
       active: w.id === current.id,
     })),
   );
+}
+
+// Cria (ou recupera) o workspace proprio de quem so participa como
+// convidado, e ja o torna o ativo.
+export async function POST() {
+  const session = await auth();
+  const email = session?.user?.email;
+  if (!email)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const own = await ensureOwnAccount(email);
+  await db
+    .insert(schema.userProfiles)
+    .values({ email, activeAccountId: own.id })
+    .onConflictDoUpdate({
+      target: schema.userProfiles.email,
+      set: { activeAccountId: own.id },
+    });
+
+  return NextResponse.json({ ok: true, id: own.id });
 }
 
 // Troca o workspace ativo (valida que o usuario tem acesso a ele).

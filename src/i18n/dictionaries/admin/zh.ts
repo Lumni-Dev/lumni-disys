@@ -217,6 +217,8 @@ const zh: Admin = {
     signOutDesc: "结束您在本设备上的会话。",
     leaveTitle: "退出工作区",
     leaveDesc: "您将失去对此工作区的访问权限。所有者可以再次邀请您。",
+    createWorkspace: "创建我的工作区",
+    noOwnWorkspace: "您以访客身份参与，还没有自己的工作区。",
   },
   modals: {
     select: "选择",

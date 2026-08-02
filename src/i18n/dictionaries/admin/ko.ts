@@ -218,6 +218,8 @@ const ko: Admin = {
     leaveTitle: "워크스페이스 나가기",
     leaveDesc:
       "이 워크스페이스에 대한 접근 권한을 잃게 됩니다. 소유자가 다시 초대할 수 있습니다.",
+    createWorkspace: "내 워크스페이스 만들기",
+    noOwnWorkspace: "게스트로 참여 중이며 아직 내 워크스페이스가 없습니다.",
   },
   modals: {
     select: "선택",
