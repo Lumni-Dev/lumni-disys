@@ -23,6 +23,7 @@ import {
 import { initials, cx } from "@/lib/utils";
 import { THEMES } from "@/lib/themes";
 import { isPhone } from "@/lib/validation";
+import { useAccess } from "@/lib/access";
 import { useI18n } from "@/i18n/context";
 
 export default function AccountPage() {
@@ -33,14 +34,7 @@ export default function AccountPage() {
   const [savingTheme, setSavingTheme] = useState(false);
   const [themeSaved, setThemeSaved] = useState(false);
   // So o dono do workspace ve a zona de perigo (excluir a conta inteira).
-  const [isOwner, setIsOwner] = useState(false);
-
-  useEffect(() => {
-    api
-      .get<{ token: string; owner: boolean }>("/api/account")
-      .then((d) => setIsOwner(!!d.owner))
-      .catch(() => {});
-  }, []);
+  const isOwner = !!useAccess()?.owner;
 
   async function onSaveTheme() {
     setSavingTheme(true);

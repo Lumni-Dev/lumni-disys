@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail } from "@/lib/account";
+import { MODULES } from "@/lib/permissions";
 
 export async function GET() {
   const session = await auth();
@@ -15,11 +16,44 @@ export async function GET() {
     .select({ id: schema.accounts.id })
     .from(schema.accounts)
     .where(eq(schema.accounts.ownerEmail, email));
+  const owner = own?.id === account.id;
+
+  // Modulos que o usuario pode VER: dono ve tudo; colaborador, so os que
+  // tiverem a permissao "view" (usado para montar o menu lateral).
+  let modules: string[];
+  if (owner) {
+    modules = MODULES.map((m) => m.key);
+  } else {
+    const [member] = await db
+      .select({ id: schema.teamMembers.id })
+      .from(schema.teamMembers)
+      .where(
+        and(
+          eq(schema.teamMembers.email, email),
+          eq(schema.teamMembers.accountId, account.id),
+        ),
+      );
+    if (member) {
+      const rows = await db
+        .select({ module: schema.memberPermissions.module })
+        .from(schema.memberPermissions)
+        .where(
+          and(
+            eq(schema.memberPermissions.memberId, member.id),
+            eq(schema.memberPermissions.action, "view"),
+          ),
+        );
+      modules = [...new Set(rows.map((r) => r.module))];
+    } else {
+      modules = [];
+    }
+  }
 
   return NextResponse.json({
     token: account.publicToken,
     // Colaboradores usam a conta do dono; so o dono pode excluir o workspace.
-    owner: own?.id === account.id,
+    owner,
+    modules,
   });
 }
 

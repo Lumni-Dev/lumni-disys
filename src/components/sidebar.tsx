@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { cx, initials, ACTIVE } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
+import { useAccess } from "@/lib/access";
 import { Avatar } from "@/components/ui/avatar";
 import { useSidebar } from "./sidebar-context";
 import { useProfile } from "./profile-context";
@@ -38,6 +39,10 @@ export function Sidebar() {
   const { admin } = useI18n();
   const { data: session } = useSession();
   const { photo } = useProfile();
+  const access = useAccess();
+  // Colaborador so ve no menu os modulos com permissao de ver; enquanto o
+  // acesso carrega, mostra tudo (caso comum: dono, que ve tudo mesmo).
+  const items = access ? nav.filter((n) => access.modules.includes(n.key)) : nav;
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } =
     useSidebar();
   const accountActive = pathname.startsWith("/account");
@@ -94,7 +99,7 @@ export function Sidebar() {
         </div>
 
         <nav className="scroll-thin flex flex-1 flex-col gap-1 overflow-y-auto p-2.5">
-          {nav.map(({ href, key, Icon }) => {
+          {items.map(({ href, key, Icon }) => {
             const label = admin.nav[key];
             const active =
               href === "/dashboard"
