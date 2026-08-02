@@ -41,7 +41,15 @@ export async function PUT(req: Request) {
     phone?: string;
     role?: string;
   } = {};
-  if (typeof body.photo === "string") set.avatarBase64 = body.photo;
+  if (typeof body.photo === "string") {
+    // O cliente redimensiona antes de enviar; o teto aqui e so protecao.
+    if (body.photo.length > 400_000)
+      return NextResponse.json(
+        { error: "Imagem muito grande" },
+        { status: 413 },
+      );
+    set.avatarBase64 = body.photo;
+  }
   if (typeof body.theme === "string") set.theme = body.theme;
   if (typeof body.name === "string") set.name = body.name;
   if (typeof body.phone === "string") set.phone = body.phone;

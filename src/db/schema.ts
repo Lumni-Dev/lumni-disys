@@ -66,6 +66,9 @@ export const candidates = pgTable("candidates", {
   email: varchar({ length: 200 }).notNull().default(""),
   stage: varchar({ length: 40 }).notNull().default("Triagem"),
   linkedin: varchar({ length: 300 }).notNull().default(""),
+  // Curriculo anexado na candidatura publica (data URL base64, ate ~2 MB).
+  cvName: varchar({ length: 200 }).notNull().default(""),
+  cvBase64: text().notNull().default(""),
   ...timestamps,
 });
 

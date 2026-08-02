@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
+import { useI18n } from "@/i18n/context";
 import { controlClass } from "./form";
 import { IconChevronDown, IconCheck } from "./icons";
 
@@ -32,7 +33,7 @@ export function Select({
   value,
   onChange,
   options,
-  placeholder = "Selecione…",
+  placeholder,
   emptyLabel,
   disabled,
   invalid = 0,
@@ -47,6 +48,8 @@ export function Select({
   invalid?: number;
   className?: string;
 }) {
+  const { admin } = useI18n();
+  const resolvedPlaceholder = placeholder ?? admin.modals.select;
   const [open, setOpen] = useState(false);
   const mounted = useMounted();
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -174,7 +177,7 @@ export function Select({
         style={invalid ? { borderColor: "var(--accent)" } : undefined}
       >
         <span className={cx("truncate", !selected && "text-muted")}>
-          {selected?.label ?? placeholder}
+          {selected?.label ?? resolvedPlaceholder}
         </span>
         <IconChevronDown
           className={cx(

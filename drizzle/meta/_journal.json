@@ -71,6 +71,13 @@
       "when": 1785692638197,
       "tag": "0009_invite_flow",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1785697638820,
+      "tag": "0010_candidate_cv",
+      "breakpoints": true
     }
   ]
 }

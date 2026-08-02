@@ -140,6 +140,7 @@ const it: Admin = {
   candidates: {
     searchPlaceholder: "Cerca candidati...",
     add: "Aggiungi candidato",
+    downloadCv: "Scarica curriculum",
     allStages: "Tutte le fasi",
     allRoles: "Tutti i ruoli",
     listTitle: "Bacino talenti",
@@ -334,6 +335,7 @@ const it: Admin = {
     cv: "Curriculum",
     cvAttach: "Allega curriculum (PDF, DOC)",
     cvSelect: "Seleziona",
+    cvTooBig: "File troppo grande (max 2 MB).",
     send: "Invia candidatura",
     sending: "Invio...",
     sendFailed: "Impossibile inviare la candidatura. Riprova.",
@@ -343,6 +345,15 @@ const it: Admin = {
     invalidLink:
       "Questo link non è valido. Chiedi all'azienda il link completo delle posizioni.",
     goHome: "Vai alla home",
+  },
+  login: {
+    subtitle: "Accedi per entrare nel sistema",
+    google: "Continua con Google",
+    linkedin: "Continua con LinkedIn",
+    backHome: "Torna alla home",
+    terms: "Accedendo accetti i termini di utilizzo.",
+    error:
+      "Impossibile accedere. Verifica che la tua e-mail sia visibile nel provider (LinkedIn può nasconderla) e riprova, oppure usa Google.",
   },
   invite: {
     title: "Invito al workspace",

@@ -140,6 +140,7 @@ const de: Admin = {
   candidates: {
     searchPlaceholder: "Kandidaten suchen...",
     add: "Kandidat hinzufügen",
+    downloadCv: "Lebenslauf herunterladen",
     allStages: "Alle Phasen",
     allRoles: "Alle Rollen",
     listTitle: "Talentpool",
@@ -333,6 +334,7 @@ const de: Admin = {
     cv: "Lebenslauf",
     cvAttach: "Lebenslauf anhängen (PDF, DOC)",
     cvSelect: "Auswählen",
+    cvTooBig: "Datei zu groß (max. 2 MB).",
     send: "Bewerbung senden",
     sending: "Wird gesendet...",
     sendFailed:
@@ -343,6 +345,15 @@ const de: Admin = {
     invalidLink:
       "Dieser Stellen-Link ist ungültig. Fragen Sie das Unternehmen nach dem vollständigen Link.",
     goHome: "Zur Startseite",
+  },
+  login: {
+    subtitle: "Melden Sie sich an, um auf das System zuzugreifen",
+    google: "Weiter mit Google",
+    linkedin: "Weiter mit LinkedIn",
+    backHome: "Zurück zur Startseite",
+    terms: "Mit der Anmeldung stimmen Sie den Nutzungsbedingungen zu.",
+    error:
+      "Anmeldung nicht möglich. Prüfen Sie, ob Ihre E-Mail beim Anbieter sichtbar ist (LinkedIn kann sie verbergen), und versuchen Sie es erneut, oder nutzen Sie Google.",
   },
   invite: {
     title: "Workspace-Einladung",

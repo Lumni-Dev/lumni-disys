@@ -17,13 +17,38 @@ export async function POST(req: Request) {
   if (!name || !email)
     return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
 
+  const role = String(body.jobTitle ?? "").slice(0, 160);
+
+  // Mesma pessoa na mesma vaga: nao duplica o candidato nem infla o contador.
+  const [dup] = await db
+    .select({ id: schema.candidates.id })
+    .from(schema.candidates)
+    .where(
+      and(
+        eq(schema.candidates.accountId, account.id),
+        eq(schema.candidates.email, email.slice(0, 200)),
+        eq(schema.candidates.role, role),
+      ),
+    );
+  if (dup) return NextResponse.json({ ok: true }, { status: 200 });
+
+  // Curriculo: data URL base64, com teto de tamanho no servidor (~2 MB).
+  const cvData =
+    typeof body.cvData === "string" &&
+    body.cvData.startsWith("data:") &&
+    body.cvData.length <= 3_000_000
+      ? body.cvData
+      : "";
+
   await db.insert(schema.candidates).values({
     accountId: account.id,
     name: name.slice(0, 160),
-    role: String(body.jobTitle ?? "").slice(0, 160),
+    role,
     email: email.slice(0, 200),
     stage: "Triagem",
     linkedin: String(body.linkedin ?? "").slice(0, 300),
+    cvName: cvData ? String(body.cvName ?? "").slice(0, 200) : "",
+    cvBase64: cvData,
   });
 
   const jobId = Number(body.jobId);
