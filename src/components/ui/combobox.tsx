@@ -4,7 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
 import { controlClass } from "./form";
-import { IconChevronDown } from "./icons";
+import { IconChevronDown, IconSearch } from "./icons";
 
 // Campo de busca com sugestoes: filtra conforme digita, aceita valor livre e
 // tem navegacao por teclado. O painel usa portal com posicao fixa (mesmo
@@ -155,6 +155,7 @@ export function Combobox({
 
   return (
     <div className="relative">
+      <IconSearch className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
       <input
         ref={inputRef}
         type="text"
@@ -179,10 +180,15 @@ export function Combobox({
         onKeyDown={onKeyDown}
         className={cx(
           controlClass,
-          "pr-8 disabled:cursor-not-allowed disabled:opacity-40",
+          "disabled:cursor-not-allowed disabled:opacity-40",
           !!invalid && "ring-1 ring-accent",
         )}
-        style={invalid ? { borderColor: "var(--accent)" } : undefined}
+        // Padding inline para abrir espaco garantido para a lupa e o chevron.
+        style={{
+          paddingLeft: "2rem",
+          paddingRight: "2rem",
+          ...(invalid ? { borderColor: "var(--accent)" } : {}),
+        }}
       />
       <IconChevronDown
         className={cx(
