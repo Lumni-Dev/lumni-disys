@@ -43,6 +43,13 @@
       "when": 1785623740018,
       "tag": "0005_chief_arachne",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1785631984035,
+      "tag": "0006_aromatic_lester",
+      "breakpoints": true
     }
   ]
 }

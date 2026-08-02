@@ -32,6 +32,20 @@ export async function PUT(req: Request, { params }: Params) {
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Propaga a mudanca de etapa para o candidato vinculado, mantendo o funil e
+  // as atividades recentes do dashboard em sincronia com o pipeline.
+  if (body.stage !== undefined && row.candidateId) {
+    await db
+      .update(schema.candidates)
+      .set({ stage: row.stage })
+      .where(
+        and(
+          eq(schema.candidates.id, row.candidateId),
+          eq(schema.candidates.accountId, account.id),
+        ),
+      );
+  }
+
   return NextResponse.json({
     id: row.id,
     name: row.name,
