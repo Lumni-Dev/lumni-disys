@@ -17,7 +17,7 @@ export function StatCard({
   return (
     <Link
       href={href}
-      className="elevated group flex flex-col overflow-hidden rounded-lg border border-white/[0.09] bg-surface bg-gradient-to-b from-white/[0.03] to-transparent transition-all duration-200 hover:border-white/25"
+      className="elevated group flex flex-col overflow-hidden rounded-lg border border-white/[0.09] bg-surface transition-all duration-200 hover:border-white/25"
     >
       <div className="border-b border-white/[0.07] p-2.5">
         <p className="text-xs text-muted">{label}</p>

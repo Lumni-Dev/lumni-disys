@@ -11,7 +11,7 @@ export function Card({
   return (
     <div
       className={cx(
-        "elevated overflow-hidden rounded-lg border border-white/[0.09] bg-surface bg-gradient-to-b from-white/[0.03] to-transparent",
+        "elevated overflow-hidden rounded-lg border border-white/[0.09] bg-surface",
         className,
       )}
     >
