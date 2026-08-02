@@ -50,7 +50,7 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         className={cx(
-          "relative z-10 my-2.5 w-full rounded-lg border border-white/10 bg-surface bg-gradient-to-b from-white/[0.03] to-transparent shadow-2xl shadow-black/50",
+          "relative z-10 my-2.5 w-full rounded-lg border border-white/10 bg-surface shadow-2xl shadow-black/50",
           size === "lg" ? "max-w-2xl" : "max-w-lg",
         )}
       >

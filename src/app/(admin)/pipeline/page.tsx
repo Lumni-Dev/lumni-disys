@@ -218,7 +218,7 @@ export default function PipelinePage() {
                       }}
                       onClick={() => setEditing({ card: c, stage: col.stage })}
                       className={cx(
-                        "elevated cursor-grab rounded-lg border border-white/[0.09] bg-surface-2 bg-gradient-to-b from-white/[0.03] to-transparent p-2.5 shadow-sm transition-all duration-200 hover:border-white/25 hover:shadow-md active:cursor-grabbing",
+                        "elevated cursor-grab rounded-lg border border-white/[0.09] bg-surface-2 p-2.5 shadow-sm transition-all duration-200 hover:border-white/25 hover:shadow-md active:cursor-grabbing",
                         dragged?.id === c.id && "opacity-40",
                       )}
                     >
