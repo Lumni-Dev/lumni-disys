@@ -12,7 +12,7 @@ const es: Landing = {
     titleLead: "El ATS de RR. HH.",
     titleAccent: "práctico y rápido",
     subtitle:
-      "Empresas, vacantes, candidatos y procesos en una sola plataforma rápida, segura y conectada. Recluta mejor, desde el primer contacto hasta la contratación.",
+      "Empresas, vacantes, candidatos y procesos en una sola plataforma, con análisis de currículums por IA. Recluta mejor, desde el primer contacto hasta la contratación.",
     ctaGuest: "Entrar al sistema",
     ctaAuthed: "Ir al sistema",
     ctaSecondary: "Ver módulos",
@@ -23,7 +23,7 @@ const es: Landing = {
     candidates: "Candidatos",
     inProcess: "En proceso",
   },
-  stats: ["Módulos integrados", "En la nube", "Contraseñas que recordar", "Disponible"],
+  stats: ["Módulos integrados", "Idiomas", "Contraseñas que recordar", "Disponible"],
   modulesSection: {
     title: "Todo lo que tu RR. HH. necesita",
     subtitle:
@@ -36,33 +36,33 @@ const es: Landing = {
     },
     {
       title: "Vacantes",
-      desc: "Publica vacantes, define niveles y rangos salariales, y haz seguimiento de las aperturas.",
+      desc: "Publica con descripción completa y comparte el enlace público de cada vacante para recibir postulaciones.",
     },
     {
       title: "Candidatos",
-      desc: "Centraliza talento, currículos y portafolios en una base con búsqueda.",
+      desc: "Base de talento con currículum adjunto y compatibilidad con la vacante calculada por IA, de 0 a 100.",
     },
     {
       title: "Procesos",
-      desc: "Pipeline visual de arrastrar y soltar para mover candidatos entre etapas.",
+      desc: "Pipeline visual de arrastrar y soltar; las nuevas postulaciones entran solas a la preselección.",
     },
     {
       title: "Equipo",
-      desc: "Invita a tu equipo por correo y controla los permisos por página.",
+      desc: "Invita por correo con aceptación, define permisos por página y alterna entre workspaces.",
     },
   ],
   features: [
     {
-      title: "Genuinamente rápido",
-      desc: "Una interfaz ágil, atajos y búsqueda instantánea en cada página.",
+      title: "Compatibilidad por IA",
+      desc: "Cada currículum recibido se analiza contra la vacante y recibe una nota de 0 a 100.",
     },
     {
       title: "Inicio de sesión seguro",
       desc: "Accede solo con Google o LinkedIn, sin contraseñas que gestionar.",
     },
     {
-      title: "Todo organizado",
-      desc: "Empresas, vacantes, candidatos y procesos conectados en un solo lugar.",
+      title: "Vacantes públicas",
+      desc: "Comparte el enlace del workspace o de una vacante específica y recibe postulaciones con currículum.",
     },
   ],
   cta: {

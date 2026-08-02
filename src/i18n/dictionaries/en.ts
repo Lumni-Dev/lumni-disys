@@ -12,7 +12,7 @@ const en: Landing = {
     titleLead: "The practical, fast",
     titleAccent: "HR ATS",
     subtitle:
-      "Companies, jobs, candidates and processes in a single fast, secure and connected platform. Recruit better, from first contact to hire.",
+      "Companies, jobs, candidates and pipelines in one platform, with AI resume screening. Recruit better, from first contact to hire.",
     ctaGuest: "Enter the system",
     ctaAuthed: "Go to the system",
     ctaSecondary: "See modules",
@@ -23,7 +23,7 @@ const en: Landing = {
     candidates: "Candidates",
     inProcess: "In process",
   },
-  stats: ["Integrated modules", "In the cloud", "Passwords to remember", "Available"],
+  stats: ["Integrated modules", "Languages", "Passwords to remember", "Available"],
   modulesSection: {
     title: "Everything your HR needs",
     subtitle:
@@ -36,33 +36,33 @@ const en: Landing = {
     },
     {
       title: "Jobs",
-      desc: "Post openings, set levels and salary ranges, and track openings.",
+      desc: "Post jobs with full descriptions and share each job's public link to collect applications.",
     },
     {
       title: "Candidates",
-      desc: "Centralize talent, resumes and portfolios in a searchable base.",
+      desc: "Talent pool with attached resumes and AI-scored job fit from 0 to 100.",
     },
     {
       title: "Processes",
-      desc: "Visual drag and drop pipeline to move candidates between stages.",
+      desc: "Visual drag and drop pipeline; new applications land in screening automatically.",
     },
     {
       title: "Team",
-      desc: "Invite your team by email and control permissions per page.",
+      desc: "Invite by email with acceptance, set per-page permissions and switch between workspaces.",
     },
   ],
   features: [
     {
-      title: "Genuinely fast",
-      desc: "A lean interface, shortcuts and instant search on every page.",
+      title: "AI job fit",
+      desc: "Every incoming resume is scored against the job, from 0 to 100.",
     },
     {
       title: "Secure login",
       desc: "Access with Google or LinkedIn only, no passwords to manage.",
     },
     {
-      title: "All organized",
-      desc: "Companies, jobs, candidates and processes connected in one place.",
+      title: "Public job pages",
+      desc: "Share your workspace link or a single job and receive applications with resumes.",
     },
   ],
   cta: {

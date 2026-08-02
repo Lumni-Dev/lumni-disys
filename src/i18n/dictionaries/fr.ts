@@ -12,7 +12,7 @@ const fr: Landing = {
     titleLead: "L'ATS RH",
     titleAccent: "pratique et rapide",
     subtitle:
-      "Entreprises, postes, candidats et processus sur une seule plateforme rapide, sécurisée et connectée. Recrutez mieux, du premier contact à l'embauche.",
+      "Entreprises, postes, candidats et processus sur une seule plateforme, avec analyse des CV par IA. Recrutez mieux, du premier contact à l'embauche.",
     ctaGuest: "Accéder au système",
     ctaAuthed: "Aller au système",
     ctaSecondary: "Voir les modules",
@@ -23,7 +23,7 @@ const fr: Landing = {
     candidates: "Candidats",
     inProcess: "En cours",
   },
-  stats: ["Modules intégrés", "Dans le cloud", "Mots de passe à retenir", "Disponible"],
+  stats: ["Modules intégrés", "Langues", "Mots de passe à retenir", "Disponible"],
   modulesSection: {
     title: "Tout ce dont vos RH ont besoin",
     subtitle:
@@ -36,33 +36,33 @@ const fr: Landing = {
     },
     {
       title: "Postes",
-      desc: "Publiez des offres, définissez les niveaux et les fourchettes salariales, et suivez les ouvertures.",
+      desc: "Publiez avec une description complète et partagez le lien public de chaque offre pour recevoir des candidatures.",
     },
     {
       title: "Candidats",
-      desc: "Centralisez les talents, les CV et les portfolios dans une base consultable.",
+      desc: "Vivier de talents avec CV joint et compatibilité avec l'offre calculée par IA, de 0 à 100.",
     },
     {
       title: "Processus",
-      desc: "Pipeline visuel en glisser-déposer pour faire avancer les candidats entre les étapes.",
+      desc: "Pipeline visuel en glisser-déposer ; les nouvelles candidatures arrivent seules en présélection.",
     },
     {
       title: "Équipe",
-      desc: "Invitez votre équipe par e-mail et contrôlez les permissions page par page.",
+      desc: "Invitez par e-mail avec acceptation, définissez les permissions par page et passez d'un espace à l'autre.",
     },
   ],
   features: [
     {
-      title: "Vraiment rapide",
-      desc: "Une interface épurée, des raccourcis et une recherche instantanée sur chaque page.",
+      title: "Compatibilité par IA",
+      desc: "Chaque CV reçu est analysé par rapport à l'offre et reçoit une note de 0 à 100.",
     },
     {
       title: "Connexion sécurisée",
       desc: "Accès uniquement avec Google ou LinkedIn, sans mot de passe à gérer.",
     },
     {
-      title: "Tout est organisé",
-      desc: "Entreprises, postes, candidats et processus connectés au même endroit.",
+      title: "Offres publiques",
+      desc: "Partagez le lien de votre espace ou d'une offre précise et recevez des candidatures avec CV.",
     },
   ],
   cta: {

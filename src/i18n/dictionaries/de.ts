@@ -12,7 +12,7 @@ const de: Landing = {
     titleLead: "Das praktische, schnelle",
     titleAccent: "HR-ATS",
     subtitle:
-      "Unternehmen, Stellen, Kandidaten und Prozesse in einer einzigen, schnellen, sicheren und vernetzten Plattform. Rekrutieren Sie besser, vom ersten Kontakt bis zur Einstellung.",
+      "Unternehmen, Stellen, Kandidaten und Prozesse auf einer Plattform, mit KI-Lebenslaufanalyse. Rekrutieren Sie besser, vom ersten Kontakt bis zur Einstellung.",
     ctaGuest: "Zum System",
     ctaAuthed: "Zum System wechseln",
     ctaSecondary: "Module ansehen",
@@ -23,7 +23,7 @@ const de: Landing = {
     candidates: "Kandidaten",
     inProcess: "Im Prozess",
   },
-  stats: ["Integrierte Module", "In der Cloud", "Zu merkende Passwörter", "Verfügbar"],
+  stats: ["Integrierte Module", "Sprachen", "Zu merkende Passwörter", "Verfügbar"],
   modulesSection: {
     title: "Alles, was Ihr HR braucht",
     subtitle:
@@ -36,33 +36,33 @@ const de: Landing = {
     },
     {
       title: "Stellen",
-      desc: "Veröffentlichen Sie Stellen, legen Sie Level und Gehaltsspannen fest und verfolgen Sie Ausschreibungen.",
+      desc: "Veröffentlichen Sie Stellen mit vollständiger Beschreibung und teilen Sie den öffentlichen Link jeder Stelle.",
     },
     {
       title: "Kandidaten",
-      desc: "Bündeln Sie Talente, Lebensläufe und Portfolios in einer durchsuchbaren Datenbank.",
+      desc: "Talentpool mit angehängtem Lebenslauf und KI-bewerteter Passung zur Stelle von 0 bis 100.",
     },
     {
       title: "Prozesse",
-      desc: "Visuelle Drag-and-Drop-Pipeline, um Kandidaten zwischen Phasen zu bewegen.",
+      desc: "Visuelle Drag-and-Drop-Pipeline; neue Bewerbungen landen automatisch in der Vorauswahl.",
     },
     {
       title: "Team",
-      desc: "Laden Sie Ihr Team per E-Mail ein und steuern Sie Berechtigungen pro Seite.",
+      desc: "Per E-Mail mit Annahme einladen, Berechtigungen pro Seite festlegen und zwischen Workspaces wechseln.",
     },
   ],
   features: [
     {
-      title: "Wirklich schnell",
-      desc: "Eine schlanke Oberfläche, Tastenkürzel und sofortige Suche auf jeder Seite.",
+      title: "KI-Passung",
+      desc: "Jeder eingehende Lebenslauf wird gegen die Stelle bewertet, von 0 bis 100.",
     },
     {
       title: "Sicheres Login",
       desc: "Zugang nur mit Google oder LinkedIn, ohne Passwörter zu verwalten.",
     },
     {
-      title: "Alles organisiert",
-      desc: "Unternehmen, Stellen, Kandidaten und Prozesse an einem Ort vernetzt.",
+      title: "Öffentliche Stellenseiten",
+      desc: "Teilen Sie den Workspace-Link oder eine einzelne Stelle und erhalten Sie Bewerbungen mit Lebenslauf.",
     },
   ],
   cta: {
