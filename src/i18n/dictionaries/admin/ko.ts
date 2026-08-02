@@ -16,6 +16,7 @@ const ko: Admin = {
     openMenu: "메뉴 열기",
     closeMenu: "메뉴 닫기",
     userFallback: "사용자",
+    myWorkspace: "내 워크스페이스",
   },
   common: {
     search: "검색...",

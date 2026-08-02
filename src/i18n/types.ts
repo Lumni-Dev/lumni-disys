@@ -71,6 +71,8 @@ export interface Admin {
     openMenu: string;
     closeMenu: string;
     userFallback: string;
+    /** Rotulo do proprio workspace no seletor de workspaces. */
+    myWorkspace: string;
   };
   common: {
     search: string;

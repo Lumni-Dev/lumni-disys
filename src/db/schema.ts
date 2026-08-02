@@ -93,7 +93,8 @@ export const teamMembers = pgTable(
     role: varchar({ length: 120 }).notNull().default(""),
     ...timestamps,
   },
-  (t) => [uniqueIndex("team_members_email_key").on(t.email)],
+  // Unico por workspace: a mesma pessoa pode colaborar em varias contas.
+  (t) => [uniqueIndex("team_members_account_email_key").on(t.accountId, t.email)],
 );
 
 export const userProfiles = pgTable(
@@ -101,6 +102,10 @@ export const userProfiles = pgTable(
   {
     id: serial().primaryKey(),
     email: varchar({ length: 200 }).notNull(),
+    // Workspace em que a pessoa esta trabalhando (null = resolucao padrao).
+    activeAccountId: integer().references(() => accounts.id, {
+      onDelete: "set null",
+    }),
     name: varchar({ length: 160 }).notNull().default(""),
     phone: varchar({ length: 40 }).notNull().default(""),
     role: varchar({ length: 120 }).notNull().default(""),

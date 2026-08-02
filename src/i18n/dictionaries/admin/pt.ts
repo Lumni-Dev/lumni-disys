@@ -16,6 +16,7 @@ const pt: Admin = {
     openMenu: "Abrir menu",
     closeMenu: "Fechar menu",
     userFallback: "Usuário",
+    myWorkspace: "Meu workspace",
   },
   common: {
     search: "Buscar...",

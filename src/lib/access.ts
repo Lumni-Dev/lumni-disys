@@ -36,3 +36,40 @@ export function useAccess(): Access | null {
   }, []);
   return access;
 }
+
+// Workspaces do usuario (conta propria + convites), para o seletor do menu.
+
+export type Workspace = {
+  id: number;
+  owner: boolean;
+  ownerEmail: string;
+  ownerName: string;
+  active: boolean;
+};
+
+let wsCached: Promise<Workspace[]> | null = null;
+
+export function fetchWorkspaces(): Promise<Workspace[]> {
+  wsCached ??= api.get<Workspace[]>("/api/workspaces").catch((err) => {
+    wsCached = null;
+    throw err;
+  });
+  return wsCached;
+}
+
+/** Workspaces do usuario atual, ou null enquanto carrega. */
+export function useWorkspaces(): Workspace[] | null {
+  const [list, setList] = useState<Workspace[] | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetchWorkspaces()
+      .then((w) => {
+        if (alive) setList(w);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return list;
+}

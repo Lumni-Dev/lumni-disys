@@ -16,6 +16,7 @@ const ru: Admin = {
     openMenu: "Открыть меню",
     closeMenu: "Закрыть меню",
     userFallback: "Пользователь",
+    myWorkspace: "Моё рабочее пространство",
   },
   common: {
     search: "Поиск...",
