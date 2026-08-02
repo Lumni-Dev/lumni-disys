@@ -140,6 +140,7 @@ const fr: Admin = {
   candidates: {
     searchPlaceholder: "Rechercher des candidats...",
     add: "Ajouter un candidat",
+    downloadCv: "Télécharger le CV",
     allStages: "Toutes les étapes",
     allRoles: "Tous les postes",
     listTitle: "Vivier de talents",
@@ -333,6 +334,7 @@ const fr: Admin = {
     cv: "CV",
     cvAttach: "Joindre un CV (PDF, DOC)",
     cvSelect: "Choisir",
+    cvTooBig: "Fichier trop volumineux (max. 2 Mo).",
     send: "Envoyer la candidature",
     sending: "Envoi...",
     sendFailed: "Impossible d'envoyer la candidature. Veuillez réessayer.",
@@ -342,6 +344,15 @@ const fr: Admin = {
     invalidLink:
       "Ce lien d'offres n'est pas valide. Demandez à l'entreprise son lien complet.",
     goHome: "Aller à l'accueil",
+  },
+  login: {
+    subtitle: "Connectez-vous pour accéder au système",
+    google: "Continuer avec Google",
+    linkedin: "Continuer avec LinkedIn",
+    backHome: "Retour à l'accueil",
+    terms: "En vous connectant, vous acceptez les conditions d'utilisation.",
+    error:
+      "Connexion impossible. Vérifiez que votre e-mail est visible chez le fournisseur (LinkedIn peut le masquer) et réessayez, ou utilisez Google.",
   },
   invite: {
     title: "Invitation à l'espace de travail",

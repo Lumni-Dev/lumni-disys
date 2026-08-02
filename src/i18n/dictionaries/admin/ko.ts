@@ -140,6 +140,7 @@ const ko: Admin = {
   candidates: {
     searchPlaceholder: "지원자 검색...",
     add: "지원자 추가",
+    downloadCv: "이력서 다운로드",
     allStages: "모든 단계",
     allRoles: "모든 직무",
     listTitle: "인재 풀",
@@ -327,6 +328,7 @@ const ko: Admin = {
     cv: "이력서",
     cvAttach: "이력서 첨부 (PDF, DOC)",
     cvSelect: "선택",
+    cvTooBig: "파일이 너무 큽니다(최대 2MB).",
     send: "지원서 제출",
     sending: "제출 중...",
     sendFailed: "지원서를 제출하지 못했습니다. 다시 시도해 주세요.",
@@ -336,6 +338,15 @@ const ko: Admin = {
     invalidLink:
       "이 채용 링크는 유효하지 않습니다. 회사에 전체 링크를 요청하세요.",
     goHome: "홈으로",
+  },
+  login: {
+    subtitle: "시스템에 접속하려면 로그인하세요",
+    google: "Google로 계속하기",
+    linkedin: "LinkedIn으로 계속하기",
+    backHome: "홈으로 돌아가기",
+    terms: "로그인하면 이용 약관에 동의하는 것입니다.",
+    error:
+      "로그인할 수 없습니다. 제공자에서 이메일이 공개되어 있는지 확인 후 다시 시도하거나(LinkedIn은 숨길 수 있음) Google을 사용하세요.",
   },
   invite: {
     title: "워크스페이스 초대",

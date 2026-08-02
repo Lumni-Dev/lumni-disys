@@ -140,6 +140,7 @@ const nl: Admin = {
   candidates: {
     searchPlaceholder: "Kandidaten zoeken...",
     add: "Kandidaat toevoegen",
+    downloadCv: "Cv downloaden",
     allStages: "Alle fases",
     allRoles: "Alle functies",
     listTitle: "Talentenpool",
@@ -334,6 +335,7 @@ const nl: Admin = {
     cv: "Cv",
     cvAttach: "Cv bijvoegen (PDF, DOC)",
     cvSelect: "Kiezen",
+    cvTooBig: "Bestand te groot (max. 2 MB).",
     send: "Sollicitatie versturen",
     sending: "Versturen...",
     sendFailed: "Kon de sollicitatie niet versturen. Probeer het opnieuw.",
@@ -343,6 +345,15 @@ const nl: Admin = {
     invalidLink:
       "Deze vacaturelink is niet geldig. Vraag het bedrijf om de volledige link.",
     goHome: "Naar home",
+  },
+  login: {
+    subtitle: "Log in om toegang te krijgen tot het systeem",
+    google: "Doorgaan met Google",
+    linkedin: "Doorgaan met LinkedIn",
+    backHome: "Terug naar home",
+    terms: "Door in te loggen ga je akkoord met de gebruiksvoorwaarden.",
+    error:
+      "Inloggen is niet gelukt. Controleer of je e-mailadres zichtbaar is bij de provider (LinkedIn kan het verbergen) en probeer opnieuw, of gebruik Google.",
   },
   invite: {
     title: "Workspace-uitnodiging",

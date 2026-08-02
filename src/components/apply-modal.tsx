@@ -28,11 +28,33 @@ export function ApplyModal({
   const [phone, setPhone] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [message, setMessage] = useState("");
-  const [cv, setCv] = useState("");
+  const [cvName, setCvName] = useState("");
+  const [cvData, setCvData] = useState("");
+  const [cvTooBig, setCvTooBig] = useState(false);
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);
   const invalid = (k: string) => (errs[k] ? attempt : 0);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const MAX_CV_BYTES = 2 * 1024 * 1024;
+
+  // Le o arquivo de verdade (base64) para enviar junto com a candidatura.
+  function onCvFile(file: File | undefined) {
+    setCvTooBig(false);
+    if (!file) return;
+    if (file.size > MAX_CV_BYTES) {
+      setCvName("");
+      setCvData("");
+      setCvTooBig(true);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCvName(file.name);
+      setCvData(String(reader.result ?? ""));
+    };
+    reader.readAsDataURL(file);
+  }
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -42,7 +64,7 @@ export function ApplyModal({
       phone: !isPhone(phone),
       linkedin: !isUrl(linkedin),
       message: !message.trim(),
-      cv: !cv.trim(),
+      cv: !cvData,
     };
     setErrs(errors);
     if (Object.values(errors).some(Boolean)) {
@@ -66,6 +88,8 @@ export function ApplyModal({
           phone,
           linkedin,
           message,
+          cvName,
+          cvData,
         }),
       });
       if (!res.ok) throw new Error("failed");
@@ -86,7 +110,9 @@ export function ApplyModal({
     setPhone("");
     setLinkedin("");
     setMessage("");
-    setCv("");
+    setCvName("");
+    setCvData("");
+    setCvTooBig(false);
     setErrs({});
     onClose();
   }
@@ -170,15 +196,18 @@ export function ApplyModal({
                 style={invalid("cv") ? { borderColor: "var(--accent)" } : undefined}
                 className="flex w-full items-center justify-between rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-white/40 hover:text-foreground"
               >
-                <span className="truncate">{cv || t.cvAttach}</span>
+                <span className="truncate">{cvName || t.cvAttach}</span>
                 <span className="text-foreground">{t.cvSelect}</span>
               </button>
+              {cvTooBig && (
+                <span className="text-xs text-accent">{t.cvTooBig}</span>
+              )}
               <input
                 ref={fileRef}
                 type="file"
                 accept=".pdf,.doc,.docx"
                 className="hidden"
-                onChange={(e) => setCv(e.target.files?.[0]?.name ?? "")}
+                onChange={(e) => onCvFile(e.target.files?.[0])}
               />
             </Field>
           </div>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -8,8 +8,18 @@ export async function GET() {
   const { account, response } = await authorize("candidates", "view");
   if (!account) return response;
 
+  // Sem o cv_base64 na listagem (pode pesar megabytes); vai so o flag.
   const rows = await db
-    .select()
+    .select({
+      id: schema.candidates.id,
+      name: schema.candidates.name,
+      role: schema.candidates.role,
+      email: schema.candidates.email,
+      stage: schema.candidates.stage,
+      linkedin: schema.candidates.linkedin,
+      updatedAt: schema.candidates.updatedAt,
+      hasCv: sql<boolean>`${schema.candidates.cvBase64} <> ''`,
+    })
     .from(schema.candidates)
     .where(eq(schema.candidates.accountId, account.id))
     .orderBy(asc(schema.candidates.id));

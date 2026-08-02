@@ -140,6 +140,7 @@ const en: Admin = {
   candidates: {
     searchPlaceholder: "Search candidates...",
     add: "Add candidate",
+    downloadCv: "Download resume",
     allStages: "All stages",
     allRoles: "All roles",
     listTitle: "Talent pool",
@@ -332,6 +333,7 @@ const en: Admin = {
     cv: "Resume",
     cvAttach: "Attach resume (PDF, DOC)",
     cvSelect: "Browse",
+    cvTooBig: "File too large (max 2 MB).",
     send: "Submit application",
     sending: "Sending...",
     sendFailed: "Could not submit your application. Please try again.",
@@ -341,6 +343,15 @@ const en: Admin = {
     invalidLink:
       "This jobs link is not valid. Ask the company for their full jobs link.",
     goHome: "Go to home",
+  },
+  login: {
+    subtitle: "Sign in to access the system",
+    google: "Continue with Google",
+    linkedin: "Continue with LinkedIn",
+    backHome: "Back to home",
+    terms: "By signing in you agree to the terms of use.",
+    error:
+      "Could not sign you in. Check that your email is visible in the provider (LinkedIn may hide it) and try again, or use Google.",
   },
   invite: {
     title: "Workspace invite",

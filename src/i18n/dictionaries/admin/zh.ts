@@ -140,6 +140,7 @@ const zh: Admin = {
   candidates: {
     searchPlaceholder: "搜索候选人……",
     add: "添加候选人",
+    downloadCv: "下载简历",
     allStages: "所有阶段",
     allRoles: "所有岗位",
     listTitle: "人才库",
@@ -326,6 +327,7 @@ const zh: Admin = {
     cv: "简历",
     cvAttach: "附上简历 (PDF, DOC)",
     cvSelect: "选择",
+    cvTooBig: "文件太大（最大 2 MB）。",
     send: "提交申请",
     sending: "提交中...",
     sendFailed: "无法提交申请，请重试。",
@@ -334,6 +336,15 @@ const zh: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink: "此招聘链接无效。请向公司索取完整链接。",
     goHome: "返回首页",
+  },
+  login: {
+    subtitle: "登录以访问系统",
+    google: "使用 Google 继续",
+    linkedin: "使用 LinkedIn 继续",
+    backHome: "返回首页",
+    terms: "登录即表示您同意使用条款。",
+    error:
+      "无法登录。请确认您的邮箱在提供商处可见（LinkedIn 可能隐藏）后重试，或使用 Google。",
   },
   invite: {
     title: "工作区邀请",

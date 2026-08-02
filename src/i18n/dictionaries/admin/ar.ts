@@ -141,6 +141,7 @@ const ar: Admin = {
   candidates: {
     searchPlaceholder: "البحث في المرشحين...",
     add: "إضافة مرشح",
+    downloadCv: "تنزيل السيرة الذاتية",
     allStages: "جميع المراحل",
     allRoles: "جميع الأدوار",
     listTitle: "مجمع المواهب",
@@ -334,6 +335,7 @@ const ar: Admin = {
     cv: "السيرة الذاتية",
     cvAttach: "إرفاق السيرة الذاتية (PDF, DOC)",
     cvSelect: "اختيار",
+    cvTooBig: "الملف كبير جداً (الحد الأقصى 2 ميغابايت).",
     send: "إرسال الطلب",
     sending: "جارٍ الإرسال...",
     sendFailed: "تعذّر إرسال الطلب. حاول مرة أخرى.",
@@ -342,6 +344,15 @@ const ar: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink: "رابط الوظائف هذا غير صالح. اطلب من الشركة الرابط الكامل.",
     goHome: "الذهاب إلى الرئيسية",
+  },
+  login: {
+    subtitle: "سجّل الدخول للوصول إلى النظام",
+    google: "المتابعة عبر Google",
+    linkedin: "المتابعة عبر LinkedIn",
+    backHome: "العودة إلى الرئيسية",
+    terms: "بتسجيل الدخول فإنك توافق على شروط الاستخدام.",
+    error:
+      "تعذّر تسجيل الدخول. تأكد من أن بريدك ظاهر لدى المزود (قد يخفيه LinkedIn) وحاول مجدداً، أو استخدم Google.",
   },
   invite: {
     title: "دعوة إلى مساحة العمل",

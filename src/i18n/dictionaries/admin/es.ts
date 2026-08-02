@@ -140,6 +140,7 @@ const es: Admin = {
   candidates: {
     searchPlaceholder: "Buscar candidatos...",
     add: "Añadir candidato",
+    downloadCv: "Descargar currículum",
     allStages: "Todas las etapas",
     allRoles: "Todos los puestos",
     listTitle: "Base de talento",
@@ -333,6 +334,7 @@ const es: Admin = {
     cv: "Currículum",
     cvAttach: "Adjuntar currículum (PDF, DOC)",
     cvSelect: "Seleccionar",
+    cvTooBig: "Archivo demasiado grande (máx. 2 MB).",
     send: "Enviar postulación",
     sending: "Enviando...",
     sendFailed: "No se pudo enviar la postulación. Inténtalo de nuevo.",
@@ -342,6 +344,15 @@ const es: Admin = {
     invalidLink:
       "Este enlace de vacantes no es válido. Pide a la empresa su enlace completo.",
     goHome: "Ir al inicio",
+  },
+  login: {
+    subtitle: "Inicia sesión para acceder al sistema",
+    google: "Continuar con Google",
+    linkedin: "Continuar con LinkedIn",
+    backHome: "Volver al inicio",
+    terms: "Al entrar aceptas los términos de uso.",
+    error:
+      "No se pudo iniciar sesión. Verifica que tu correo esté visible en el proveedor (LinkedIn puede ocultarlo) e inténtalo de nuevo, o usa Google.",
   },
   invite: {
     title: "Invitación al workspace",

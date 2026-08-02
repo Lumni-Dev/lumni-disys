@@ -108,10 +108,24 @@ export default function AccountPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      setPhoto(base64);
-      await api.put("/api/profile", { photo: base64 });
+    reader.onload = () => {
+      // Redimensiona no navegador (max 256px, JPEG) para nao guardar
+      // megabytes de base64 no banco.
+      const img = document.createElement("img");
+      img.onload = async () => {
+        const max = 256;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
+        const base64 = canvas.toDataURL("image/jpeg", 0.85);
+        setPhoto(base64);
+        await api.put("/api/profile", { photo: base64 });
+      };
+      img.src = String(reader.result ?? "");
     };
     reader.readAsDataURL(file);
   }

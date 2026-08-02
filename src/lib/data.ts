@@ -106,6 +106,7 @@ export type Candidate = {
   stage: (typeof stages)[number];
   modifiedAt: string;
   linkedin?: string;
+  hasCv?: boolean;
 };
 
 export const candidates: Candidate[] = range(30).map((i) => {

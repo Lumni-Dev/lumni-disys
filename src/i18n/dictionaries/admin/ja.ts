@@ -140,6 +140,7 @@ const ja: Admin = {
   candidates: {
     searchPlaceholder: "候補者を検索...",
     add: "候補者を追加",
+    downloadCv: "履歴書をダウンロード",
     allStages: "すべてのステージ",
     allRoles: "すべての職種",
     listTitle: "人材プール",
@@ -331,6 +332,7 @@ const ja: Admin = {
     cv: "履歴書",
     cvAttach: "履歴書を添付 (PDF, DOC)",
     cvSelect: "選択",
+    cvTooBig: "ファイルが大きすぎます(最大2MB)。",
     send: "応募を送信",
     sending: "送信中...",
     sendFailed: "応募を送信できませんでした。もう一度お試しください。",
@@ -340,6 +342,15 @@ const ja: Admin = {
     invalidLink:
       "この求人リンクは無効です。企業に完全なリンクをお問い合わせください。",
     goHome: "ホームへ",
+  },
+  login: {
+    subtitle: "サインインしてシステムにアクセス",
+    google: "Googleで続行",
+    linkedin: "LinkedInで続行",
+    backHome: "ホームに戻る",
+    terms: "サインインすると利用規約に同意したことになります。",
+    error:
+      "サインインできませんでした。プロバイダーでメールアドレスが公開されているか確認して再試行するか(LinkedInは非公開の場合があります)、Googleをご利用ください。",
   },
   invite: {
     title: "ワークスペースへの招待",

@@ -174,6 +174,8 @@ export interface Admin {
   candidates: {
     searchPlaceholder: string;
     add: string;
+    /** Tooltip do botao de baixar o curriculo anexado. */
+    downloadCv: string;
     allStages: string;
     allRoles: string;
     listTitle: string;
@@ -364,6 +366,7 @@ export interface Admin {
     cv: string;
     cvAttach: string;
     cvSelect: string;
+    cvTooBig: string;
     send: string;
     sending: string;
     sendFailed: string;
@@ -372,6 +375,15 @@ export interface Admin {
     emailPlaceholder: string;
     invalidLink: string;
     goHome: string;
+  };
+  /** Pagina de login. */
+  login: {
+    subtitle: string;
+    google: string;
+    linkedin: string;
+    backHome: string;
+    terms: string;
+    error: string;
   };
   /** Pagina de aceite do convite de workspace. */
   invite: {

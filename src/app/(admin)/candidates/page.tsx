@@ -12,7 +12,7 @@ import { AddButton, Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { IconPencil, IconTrash } from "@/components/ui/icons";
+import { IconDownload, IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { initials } from "@/lib/utils";
@@ -219,6 +219,18 @@ export default function CandidatesPage() {
                 <Td className="text-muted">{c.modifiedAt}</Td>
                 <Td>
                   <div className="flex items-center gap-1.5">
+                    {c.hasCv && (
+                      <Tooltip label={admin.candidates.downloadCv}>
+                        <Button
+                          variant="outline"
+                          aria-label={admin.candidates.downloadCv}
+                          icon={<IconDownload className="h-4 w-4" />}
+                          onClick={() =>
+                            window.open(`/api/candidates/${c.id}/cv`, "_blank")
+                          }
+                        />
+                      </Tooltip>
+                    )}
                     <Tooltip label={admin.common.edit}>
                       <Button
                         variant="outline"

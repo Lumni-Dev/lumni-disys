@@ -92,12 +92,21 @@ export default function Home() {
   const maxCount = Math.max(1, ...funnel.map((f) => f.count));
   const totalInProcess = funnel.reduce((a, f) => a + f.count, 0);
 
-  const activities = candidates.map((c) => ({
-    who: c.name,
-    what: admin.dashboard.movedTo(admin.stages[c.stage] ?? c.stage),
-    role: c.role,
-    time: c.modifiedAt,
-  }));
+  // Mais recentes primeiro (modifiedAt vem como dd/mm/aaaa).
+  const dateValue = (d: string) => {
+    const [dd, mm, yy] = d.split("/").map(Number);
+    return new Date(yy || 0, (mm || 1) - 1, dd || 1).getTime();
+  };
+  const activities = [...candidates]
+    .sort(
+      (a, b) => dateValue(b.modifiedAt) - dateValue(a.modifiedAt) || b.id - a.id,
+    )
+    .map((c) => ({
+      who: c.name,
+      what: admin.dashboard.movedTo(admin.stages[c.stage] ?? c.stage),
+      role: c.role,
+      time: c.modifiedAt,
+    }));
   const pageCount = Math.ceil(activities.length / ACTIVITY_PAGE_SIZE);
   const start = (page - 1) * ACTIVITY_PAGE_SIZE;
   const visible = activities.slice(start, start + ACTIVITY_PAGE_SIZE);
