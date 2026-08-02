@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -54,6 +54,23 @@ export async function POST(req: Request) {
   if (!account) return response;
 
   const body = await req.json();
+
+  // Mesmo e-mail duas vezes no mesmo workspace: erro claro em vez de 500.
+  const [dup] = await db
+    .select({ id: schema.teamMembers.id })
+    .from(schema.teamMembers)
+    .where(
+      and(
+        eq(schema.teamMembers.accountId, account.id),
+        eq(schema.teamMembers.email, body.email),
+      ),
+    );
+  if (dup)
+    return NextResponse.json(
+      { error: "Este e-mail ja foi convidado" },
+      { status: 409 },
+    );
+
   const [member] = await db
     .insert(schema.teamMembers)
     .values({

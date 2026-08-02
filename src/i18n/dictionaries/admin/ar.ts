@@ -16,6 +16,7 @@ const ar: Admin = {
     openMenu: "فتح القائمة",
     closeMenu: "إغلاق القائمة",
     userFallback: "مستخدم",
+    myWorkspace: "مساحة عملي",
   },
   common: {
     search: "بحث...",

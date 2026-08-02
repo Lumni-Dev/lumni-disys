@@ -16,6 +16,7 @@ const zh: Admin = {
     openMenu: "打开菜单",
     closeMenu: "关闭菜单",
     userFallback: "用户",
+    myWorkspace: "我的工作区",
   },
   common: {
     search: "搜索……",

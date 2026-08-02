@@ -5,8 +5,10 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { cx, initials, ACTIVE } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
-import { useAccess } from "@/lib/access";
+import { useAccess, useWorkspaces } from "@/lib/access";
+import { api } from "@/lib/api-client";
 import { Avatar } from "@/components/ui/avatar";
+import { Select } from "@/components/ui/select";
 import { useSidebar } from "./sidebar-context";
 import { useProfile } from "./profile-context";
 import {
@@ -43,8 +45,17 @@ export function Sidebar() {
   // Colaborador so ve no menu os modulos com permissao de ver; enquanto o
   // acesso carrega, mostra tudo (caso comum: dono, que ve tudo mesmo).
   const items = access ? nav.filter((n) => access.modules.includes(n.key)) : nav;
+  const workspaces = useWorkspaces();
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } =
     useSidebar();
+
+  // Troca de workspace: salva o ativo e recarrega no dashboard.
+  function switchWorkspace(v: string) {
+    void api
+      .put("/api/workspaces", { id: Number(v) })
+      .then(() => window.location.assign("/dashboard"))
+      .catch(() => {});
+  }
   const accountActive = pathname.startsWith("/account");
   const userName = session?.user?.name ?? admin.sidebar.userFallback;
   const userEmail = session?.user?.email ?? "";
@@ -97,6 +108,26 @@ export function Sidebar() {
             <IconClose className="h-5 w-5" />
           </button>
         </div>
+
+        {workspaces && workspaces.length > 1 && (
+          <div
+            className={cx(
+              "shrink-0 border-b border-white/[0.05] p-2.5",
+              collapsed && "lg:hidden",
+            )}
+          >
+            <Select
+              value={String(workspaces.find((w) => w.active)?.id ?? "")}
+              onChange={switchWorkspace}
+              options={workspaces.map((w) => ({
+                value: String(w.id),
+                label: w.owner
+                  ? admin.sidebar.myWorkspace
+                  : w.ownerName || w.ownerEmail,
+              }))}
+            />
+          </div>
+        )}
 
         <nav className="scroll-thin flex flex-1 flex-col gap-1 overflow-y-auto p-2.5">
           {items.map(({ href, key, Icon }) => {

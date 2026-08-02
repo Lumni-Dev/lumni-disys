@@ -16,6 +16,7 @@ const ja: Admin = {
     openMenu: "メニューを開く",
     closeMenu: "メニューを閉じる",
     userFallback: "ユーザー",
+    myWorkspace: "マイワークスペース",
   },
   common: {
     search: "検索...",
