@@ -154,6 +154,7 @@ const es: Admin = {
       email: "Correo electrónico",
       role: "Puesto deseado",
       stage: "Etapa",
+      match: "Compatibilidad",
       modifiedAt: "Última modificación",
     },
   },

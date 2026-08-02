@@ -154,6 +154,7 @@ const zh: Admin = {
       email: "邮箱",
       role: "期望岗位",
       stage: "阶段",
+      match: "匹配度",
       modifiedAt: "最后修改",
     },
   },

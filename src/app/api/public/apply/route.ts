@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { and, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { accountByToken } from "@/lib/account";
+import { scoreCvMatch } from "@/lib/match";
+
+// A analise de compatibilidade por IA pode levar alguns segundos.
+export const maxDuration = 60;
 
 // Candidatura publica: cria o candidato na conta dona do link (token).
 export async function POST(req: Request) {
@@ -40,6 +44,36 @@ export async function POST(req: Request) {
       ? body.cvData
       : "";
 
+  // Dados da vaga: empresa para o card e titulo/descricao para a analise.
+  const jobId = Number(body.jobId);
+  let job: { title: string; company: string; description: string } | null =
+    null;
+  if (Number.isFinite(jobId)) {
+    const [row] = await db
+      .select({
+        title: schema.jobs.title,
+        company: schema.jobs.company,
+        description: schema.jobs.description,
+      })
+      .from(schema.jobs)
+      .where(
+        and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
+      );
+    job = row ?? null;
+  }
+
+  // Compatibilidade curriculo x vaga por IA (0 a 100; null se falhar).
+  const cvName = cvData ? String(body.cvName ?? "").slice(0, 200) : "";
+  const matchScore =
+    cvData && job
+      ? await scoreCvMatch({
+          cvDataUrl: cvData,
+          cvName,
+          jobTitle: job.title,
+          jobDescription: job.description,
+        })
+      : null;
+
   const [candidate] = await db
     .insert(schema.candidates)
     .values({
@@ -49,30 +83,20 @@ export async function POST(req: Request) {
       email: email.slice(0, 200),
       stage: "Triagem",
       linkedin: String(body.linkedin ?? "").slice(0, 300),
-      cvName: cvData ? String(body.cvName ?? "").slice(0, 200) : "",
+      cvName,
       cvBase64: cvData,
+      matchScore,
     })
     .returning({ id: schema.candidates.id });
 
-  // Empresa da vaga (para o card) + contador de candidatos da vaga.
-  const jobId = Number(body.jobId);
-  let jobCompany = "";
-  if (Number.isFinite(jobId)) {
-    const [job] = await db
-      .select({ company: schema.jobs.company })
-      .from(schema.jobs)
+  const jobCompany = job?.company ?? "";
+  if (job) {
+    await db
+      .update(schema.jobs)
+      .set({ applicants: sql`${schema.jobs.applicants} + 1` })
       .where(
         and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
       );
-    if (job) {
-      jobCompany = job.company;
-      await db
-        .update(schema.jobs)
-        .set({ applicants: sql`${schema.jobs.applicants} + 1` })
-        .where(
-          and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
-        );
-    }
   }
 
   // A candidatura ja entra no kanban de processos, no fim da Triagem,

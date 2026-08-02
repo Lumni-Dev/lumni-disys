@@ -190,6 +190,8 @@ export interface Admin {
       email: string;
       role: string;
       stage: string;
+      /** Compatibilidade curriculo x vaga calculada por IA (0 a 100). */
+      match: string;
       modifiedAt: string;
     };
   };

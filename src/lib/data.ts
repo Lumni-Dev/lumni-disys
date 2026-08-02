@@ -109,6 +109,7 @@ export type Candidate = {
   modifiedAt: string;
   linkedin?: string;
   hasCv?: boolean;
+  matchScore?: number | null;
 };
 
 export const candidates: Candidate[] = range(30).map((i) => {

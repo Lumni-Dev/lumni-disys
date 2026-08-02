@@ -154,6 +154,7 @@ const nl: Admin = {
       email: "E-mail",
       role: "Gewenste functie",
       stage: "Fase",
+      match: "Match",
       modifiedAt: "Laatst gewijzigd",
     },
   },

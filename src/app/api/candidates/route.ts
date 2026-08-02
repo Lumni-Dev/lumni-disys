@@ -19,6 +19,7 @@ export async function GET() {
       linkedin: schema.candidates.linkedin,
       updatedAt: schema.candidates.updatedAt,
       hasCv: sql<boolean>`${schema.candidates.cvBase64} <> ''`,
+      matchScore: schema.candidates.matchScore,
     })
     .from(schema.candidates)
     .where(eq(schema.candidates.accountId, account.id))

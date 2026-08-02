@@ -65,6 +65,7 @@ type CandidateRow = {
   // conteudo e o flag e derivado aqui. O base64 nunca vai na resposta.
   cvBase64?: string;
   hasCv?: boolean;
+  matchScore?: number | null;
 };
 export function serializeCandidate(r: CandidateRow) {
   return {
@@ -75,6 +76,7 @@ export function serializeCandidate(r: CandidateRow) {
     stage: r.stage,
     linkedin: r.linkedin,
     hasCv: r.hasCv ?? Boolean(r.cvBase64),
+    matchScore: r.matchScore ?? null,
     modifiedAt: formatDate(r.updatedAt),
   };
 }

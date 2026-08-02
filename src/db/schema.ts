@@ -71,6 +71,9 @@ export const candidates = pgTable("candidates", {
   // Curriculo anexado na candidatura publica (data URL base64, ate ~2 MB).
   cvName: varchar({ length: 200 }).notNull().default(""),
   cvBase64: text().notNull().default(""),
+  // Compatibilidade curriculo x vaga (0 a 100) calculada por IA na
+  // candidatura; null quando nao analisado.
+  matchScore: integer(),
   ...timestamps,
 });
 
