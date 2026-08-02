@@ -24,14 +24,14 @@ export function Topbar({
   return (
     <header
       className={cx(
-        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-white/[0.07] bg-background/60 p-2.5 shadow-[0_1px_0_0_rgba(255,255,255,0.03)] backdrop-blur-xl",
+        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-white/[0.05] bg-background/60 p-2.5 shadow-[0_1px_0_0_rgba(255,255,255,0.03)] backdrop-blur-xl",
         emptyOnDesktop && "lg:hidden",
       )}
     >
       <button
         onClick={() => setMobileOpen(true)}
         aria-label="Abrir menu"
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-white/25 hover:text-foreground active:scale-[0.98] lg:hidden"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:text-foreground active:scale-[0.98] lg:hidden"
       >
         <IconMenu className="h-5 w-5" />
       </button>
