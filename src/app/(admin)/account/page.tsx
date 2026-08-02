@@ -211,6 +211,8 @@ export default function AccountPage() {
         </form>
       </Card>
 
+      {/* Mosaico: cards menores lado a lado no desktop. */}
+      <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
       <Card>
         <CardHeader
           title={admin.account.themeTitle}
@@ -284,36 +286,6 @@ export default function AccountPage() {
         </CardBody>
       </Card>
 
-      {isOwner && (
-        <Card className="border-white/30">
-          <CardHeader
-            title={admin.account.dangerTitle}
-            subtitle={admin.account.dangerSubtitle}
-          />
-          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-            <div className="leading-tight">
-              <p className="text-sm font-medium text-foreground">
-                {admin.account.deleteAccount}
-              </p>
-              <p className="text-xs text-muted">
-                {admin.account.deleteAccountDesc}
-              </p>
-            </div>
-            <ConfirmAction
-              label={admin.account.deleteAccount}
-              icon={<IconTrash className="h-4 w-4" />}
-              confirmLabel={admin.account.confirmDelete}
-              onConfirm={() => {
-                void api
-                  .del("/api/account")
-                  .then(() => signOut({ redirectTo: "/" }))
-                  .catch(() => {});
-              }}
-            />
-          </CardBody>
-        </Card>
-      )}
-
       {!hasOwn && (
         <Card>
           <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
@@ -381,6 +353,37 @@ export default function AccountPage() {
           </Tooltip>
         </CardBody>
       </Card>
+
+      {isOwner && (
+        <Card className="border-white/30 lg:col-span-2">
+          <CardHeader
+            title={admin.account.dangerTitle}
+            subtitle={admin.account.dangerSubtitle}
+          />
+          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
+            <div className="leading-tight">
+              <p className="text-sm font-medium text-foreground">
+                {admin.account.deleteAccount}
+              </p>
+              <p className="text-xs text-muted">
+                {admin.account.deleteAccountDesc}
+              </p>
+            </div>
+            <ConfirmAction
+              label={admin.account.deleteAccount}
+              icon={<IconTrash className="h-4 w-4" />}
+              confirmLabel={admin.account.confirmDelete}
+              onConfirm={() => {
+                void api
+                  .del("/api/account")
+                  .then(() => signOut({ redirectTo: "/" }))
+                  .catch(() => {});
+              }}
+            />
+          </CardBody>
+        </Card>
+      )}
+      </div>
     </PageShell>
   );
 }
