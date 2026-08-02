@@ -50,6 +50,9 @@ export const jobs = pgTable("jobs", {
   company: varchar({ length: 160 }).notNull().default(""),
   type: varchar({ length: 40 }).notNull().default("Remoto"),
   level: varchar({ length: 40 }).notNull().default("Pleno"),
+  // Quantidade de posicoes abertas nesta vaga (informado ao criar).
+  openings: integer().notNull().default(1),
+  // Contador automatico de candidaturas (nao editavel no modal).
   applicants: integer().notNull().default(0),
   status: varchar({ length: 40 }).notNull().default("Aberta"),
   ...timestamps,

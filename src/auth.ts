@@ -22,14 +22,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // A identidade do usuário é o e-mail: garante que ele esteja sempre no token
     // e na sessão (em minúsculas), para Google e LinkedIn compartilharem os
     // mesmos dados quando o e-mail é o mesmo.
-    async jwt({ token, profile }) {
+    async jwt({ token, profile, account }) {
       if (profile?.email) token.email = profile.email.toLowerCase();
+      // Guarda por onde a pessoa entrou (google/linkedin) para a tela de conta.
+      if (account?.provider) token.provider = account.provider;
       return token;
     },
     async session({ session, token }) {
       if (session.user && token.email) {
         session.user.email = token.email;
       }
+      if (token.provider) session.provider = token.provider;
       return session;
     },
   },

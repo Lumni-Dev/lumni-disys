@@ -20,7 +20,8 @@ export async function PUT(req: Request, { params }: Params) {
       company: body.company ?? "",
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
-      applicants: Number(body.applicants) || 0,
+      openings: Number(body.openings) || 1,
+      // applicants e contador automatico: a edicao nao mexe nele.
       status: body.status ?? "Aberta",
     })
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)))

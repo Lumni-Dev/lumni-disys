@@ -10,8 +10,11 @@ import { ApplyModal } from "@/components/apply-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type Job } from "@/lib/data";
 import { api } from "@/lib/api-client";
+import { useI18n } from "@/i18n/context";
 
 export default function CareersPage() {
+  const { admin } = useI18n();
+  const t = admin.careers;
   const { token } = useParams<{ token: string }>();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,18 +78,15 @@ export default function CareersPage() {
             <p className="text-lg font-normal tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
               DISYS
             </p>
-            <p className="text-xs text-muted">Nossas vagas</p>
+            <p className="text-xs text-muted">{t.tagline}</p>
           </div>
         </header>
 
         <div className="rounded-lg border border-border bg-surface/80 p-2.5 backdrop-blur">
           <h1 className="text-xl font-semibold tracking-tight text-foreground">
-            Vagas abertas
+            {t.title}
           </h1>
-          <p className="mt-0.5 text-xs text-muted">
-            {filtered.length}{" "}
-            {filtered.length === 1 ? "oportunidade" : "oportunidades"} disponíveis
-          </p>
+          <p className="mt-0.5 text-xs text-muted">{t.available(filtered.length)}</p>
 
           <div className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-4">
             <div className="relative sm:col-span-2">
@@ -95,21 +95,27 @@ export default function CareersPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar por cargo ou empresa..."
+                placeholder={t.searchPlaceholder}
                 className="w-full rounded-lg border border-border bg-surface-2 py-1.5 pl-8 pr-2.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-white/50 focus:ring-1 focus:ring-white/30"
               />
             </div>
             <Select
               value={level}
               onChange={setLevel}
-              emptyLabel="Todos os níveis"
-              options={levels}
+              emptyLabel={admin.jobs.allLevels}
+              options={levels.map((v) => ({
+                value: v,
+                label: admin.levels[v] ?? v,
+              }))}
             />
             <Select
               value={jobType}
               onChange={setJobType}
-              emptyLabel="Todas as modalidades"
-              options={jobTypes}
+              emptyLabel={admin.jobs.allTypes}
+              options={jobTypes.map((v) => ({
+                value: v,
+                label: admin.jobTypes[v] ?? v,
+              }))}
             />
           </div>
         </div>
@@ -138,17 +144,20 @@ export default function CareersPage() {
             <Card key={v.id}>
               <CardHeader title={v.title} subtitle={v.company} />
               <CardBody className="flex flex-wrap gap-2.5">
-                <Badge tone="red">{v.level}</Badge>
-                <Badge>{v.type}</Badge>
+                <Badge tone="red">{admin.levels[v.level] ?? v.level}</Badge>
+                <Badge>{admin.jobTypes[v.type] ?? v.type}</Badge>
+                <Badge>{admin.jobs.openingsCount(v.openings)}</Badge>
               </CardBody>
               <CardFooter>
-                <span className="text-xs text-muted">Publicada recentemente</span>
+                <span className="text-xs text-muted">
+                  {v.postedAt ? t.postedAt(v.postedAt) : ""}
+                </span>
                 <button
                   type="button"
                   onClick={() => setApplying(v)}
                   className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-white"
                 >
-                  Candidatar-se
+                  {t.apply}
                 </button>
               </CardFooter>
             </Card>
@@ -157,9 +166,7 @@ export default function CareersPage() {
 
         {!loading && filtered.length === 0 && (
           <Card>
-            <p className="p-2.5 text-center text-sm text-muted">
-              Nenhuma vaga encontrada.
-            </p>
+            <p className="p-2.5 text-center text-sm text-muted">{t.empty}</p>
           </Card>
         )}
 

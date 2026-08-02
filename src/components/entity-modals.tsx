@@ -4,11 +4,51 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
 import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
 import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
+import { api } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 import type { Company, Job, Candidate, PipelineCard } from "@/lib/data";
+
+// Sugestoes dos campos de vinculo: nomes de empresas, titulos de vagas e
+// candidatos da conta, carregados quando o modal abre.
+function useCompanyNames(open: boolean): string[] {
+  const [names, setNames] = useState<string[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    api
+      .get<Company[]>("/api/companies")
+      .then((rows) => setNames(rows.map((c) => c.name)))
+      .catch(() => {});
+  }, [open]);
+  return names;
+}
+
+function useJobs(open: boolean): Job[] {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    api
+      .get<Job[]>("/api/jobs")
+      .then(setJobs)
+      .catch(() => {});
+  }, [open]);
+  return jobs;
+}
+
+function useCandidates(open: boolean): Candidate[] {
+  const [list, setList] = useState<Candidate[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    api
+      .get<Candidate[]>("/api/candidates")
+      .then(setList)
+      .catch(() => {});
+  }, [open]);
+  return list;
+}
 
 const LEVELS = ["Estágio", "Trainee", "Júnior", "Pleno", "Sênior", "Temporário"];
 const JOB_TYPES = ["Remoto", "Híbrido", "Presencial"];
@@ -288,13 +328,14 @@ export function JobModal({
   const [company, setCompany] = useState(job?.company ?? "");
   const [level, setLevel] = useState(job?.level ?? "");
   const [type, setType] = useState(job?.type ?? "");
-  const [applicants, setApplicants] = useState(String(job?.applicants ?? ""));
+  const [openings, setOpenings] = useState(String(job?.openings ?? ""));
   const [status, setStatus] = useState<string>(job?.status ?? "");
   const [salaryFrom, setSalaryFrom] = useState("");
   const [salaryTo, setSalaryTo] = useState("");
   const { run, invalid, hasError } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.job;
+  const companyNames = useCompanyNames(open);
 
   return (
     <FormModal
@@ -311,7 +352,7 @@ export function JobModal({
           company: isBlank(company),
           level: isBlank(level),
           type: isBlank(type),
-          applicants: !isCount(applicants),
+          openings: !isCount(openings),
           status: isBlank(status),
           salaryFrom: isBlank(salaryFrom),
           salaryTo: isBlank(salaryTo),
@@ -324,7 +365,9 @@ export function JobModal({
           company: company.trim(),
           level,
           type,
-          applicants: Number(applicants) || 0,
+          openings: Number(openings) || 0,
+          // O total de candidatos e um contador automatico, nao editavel.
+          applicants: job?.applicants ?? 0,
           status: status as Job["status"],
         });
         return true;
@@ -339,11 +382,13 @@ export function JobModal({
         />
       </Field>
       <Field label={t.company} full req>
-        <Input
+        <Combobox
           invalid={invalid("company")}
           maxLength={160}
           value={company}
-          onChange={(e) => setCompany(e.target.value)}
+          onChange={setCompany}
+          options={companyNames}
+          placeholder={admin.modals.searchOrType}
         />
       </Field>
       <Field label={t.level} req>
@@ -364,13 +409,13 @@ export function JobModal({
           invalid={invalid("type")}
         />
       </Field>
-      <Field label={t.applicants} req>
+      <Field label={t.openings} req>
         <Input
           inputMode="numeric"
           maxLength={5}
-          invalid={invalid("applicants")}
-          value={applicants}
-          onChange={(e) => setApplicants(e.target.value.replace(/\D/g, ""))}
+          invalid={invalid("openings")}
+          value={openings}
+          onChange={(e) => setOpenings(e.target.value.replace(/\D/g, ""))}
         />
       </Field>
       <Field label={t.status} req>
@@ -429,6 +474,10 @@ export function CandidateModal({
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.candidate;
+  // Sugere os titulos das vagas cadastradas para facilitar o vinculo
+  // candidato -> vaga (valor livre continua permitido).
+  const jobs = useJobs(open);
+  const jobTitles = [...new Set(jobs.map((j) => j.title))];
 
   return (
     <FormModal
@@ -451,7 +500,8 @@ export function CandidateModal({
           email: email.trim(),
           role: role.trim(),
           stage: stage as Candidate["stage"],
-          modifiedAt: "01/08/2026",
+          // A data real vem do servidor (updatedAt); este valor e ignorado.
+          modifiedAt: candidate?.modifiedAt ?? "",
           linkedin: linkedin.trim(),
         });
         return true;
@@ -475,11 +525,13 @@ export function CandidateModal({
         />
       </Field>
       <Field label={t.desiredRole} req>
-        <Input
+        <Combobox
           invalid={invalid("role")}
           maxLength={160}
           value={role}
-          onChange={(e) => setRole(e.target.value)}
+          onChange={setRole}
+          options={jobTitles}
+          placeholder={admin.modals.searchOrType}
         />
       </Field>
       <Field label={t.linkedin} full req>
@@ -527,6 +579,31 @@ export function ProcessModal({
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.process;
+  const candidates = useCandidates(open);
+  const jobs = useJobs(open);
+  const companyNames = useCompanyNames(open);
+  const jobTitles = [...new Set(jobs.map((j) => j.title))];
+
+  // Escolher um candidato preenche o que estiver em branco: etapa atual dele
+  // e, se o cargo pretendido bater com uma vaga, a vaga e a empresa.
+  function pickCandidate(v: string) {
+    const c = candidates.find((x) => x.name === v);
+    if (!c) return;
+    if (!card && isBlank(stage)) setStage(c.stage);
+    if (isBlank(job) && c.role) {
+      const j = jobs.find((x) => x.title === c.role);
+      if (j) {
+        setJob(j.title);
+        if (isBlank(company)) setCompany(j.company);
+      }
+    }
+  }
+
+  // Escolher uma vaga sempre traz a empresa dela junto.
+  function pickJob(v: string) {
+    const j = jobs.find((x) => x.title === v);
+    if (j?.company) setCompany(j.company);
+  }
 
   return (
     <FormModal
@@ -555,27 +632,35 @@ export function ProcessModal({
       }}
     >
       <Field label={t.candidate} full req>
-        <Input
+        <Combobox
           invalid={invalid("name")}
           maxLength={160}
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={setName}
+          onPick={pickCandidate}
+          options={candidates.map((c) => c.name)}
+          placeholder={admin.modals.searchOrType}
         />
       </Field>
       <Field label={t.job} req>
-        <Input
+        <Combobox
           invalid={invalid("job")}
           maxLength={200}
           value={job}
-          onChange={(e) => setJob(e.target.value)}
+          onChange={setJob}
+          onPick={pickJob}
+          options={jobTitles}
+          placeholder={admin.modals.searchOrType}
         />
       </Field>
       <Field label={t.company} req>
-        <Input
+        <Combobox
           invalid={invalid("company")}
           maxLength={160}
           value={company}
-          onChange={(e) => setCompany(e.target.value)}
+          onChange={setCompany}
+          options={companyNames}
+          placeholder={admin.modals.searchOrType}
         />
       </Field>
       <Field label={t.stage} full req>

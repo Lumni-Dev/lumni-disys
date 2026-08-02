@@ -17,6 +17,7 @@ import {
   IconLogout,
   IconCamera,
   IconGoogle,
+  IconLinkedin,
   IconTrash,
 } from "@/components/ui/icons";
 import { initials, cx } from "@/lib/utils";
@@ -31,6 +32,15 @@ export default function AccountPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [savingTheme, setSavingTheme] = useState(false);
   const [themeSaved, setThemeSaved] = useState(false);
+  // So o dono do workspace ve a zona de perigo (excluir a conta inteira).
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    api
+      .get<{ token: string; owner: boolean }>("/api/account")
+      .then((d) => setIsOwner(!!d.owner))
+      .catch(() => {});
+  }, []);
 
   async function onSaveTheme() {
     setSavingTheme(true);
@@ -244,7 +254,11 @@ export default function AccountPage() {
         <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-2">
-              <IconGoogle className="h-5 w-5" />
+              {session?.provider === "linkedin" ? (
+                <IconLinkedin className="h-5 w-5" />
+              ) : (
+                <IconGoogle className="h-5 w-5" />
+              )}
             </div>
             <div className="min-w-0 leading-tight">
               <p className="text-sm font-medium text-foreground">
@@ -256,28 +270,35 @@ export default function AccountPage() {
         </CardBody>
       </Card>
 
-      <Card className="border-white/30">
-        <CardHeader
-          title={admin.account.dangerTitle}
-          subtitle={admin.account.dangerSubtitle}
-        />
-        <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-          <div className="leading-tight">
-            <p className="text-sm font-medium text-foreground">
-              {admin.account.deleteAccount}
-            </p>
-            <p className="text-xs text-muted">
-              {admin.account.deleteAccountDesc}
-            </p>
-          </div>
-          <ConfirmAction
-            label={admin.account.deleteAccount}
-            icon={<IconTrash className="h-4 w-4" />}
-            confirmLabel={admin.account.confirmDelete}
-            onConfirm={() => {}}
+      {isOwner && (
+        <Card className="border-white/30">
+          <CardHeader
+            title={admin.account.dangerTitle}
+            subtitle={admin.account.dangerSubtitle}
           />
-        </CardBody>
-      </Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
+            <div className="leading-tight">
+              <p className="text-sm font-medium text-foreground">
+                {admin.account.deleteAccount}
+              </p>
+              <p className="text-xs text-muted">
+                {admin.account.deleteAccountDesc}
+              </p>
+            </div>
+            <ConfirmAction
+              label={admin.account.deleteAccount}
+              icon={<IconTrash className="h-4 w-4" />}
+              confirmLabel={admin.account.confirmDelete}
+              onConfirm={() => {
+                void api
+                  .del("/api/account")
+                  .then(() => signOut({ redirectTo: "/" }))
+                  .catch(() => {});
+              }}
+            />
+          </CardBody>
+        </Card>
+      )}
 
       <Card>
         <CardBody className="flex flex-wrap items-center justify-between gap-2.5">

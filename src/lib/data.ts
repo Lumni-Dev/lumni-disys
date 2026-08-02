@@ -81,8 +81,10 @@ export type Job = {
   company: string;
   type: string;
   level: string;
+  openings: number;
   applicants: number;
   status: "Aberta" | "Em análise" | "Fechada";
+  postedAt?: string;
 };
 
 export const jobs: Job[] = range(30).map((i) => ({
@@ -91,6 +93,7 @@ export const jobs: Job[] = range(30).map((i) => ({
   company: companyNames[i % companyNames.length],
   type: jobTypes[i % jobTypes.length],
   level: levels[i % levels.length],
+  openings: (i % 4) + 1,
   applicants: ((i * 7) % 45) + 4,
   status: i % 7 === 0 ? "Fechada" : i % 5 === 0 ? "Em análise" : "Aberta",
 }));

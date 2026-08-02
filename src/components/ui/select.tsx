@@ -1,10 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
 import { controlClass } from "./form";
 import { IconChevronDown, IconCheck } from "./icons";
+
+// True apenas no cliente (portal nao existe no SSR), sem setState em effect.
+const emptySubscribe = () => () => {};
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
 
 export type Option = string | { value: string; label: string };
 
@@ -31,7 +48,7 @@ export function Select({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -46,13 +63,14 @@ export function Select({
     }
   }, [invalid]);
 
-  const opts = [
-    ...(emptyLabel !== undefined ? [{ value: "", label: emptyLabel }] : []),
-    ...options.map(normalize),
-  ];
+  const opts = useMemo(
+    () => [
+      ...(emptyLabel !== undefined ? [{ value: "", label: emptyLabel }] : []),
+      ...options.map(normalize),
+    ],
+    [emptyLabel, options],
+  );
   const selected = opts.find((o) => o.value === value);
-
-  useEffect(() => setMounted(true), []);
 
   function measure() {
     const r = triggerRef.current?.getBoundingClientRect();
@@ -66,11 +84,14 @@ export function Select({
     setOpen(true);
   }
 
-  function choose(v: string) {
-    onChange(v);
-    setOpen(false);
-    triggerRef.current?.focus();
-  }
+  const choose = useCallback(
+    (v: string) => {
+      onChange(v);
+      setOpen(false);
+      triggerRef.current?.focus();
+    },
+    [onChange],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -111,7 +132,7 @@ export function Select({
       window.removeEventListener("scroll", onReposition, true);
       window.removeEventListener("resize", onReposition);
     };
-  }, [open, activeIndex, opts]);
+  }, [open, activeIndex, opts, choose]);
 
   let panelStyle: React.CSSProperties = {};
   let maxHeight = 260;
