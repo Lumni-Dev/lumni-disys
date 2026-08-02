@@ -2,6 +2,7 @@ import { randomBytes } from "crypto";
 import { and, asc, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
+import { EXAMPLE_CV_NAME, exampleCvDataUrl } from "@/lib/example-cv";
 
 export type Account = { id: number; publicToken: string };
 
@@ -44,6 +45,9 @@ async function seedExampleData(accountId: number): Promise<void> {
         email: "ana.exemplo@lumni.dev.br",
         stage: "Triagem",
         linkedin: "https://www.linkedin.com/in/exemplo",
+        // Curriculo de exemplo: mostra o botao de download desde o inicio.
+        cvName: EXAMPLE_CV_NAME,
+        cvBase64: exampleCvDataUrl(),
       })
       .returning({ id: schema.candidates.id });
     await db.insert(schema.pipelineCards).values({
