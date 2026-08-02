@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { and, count, eq } from "drizzle-orm";
 import { PgColumn, PgTable } from "drizzle-orm/pg-core";
 import { db, schema } from "@/db";
-import { currentAccount } from "@/lib/account";
+import { authorize } from "@/lib/authz";
 
 const STAGES = [
   "Triagem",
@@ -37,9 +37,8 @@ async function cumulativeSeries(
 }
 
 export async function GET() {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("dashboard", "view");
+  if (!account) return response;
   const acc = account.id;
 
   const [companiesTotal] = await db

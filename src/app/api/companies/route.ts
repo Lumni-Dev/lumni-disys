@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCompany } from "@/db/serializers";
-import { currentAccount } from "@/lib/account";
+import { authorize } from "@/lib/authz";
 
 export async function GET() {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("companies", "view");
+  if (!account) return response;
 
   const rows = await db
     .select()
@@ -18,9 +17,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("companies", "create");
+  if (!account) return response;
 
   const body = await req.json();
   const [row] = await db

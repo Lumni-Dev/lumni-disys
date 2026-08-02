@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { and, asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
-import { currentAccount } from "@/lib/account";
+import { authorize } from "@/lib/authz";
 
 const STAGES = [
   "Triagem",
@@ -12,9 +12,8 @@ const STAGES = [
 ];
 
 export async function GET() {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("pipeline", "view");
+  if (!account) return response;
 
   const cards = await db
     .select()
@@ -33,9 +32,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const account = await currentAccount();
-  if (!account)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { account, response } = await authorize("pipeline", "create");
+  if (!account) return response;
 
   const body = await req.json();
   const stage = body.stage ?? STAGES[0];
