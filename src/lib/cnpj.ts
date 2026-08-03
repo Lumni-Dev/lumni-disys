@@ -3,8 +3,10 @@
 
 export type CnpjInfo = {
   name: string;
+  sector: string;
   uf: string;
   city: string;
+  active: boolean;
 };
 
 const fold = (s: string) =>
@@ -26,14 +28,22 @@ export async function fetchCnpj(cnpj: string): Promise<CnpjInfo | null> {
     const data = (await res.json()) as {
       razao_social?: string;
       nome_fantasia?: string;
+      cnae_fiscal_descricao?: string;
+      descricao_situacao_cadastral?: string;
       uf?: string;
       municipio?: string;
     };
     return {
       // Nome fantasia quando existe; senao a razao social.
       name: (data.nome_fantasia || data.razao_social || "").trim(),
+      // Atividade principal (CNAE) usada como setor.
+      sector: (data.cnae_fiscal_descricao || "").trim(),
       uf: (data.uf || "").trim().toUpperCase(),
       city: (data.municipio || "").trim(),
+      // "ATIVA" na Receita -> status Ativa por padrao (o usuario pode trocar).
+      active:
+        (data.descricao_situacao_cadastral || "").trim().toUpperCase() ===
+        "ATIVA",
     };
   } catch {
     return null;
