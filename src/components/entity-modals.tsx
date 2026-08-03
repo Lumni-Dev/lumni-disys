@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
@@ -442,6 +443,15 @@ export function JobModal({
           placeholder={admin.modals.searchOrType}
         />
       </Field>
+      <p className="-mt-1 text-xs text-muted sm:col-span-2">
+        {t.companyHint}{" "}
+        <Link
+          href="/companies"
+          className="font-medium text-accent hover:underline"
+        >
+          {t.companyHintLink}
+        </Link>
+      </p>
       <Field label={t.description} full>
         <Textarea
           rows={5}
@@ -619,6 +629,12 @@ export function CandidateModal({
           placeholder={admin.modals.searchOrType}
         />
       </Field>
+      <p className="-mt-1 text-xs text-muted sm:col-span-2">
+        {t.jobHint}{" "}
+        <Link href="/jobs" className="font-medium text-accent hover:underline">
+          {t.jobHintLink}
+        </Link>
+      </p>
       <Field label={t.linkedin} full req>
         <Input
           type="url"

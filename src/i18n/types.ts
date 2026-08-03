@@ -308,6 +308,9 @@ export interface Admin {
       salaryFrom: string;
       salaryTo: string;
       salaryOrderError: string;
+      /** Aviso abaixo da busca de empresa: nao achou? cadastre-a. */
+      companyHint: string;
+      companyHintLink: string;
     };
     candidate: {
       editTitle: string;
@@ -317,6 +320,9 @@ export interface Admin {
       fullName: string;
       email: string;
       desiredRole: string;
+      /** Aviso abaixo da busca de vaga: nao achou? cadastre-a. */
+      jobHint: string;
+      jobHintLink: string;
       linkedin: string;
       stage: string;
       linkedinPlaceholder: string;

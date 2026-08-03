@@ -255,6 +255,8 @@ const ja: Admin = {
       taxIdPlaceholder: "Tax ID / VAT / EIN…",
     },
     job: {
+      companyHint: "会社が一覧に見つからない場合は、",
+      companyHintLink: "会社ページで登録してください",
       editTitle: "求人を編集",
       newTitle: "新規求人",
       editSubtitle: "求人情報を更新",
@@ -273,6 +275,8 @@ const ja: Admin = {
         "給与の下限を上限より大きくすることはできません。",
     },
     candidate: {
+      jobHint: "求人が一覧に見つからない場合は、",
+      jobHintLink: "求人ページで登録してください",
       editTitle: "候補者を編集",
       newTitle: "候補者を追加",
       editSubtitle: "候補者情報を更新",

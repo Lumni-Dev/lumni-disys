@@ -255,6 +255,8 @@ const de: Admin = {
       taxIdPlaceholder: "Steuernummer / USt-IdNr. / EIN…",
     },
     job: {
+      companyHint: "Wenn Sie Ihr Unternehmen nicht in der Liste finden,",
+      companyHintLink: "erstellen Sie es auf der Unternehmensseite",
       editTitle: "Stelle bearbeiten",
       newTitle: "Neue Stelle",
       editSubtitle: "Stellendaten aktualisieren",
@@ -273,6 +275,8 @@ const de: Admin = {
         'Das Gehalt "von" darf nicht höher sein als das Gehalt "bis".',
     },
     candidate: {
+      jobHint: "Wenn Sie die Stelle nicht in der Liste finden,",
+      jobHintLink: "erstellen Sie sie auf der Stellenseite",
       editTitle: "Kandidat bearbeiten",
       newTitle: "Kandidat hinzufügen",
       editSubtitle: "Kandidatendaten aktualisieren",

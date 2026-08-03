@@ -255,6 +255,8 @@ const ar: Admin = {
       taxIdPlaceholder: "الرقم الضريبي / ضريبة القيمة المضافة / EIN…",
     },
     job: {
+      companyHint: "إذا لم تجد شركتك في القائمة،",
+      companyHintLink: "أضِفها من صفحة الشركات",
       editTitle: "تعديل الوظيفة",
       newTitle: "وظيفة جديدة",
       editSubtitle: "تحديث بيانات الوظيفة",
@@ -272,6 +274,8 @@ const ar: Admin = {
       salaryOrderError: 'لا يمكن أن يكون راتب "من" أكبر من راتب "إلى".',
     },
     candidate: {
+      jobHint: "إذا لم تجد الوظيفة في القائمة،",
+      jobHintLink: "أضِفها من صفحة الوظائف",
       editTitle: "تعديل المرشح",
       newTitle: "إضافة مرشح",
       editSubtitle: "تحديث بيانات المرشح",

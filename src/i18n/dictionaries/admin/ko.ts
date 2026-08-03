@@ -253,6 +253,8 @@ const ko: Admin = {
       taxIdPlaceholder: "Tax ID / VAT / EIN…",
     },
     job: {
+      companyHint: "목록에서 회사를 찾지 못했다면,",
+      companyHintLink: "회사 페이지에서 등록하세요",
       editTitle: "채용 공고 편집",
       newTitle: "새 채용 공고",
       editSubtitle: "채용 공고 정보를 업데이트하세요",
@@ -270,6 +272,8 @@ const ko: Admin = {
       salaryOrderError: "최소 급여가 최대 급여보다 클 수 없습니다.",
     },
     candidate: {
+      jobHint: "목록에서 공고를 찾지 못했다면,",
+      jobHintLink: "공고 페이지에서 등록하세요",
       editTitle: "지원자 편집",
       newTitle: "지원자 추가",
       editSubtitle: "지원자 정보를 업데이트하세요",

@@ -265,6 +265,8 @@ const ru: Admin = {
       taxIdPlaceholder: "Tax ID / VAT / EIN...",
     },
     job: {
+      companyHint: "Если вы не нашли свою компанию в списке,",
+      companyHintLink: "добавьте её на странице компаний",
       editTitle: "Изменить вакансию",
       newTitle: "Новая вакансия",
       editSubtitle: "Обновите данные вакансии",
@@ -283,6 +285,8 @@ const ru: Admin = {
         'Зарплата "от" не может быть больше зарплаты "до".',
     },
     candidate: {
+      jobHint: "Если вы не нашли вакансию в списке,",
+      jobHintLink: "добавьте её на странице вакансий",
       editTitle: "Изменить кандидата",
       newTitle: "Добавить кандидата",
       editSubtitle: "Обновите данные кандидата",

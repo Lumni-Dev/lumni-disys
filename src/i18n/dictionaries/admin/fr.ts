@@ -255,6 +255,8 @@ const fr: Admin = {
       taxIdPlaceholder: "N° fiscal / TVA / EIN…",
     },
     job: {
+      companyHint: "Si vous n'avez pas trouvé votre entreprise dans la liste,",
+      companyHintLink: "ajoutez-la sur la page des entreprises",
       editTitle: "Modifier l'offre",
       newTitle: "Nouvelle offre",
       editSubtitle: "Mettez à jour les informations de l'offre",
@@ -273,6 +275,8 @@ const fr: Admin = {
         'Le salaire « de » ne peut pas être supérieur au salaire « à ».',
     },
     candidate: {
+      jobHint: "Si vous n'avez pas trouvé le poste dans la liste,",
+      jobHintLink: "ajoutez-le sur la page des postes",
       editTitle: "Modifier le candidat",
       newTitle: "Ajouter un candidat",
       editSubtitle: "Mettez à jour les informations du candidat",

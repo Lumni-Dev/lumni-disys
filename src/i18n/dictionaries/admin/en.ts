@@ -255,6 +255,8 @@ const en: Admin = {
       taxIdPlaceholder: "Tax ID / VAT / EIN…",
     },
     job: {
+      companyHint: "If you didn't find your company in the list,",
+      companyHintLink: "add it on the companies page",
       editTitle: "Edit job",
       newTitle: "New job",
       editSubtitle: "Update the job details",
@@ -273,6 +275,8 @@ const en: Admin = {
         'The "from" salary cannot be greater than the "to" salary.',
     },
     candidate: {
+      jobHint: "If you didn't find the job in the list,",
+      jobHintLink: "add it on the jobs page",
       editTitle: "Edit candidate",
       newTitle: "Add candidate",
       editSubtitle: "Update the candidate details",
