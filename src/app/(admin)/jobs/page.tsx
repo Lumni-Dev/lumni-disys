@@ -12,7 +12,7 @@ import { ExportButton } from "@/components/ui/export-button";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { Tooltip } from "@/components/ui/tooltip";
-import { IconUsers, IconShare, IconTrash } from "@/components/ui/icons";
+import { IconUsers, IconShare, IconTrash, IconCheck } from "@/components/ui/icons";
 import { useAccess } from "@/lib/access";
 import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
@@ -267,7 +267,13 @@ export default function JobsPage() {
                   <Button
                     variant="outline"
                     aria-label={admin.jobs.shareJob}
-                    icon={<IconShare className="h-4 w-4" />}
+                    icon={
+                      copiedId === v.id ? (
+                        <IconCheck className="h-4 w-4 text-emerald-500" />
+                      ) : (
+                        <IconShare className="h-4 w-4" />
+                      )
+                    }
                     onClick={() => shareJob(v.id)}
                   />
                 </Tooltip>
