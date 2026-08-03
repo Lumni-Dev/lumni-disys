@@ -168,7 +168,7 @@ export default function PipelinePage() {
                   className="flex flex-col gap-2.5 rounded-lg border border-border bg-surface-2 p-2.5"
                 >
                   <div className="flex items-center gap-2.5">
-                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <Skeleton className="h-8 w-8 rounded-lg" />
                     <Skeleton className="h-4 w-2/3" />
                   </div>
                   <Skeleton className="h-3 w-1/2" />
