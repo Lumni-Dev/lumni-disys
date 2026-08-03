@@ -170,8 +170,8 @@ export function CompanyModal({
     lastCnpj.current = "";
   }
 
-  // CNPJ completo: busca na BrasilAPI e preenche pais, estado e cidade
-  // (e o nome, se ainda estiver em branco).
+  // CNPJ completo: busca na BrasilAPI e preenche os demais campos —
+  // nome, setor, pais, estado, cidade e o status padrao.
   async function changeCnpj(v: string) {
     setCnpj(v);
     const digits = v.replace(/\D/g, "");
@@ -182,12 +182,16 @@ export function CompanyModal({
     setCnpjLoading(false);
     if (!info) return;
     setCountry("Brasil");
+    if (info.name) setName(info.name);
+    if (info.sector) setSector(info.sector);
     if (info.uf) {
       setUf(info.uf);
       const list = await fetchCities(info.uf);
       setCity(list.find((c) => sameCity(c, info.city)) ?? "");
     }
-    if (info.name) setName((cur) => (cur.trim() ? cur : info.name));
+    // Vagas em aberto nao vem do CNPJ; status assume a situacao cadastral,
+    // sem sobrescrever uma escolha ja feita.
+    setStatus((cur) => cur || (info.active ? "Ativa" : "Pausada"));
   }
 
   return (
@@ -226,24 +230,9 @@ export function CompanyModal({
         return true;
       }}
     >
-      <Field label={t.name} full req>
-        <Input
-          invalid={invalid("name")}
-          maxLength={160}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </Field>
-      <Field label={t.sector} req>
-        <Input
-          invalid={invalid("sector")}
-          maxLength={120}
-          value={sector}
-          onChange={(e) => setSector(e.target.value)}
-        />
-      </Field>
+      {/* CNPJ primeiro: ao localizar, preenche nome, setor, UF, cidade e status. */}
       {isBrazil ? (
-        <Field label={t.cnpj} req>
+        <Field label={t.cnpj} full req>
           <CnpjInput
             invalid={invalid("cnpj")}
             placeholder="00.000.000/0000-00"
@@ -255,7 +244,7 @@ export function CompanyModal({
           )}
         </Field>
       ) : (
-        <Field label={t.taxId} req>
+        <Field label={t.taxId} full req>
           <Input
             invalid={invalid("taxId")}
             maxLength={40}
@@ -266,6 +255,15 @@ export function CompanyModal({
         </Field>
       )}
 
+      <Field label={t.name} full req>
+        <Input
+          invalid={invalid("name")}
+          maxLength={160}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </Field>
+
       <Field label={t.country} req>
         <Select
           value={country}
@@ -273,6 +271,14 @@ export function CompanyModal({
           options={countries}
           emptyLabel={admin.modals.select}
           invalid={invalid("country")}
+        />
+      </Field>
+      <Field label={t.sector} req>
+        <Input
+          invalid={invalid("sector")}
+          maxLength={120}
+          value={sector}
+          onChange={(e) => setSector(e.target.value)}
         />
       </Field>
 
