@@ -269,7 +269,7 @@ export default function JobsPage() {
                     aria-label={admin.jobs.shareJob}
                     icon={
                       copiedId === v.id ? (
-                        <IconCheck className="h-4 w-4 text-emerald-500" />
+                        <IconCheck className="h-4 w-4 text-accent" />
                       ) : (
                         <IconShare className="h-4 w-4" />
                       )
