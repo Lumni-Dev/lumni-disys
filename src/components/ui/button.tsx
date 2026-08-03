@@ -9,7 +9,7 @@ const variants: Record<Variant, string> = {
   primary:
     "bg-accent text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] hover:brightness-110 active:scale-[0.98]",
   outline:
-    "border border-border bg-surface-2/40 text-muted shadow-sm hover:border-white/[0.15] hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
+    "border border-border bg-surface-2/40 text-muted shadow-sm hover:border-accent/40 hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
   ghost: "text-muted hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
 };
 
@@ -66,7 +66,7 @@ export function IconButton({
   return (
     <button
       {...props}
-      className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:text-foreground active:scale-[0.98]"
+      className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-accent/40 hover:text-foreground active:scale-[0.98]"
     >
       {children}
     </button>

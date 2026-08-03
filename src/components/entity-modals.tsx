@@ -143,7 +143,8 @@ export function CompanyModal({
   const [states, setStates] = useState<UF[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [cnpjLoading, setCnpjLoading] = useState(false);
-  const lastCnpj = useRef("");
+  const lastCnpj = useRef(""); // ultimo CNPJ resolvido com sucesso
+  const fetchingCnpj = useRef(""); // CNPJ em busca agora (evita chamada dupla)
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.company;
@@ -170,17 +171,21 @@ export function CompanyModal({
     lastCnpj.current = "";
   }
 
-  // CNPJ completo: busca na BrasilAPI e preenche os demais campos —
-  // nome, setor, pais, estado, cidade e o status padrao.
-  async function changeCnpj(v: string) {
-    setCnpj(v);
+  // Busca os dados do CNPJ na BrasilAPI e preenche os demais campos —
+  // nome, setor, pais, estado, cidade e o status padrao. So marca o CNPJ
+  // como resolvido em caso de sucesso: uma falha transitoria pode ser
+  // refeita no proximo change/blur.
+  async function lookupCnpj(v: string) {
     const digits = v.replace(/\D/g, "");
-    if (digits.length !== 14 || digits === lastCnpj.current) return;
-    lastCnpj.current = digits;
+    if (digits.length !== 14) return;
+    if (digits === lastCnpj.current || digits === fetchingCnpj.current) return;
+    fetchingCnpj.current = digits;
     setCnpjLoading(true);
     const info = await fetchCnpj(digits);
     setCnpjLoading(false);
+    fetchingCnpj.current = "";
     if (!info) return;
+    lastCnpj.current = digits;
     setCountry("Brasil");
     if (info.name) setName(info.name);
     if (info.sector) setSector(info.sector);
@@ -192,6 +197,12 @@ export function CompanyModal({
     // Vagas em aberto nao vem do CNPJ; status assume a situacao cadastral,
     // sem sobrescrever uma escolha ja feita.
     setStatus((cur) => cur || (info.active ? "Ativa" : "Pausada"));
+  }
+
+  // Dispara a busca a cada digitacao (quando completa) e ao sair do campo.
+  function changeCnpj(v: string) {
+    setCnpj(v);
+    void lookupCnpj(v);
   }
 
   return (
@@ -238,6 +249,7 @@ export function CompanyModal({
             placeholder="00.000.000/0000-00"
             value={cnpj}
             onChange={changeCnpj}
+            onBlur={() => void lookupCnpj(cnpj)}
           />
           {cnpjLoading && (
             <span className="text-xs text-muted">{t.cnpjLookup}</span>
