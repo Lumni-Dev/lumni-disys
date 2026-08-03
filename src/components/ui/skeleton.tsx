@@ -2,7 +2,9 @@ import { cx } from "@/lib/utils";
 
 /** Bloco de carregamento com shimmer (animate-pulse). */
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cx("animate-pulse rounded bg-white/10", className)} />;
+  return (
+    <div className={cx("animate-pulse rounded-lg bg-white/10", className)} />
+  );
 }
 
 /** Linhas fantasmas para tabelas. Usar dentro de <Tbody>. */

@@ -27,7 +27,7 @@ export function Checkbox({
       />
       <span
         className={cx(
-          "flex h-4 w-4 items-center justify-center rounded border transition-colors",
+          "flex h-4 w-4 items-center justify-center rounded-lg border transition-colors",
           checked
             ? "border-accent bg-accent text-accent-foreground"
             : "border-border bg-surface-2 text-transparent",
