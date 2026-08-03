@@ -47,7 +47,7 @@ export default function JobPage() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground opacity-[0.07] blur-[140px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.07] blur-[140px]"
       />
 
       <div className="relative z-10 w-full max-w-md rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">

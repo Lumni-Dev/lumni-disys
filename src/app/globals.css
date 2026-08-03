@@ -125,7 +125,7 @@ select:not(:disabled) {
 }
 ::-webkit-scrollbar-thumb {
   background: #3a3a3f;
-  border-radius: 999px;
+  border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
@@ -140,7 +140,7 @@ select:not(:disabled) {
 }
 .scroll-thin::-webkit-scrollbar-thumb {
   background: #3a3a3f;
-  border-radius: 999px;
+  border-radius: 8px;
 }
 .scroll-thin::-webkit-scrollbar-thumb:hover {
   background: var(--muted);

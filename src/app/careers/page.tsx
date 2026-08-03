@@ -22,7 +22,7 @@ export default function CareersIndexPage() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground opacity-[0.06] blur-[140px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.06] blur-[140px]"
       />
 
       <div className="relative z-10 w-full max-w-sm rounded-lg border border-border bg-surface/80 p-6 text-center shadow-2xl backdrop-blur">

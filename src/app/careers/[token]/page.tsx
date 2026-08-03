@@ -61,15 +61,15 @@ export default function CareersPage() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground opacity-[0.06] blur-[140px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.06] blur-[140px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-40 -left-24 h-80 w-80 rounded-full bg-foreground opacity-[0.04] blur-[120px]"
+        className="pointer-events-none absolute top-40 -left-24 h-80 w-80 rounded-lg bg-foreground opacity-[0.04] blur-[120px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-72 -right-24 h-80 w-80 rounded-full bg-foreground opacity-[0.04] blur-[120px]"
+        className="pointer-events-none absolute top-72 -right-24 h-80 w-80 rounded-lg bg-foreground opacity-[0.04] blur-[120px]"
       />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-2.5 p-2.5">
