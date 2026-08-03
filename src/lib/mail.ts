@@ -28,7 +28,7 @@ export async function sendInviteEmail(opts: {
   const { to, inviterName, url } = opts;
   const html = `
   <div style="margin:0;padding:32px 16px;background:#0a0a0b;font-family:Arial,Helvetica,sans-serif;">
-    <div style="max-width:480px;margin:0 auto;background:#101012;border:1px solid #26262a;border-radius:10px;overflow:hidden;">
+    <div style="max-width:480px;margin:0 auto;background:#101012;border:1px solid #26262a;border-radius:8px;overflow:hidden;">
       <div style="padding:24px;text-align:center;border-bottom:1px solid #1d1d20;">
         <span style="font-size:22px;letter-spacing:0.3em;color:#ffffff;">DISYS</span>
       </div>

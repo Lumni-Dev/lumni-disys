@@ -29,15 +29,15 @@ export default async function LoginPage({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground opacity-[0.07] blur-[140px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.07] blur-[140px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-40 -left-24 h-80 w-80 rounded-full bg-foreground opacity-[0.05] blur-[120px]"
+        className="pointer-events-none absolute top-40 -left-24 h-80 w-80 rounded-lg bg-foreground opacity-[0.05] blur-[120px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-foreground opacity-[0.05] blur-[120px]"
+        className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-lg bg-foreground opacity-[0.05] blur-[120px]"
       />
 
       <LoginCard error={Boolean(error)} />

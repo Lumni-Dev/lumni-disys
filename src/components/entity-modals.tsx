@@ -610,7 +610,7 @@ export function CandidateModal({
           onChange={(e) => setName(e.target.value)}
         />
       </Field>
-      <Field label={t.email} req>
+      <Field label={t.email} full req>
         <Input
           type="email"
           invalid={invalid("email")}
@@ -619,7 +619,7 @@ export function CandidateModal({
           onChange={(e) => setEmail(e.target.value)}
         />
       </Field>
-      <Field label={t.desiredRole} req>
+      <Field label={t.desiredRole} full req>
         <Combobox
           invalid={invalid("role")}
           maxLength={160}

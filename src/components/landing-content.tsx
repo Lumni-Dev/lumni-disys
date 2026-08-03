@@ -54,7 +54,7 @@ function TrendArrow({ up }: { up: boolean }) {
 function Eyebrow({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface/60 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-muted backdrop-blur">
-      <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+      <span className="h-1.5 w-1.5 rounded-lg bg-white/70" />
       {label}
     </span>
   );
@@ -82,15 +82,15 @@ export function LandingContent({ authed }: { authed: boolean }) {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-foreground opacity-[0.07] blur-[140px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.07] blur-[140px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-40 -left-20 h-80 w-80 rounded-full bg-foreground opacity-[0.04] blur-[120px]"
+        className="pointer-events-none absolute top-40 -left-20 h-80 w-80 rounded-lg bg-foreground opacity-[0.04] blur-[120px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-64 -right-20 h-80 w-80 rounded-full bg-foreground opacity-[0.04] blur-[120px]"
+        className="pointer-events-none absolute top-64 -right-20 h-80 w-80 rounded-lg bg-foreground opacity-[0.04] blur-[120px]"
       />
       <div
         aria-hidden
@@ -107,7 +107,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-20 left-1/2 h-[420px] w-[680px] max-w-[90vw] -translate-x-1/2 rounded-full bg-foreground opacity-[0.05] blur-[150px]"
+        className="pointer-events-none absolute bottom-20 left-1/2 h-[420px] w-[680px] max-w-[90vw] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[150px]"
       />
 
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-md">
@@ -167,9 +167,9 @@ export function LandingContent({ authed }: { authed: boolean }) {
             <div className="absolute -inset-x-10 -top-6 bottom-0 rounded-lg bg-white/20 blur-[80px]" />
             <div className="relative overflow-hidden rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">
               <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-white/60" />
-                <span className="h-2.5 w-2.5 rounded-full bg-muted/30" />
-                <span className="h-2.5 w-2.5 rounded-full bg-muted/30" />
+                <span className="h-2.5 w-2.5 rounded-lg bg-white/60" />
+                <span className="h-2.5 w-2.5 rounded-lg bg-muted/30" />
+                <span className="h-2.5 w-2.5 rounded-lg bg-muted/30" />
                 <span className="ml-3 text-xs text-muted" dir="ltr">
                   disys.lumni.dev.br
                 </span>
@@ -213,7 +213,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
         <section className="relative grid grid-cols-2 gap-2.5 border-y border-border py-8 md:grid-cols-4">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-40 w-[640px] max-w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-[0.05] blur-[110px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-40 w-[640px] max-w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[110px]"
           />
           {STAT_VALUES.map((value, i) => (
             <div key={dict.stats[i]} className="text-center">
@@ -228,7 +228,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
         <section id="modulos" className="relative scroll-mt-20 py-20">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-6 -z-10 h-[440px] w-[780px] max-w-[95%] -translate-x-1/2 rounded-full bg-foreground opacity-[0.05] blur-[140px]"
+            className="pointer-events-none absolute left-1/2 top-6 -z-10 h-[440px] w-[780px] max-w-[95%] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[140px]"
           />
           <div
             aria-hidden
@@ -259,7 +259,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
                   className="group relative overflow-hidden rounded-lg border border-border bg-surface/60 p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-surface/80"
                 >
                   <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-foreground opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-10" />
+                  <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-lg bg-foreground opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-10" />
                   <div className="flex items-start justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-foreground transition-colors duration-300 group-hover:bg-foreground group-hover:text-background">
                       <Icon className="h-5 w-5" />
@@ -281,11 +281,11 @@ export function LandingContent({ authed }: { authed: boolean }) {
         <section id="recursos" className="relative scroll-mt-20 py-8">
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-24 -left-24 -z-10 h-72 w-72 rounded-full bg-foreground opacity-[0.045] blur-[120px]"
+            className="pointer-events-none absolute -bottom-24 -left-24 -z-10 h-72 w-72 rounded-lg bg-foreground opacity-[0.045] blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-full bg-foreground opacity-[0.045] blur-[120px]"
+            className="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-lg bg-foreground opacity-[0.045] blur-[120px]"
           />
           <div className="mb-10 flex justify-center">
             <Eyebrow label={dict.nav.features} />
@@ -298,7 +298,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
                   key={f.title}
                   className="group relative overflow-hidden rounded-lg border border-border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/40"
                 >
-                  <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-foreground opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-10" />
+                  <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-lg bg-foreground opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-10" />
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-white/[0.04] text-foreground transition-colors duration-300 group-hover:border-white/30 group-hover:bg-white/10">
                     <Icon className="h-5 w-5" />
                   </div>
