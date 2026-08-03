@@ -443,7 +443,7 @@ export function JobModal({
           placeholder={admin.modals.searchOrType}
         />
       </Field>
-      <p className="-mt-1 text-xs text-muted sm:col-span-2">
+      <p className="rounded-lg border border-dashed border-border bg-surface-2/40 px-2.5 py-2 text-center text-xs text-muted sm:col-span-2">
         {t.companyHint}{" "}
         <Link
           href="/companies"
@@ -629,7 +629,7 @@ export function CandidateModal({
           placeholder={admin.modals.searchOrType}
         />
       </Field>
-      <p className="-mt-1 text-xs text-muted sm:col-span-2">
+      <p className="rounded-lg border border-dashed border-border bg-surface-2/40 px-2.5 py-2 text-center text-xs text-muted sm:col-span-2">
         {t.jobHint}{" "}
         <Link href="/jobs" className="font-medium text-accent hover:underline">
           {t.jobHintLink}

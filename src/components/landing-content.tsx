@@ -53,7 +53,7 @@ function TrendArrow({ up }: { up: boolean }) {
 
 function Eyebrow({ label }: { label: string }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-muted backdrop-blur">
+    <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface/60 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-muted backdrop-blur">
       <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
       {label}
     </span>
@@ -66,7 +66,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
   const ctaLabel = authed ? dict.hero.ctaAuthed : dict.hero.ctaGuest;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+    <div className="landing-root relative min-h-screen overflow-hidden bg-background text-foreground">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
