@@ -67,6 +67,14 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Scroll suave nos links internos da landing (#modulos, #recursos, #acesso),
+   escopado a ela via .landing-root e respeitando prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.landing-root) {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Fundo ambiente do app inteiro: brilhos suaves para nao ficar preto chapado. */
 body::before {
   content: "";
