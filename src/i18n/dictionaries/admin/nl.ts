@@ -255,6 +255,8 @@ const nl: Admin = {
       taxIdPlaceholder: "Fiscaal nummer / btw / EIN...",
     },
     job: {
+      companyHint: "Als u uw bedrijf niet in de lijst vindt,",
+      companyHintLink: "voeg het toe op de bedrijvenpagina",
       editTitle: "Vacature bewerken",
       newTitle: "Nieuwe vacature",
       editSubtitle: "Werk de vacaturegegevens bij",
@@ -273,6 +275,8 @@ const nl: Admin = {
         'Het salaris "vanaf" mag niet hoger zijn dan het salaris "tot".',
     },
     candidate: {
+      jobHint: "Als u de vacature niet in de lijst vindt,",
+      jobHintLink: "voeg deze toe op de vacaturepagina",
       editTitle: "Kandidaat bewerken",
       newTitle: "Kandidaat toevoegen",
       editSubtitle: "Werk de kandidaatgegevens bij",

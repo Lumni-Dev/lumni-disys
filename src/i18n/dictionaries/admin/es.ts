@@ -255,6 +255,8 @@ const es: Admin = {
       taxIdPlaceholder: "NIF / IVA / EIN…",
     },
     job: {
+      companyHint: "Si no encontraste tu empresa en la lista,",
+      companyHintLink: "regístrala en la página de empresas",
       editTitle: "Editar vacante",
       newTitle: "Nueva vacante",
       editSubtitle: "Actualiza los datos de la vacante",
@@ -273,6 +275,8 @@ const es: Admin = {
         'El salario "desde" no puede ser mayor que el salario "hasta".',
     },
     candidate: {
+      jobHint: "Si no encontraste la vacante en la lista,",
+      jobHintLink: "regístrala en la página de vacantes",
       editTitle: "Editar candidato",
       newTitle: "Añadir candidato",
       editSubtitle: "Actualiza los datos del candidato",

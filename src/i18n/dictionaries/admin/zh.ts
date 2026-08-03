@@ -252,6 +252,8 @@ const zh: Admin = {
       taxIdPlaceholder: "税号 / VAT / EIN……",
     },
     job: {
+      companyHint: "如果在列表中未找到您的公司，",
+      companyHintLink: "请在公司页面添加",
       editTitle: "编辑职位",
       newTitle: "新建职位",
       editSubtitle: "更新职位信息",
@@ -269,6 +271,8 @@ const zh: Admin = {
       salaryOrderError: "最低薪资不能高于最高薪资。",
     },
     candidate: {
+      jobHint: "如果在列表中未找到职位，",
+      jobHintLink: "请在职位页面添加",
       editTitle: "编辑候选人",
       newTitle: "添加候选人",
       editSubtitle: "更新候选人信息",

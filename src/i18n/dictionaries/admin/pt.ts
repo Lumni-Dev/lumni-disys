@@ -255,6 +255,8 @@ const pt: Admin = {
       taxIdPlaceholder: "Tax ID / VAT / EIN…",
     },
     job: {
+      companyHint: "Se você ainda não encontrou sua empresa na lista,",
+      companyHintLink: "cadastre-a na página de empresas",
       editTitle: "Editar vaga",
       newTitle: "Nova vaga",
       editSubtitle: "Atualize os dados da vaga",
@@ -273,6 +275,8 @@ const pt: Admin = {
         'O salário "de" não pode ser maior que o "até".',
     },
     candidate: {
+      jobHint: "Se você ainda não encontrou a vaga na lista,",
+      jobHintLink: "cadastre-a na página de vagas",
       editTitle: "Editar candidato",
       newTitle: "Adicionar candidato",
       editSubtitle: "Atualize os dados do candidato",

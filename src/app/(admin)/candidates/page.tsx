@@ -17,7 +17,7 @@ import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { initials } from "@/lib/utils";
 import { CandidateModal } from "@/components/entity-modals";
-import { type Candidate } from "@/lib/data";
+import { type Candidate, type Job } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
@@ -45,6 +45,7 @@ export default function CandidatesPage() {
     { key: "modifiedAt", label: admin.candidates.cols.modifiedAt },
   ];
   const [list, setList] = useState<Candidate[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -58,10 +59,23 @@ export default function CandidatesPage() {
       .get<Candidate[]>("/api/candidates")
       .then(setList)
       .finally(() => setLoading(false));
+    api
+      .get<Job[]>("/api/jobs")
+      .then(setJobs)
+      .catch(() => {});
   }, []);
 
   const roles = [...new Set(list.map((c) => c.role))].sort();
   const hasFilters = !!(fStage || fRole);
+
+  // Empresa mostrada abaixo do cargo: a da vaga cujo titulo bate com o cargo
+  // pretendido do candidato (primeira correspondencia).
+  const companyByRole = new Map<string, string>();
+  for (const j of jobs) {
+    if (j.title && j.company && !companyByRole.has(j.title)) {
+      companyByRole.set(j.title, j.company);
+    }
+  }
 
   const q = query.trim().toLowerCase();
   const filtered = list.filter((c) => {
@@ -212,7 +226,14 @@ export default function CandidatesPage() {
                     </div>
                   </button>
                 </Td>
-                <Td className="text-muted">{c.role}</Td>
+                <Td>
+                  <p className="text-muted">{c.role}</p>
+                  {companyByRole.get(c.role) && (
+                    <p className="max-w-[180px] truncate text-[11px] text-muted/70">
+                      {companyByRole.get(c.role)}
+                    </p>
+                  )}
+                </Td>
                 <Td>
                   <Badge tone={stageTone[c.stage]}>
                     {admin.stages[c.stage] ?? c.stage}

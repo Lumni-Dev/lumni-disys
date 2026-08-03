@@ -29,7 +29,7 @@ export function Checkbox({
         className={cx(
           "flex h-4 w-4 items-center justify-center rounded border transition-colors",
           checked
-            ? "border-white bg-foreground text-background"
+            ? "border-accent bg-accent text-accent-foreground"
             : "border-border bg-surface-2 text-transparent",
         )}
       >
