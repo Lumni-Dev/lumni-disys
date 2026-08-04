@@ -211,8 +211,9 @@ export default function AccountPage() {
         </form>
       </Card>
 
-      {/* Mosaico: cards menores lado a lado no desktop. */}
-      <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
+      {/* Mosaico: cards menores lado a lado no desktop, cada um com a altura
+          do proprio conteudo (items-start evita esticar ate a linha). */}
+      <div className="grid grid-cols-1 items-start gap-2.5 lg:grid-cols-2">
       <Card>
         <CardHeader
           title={admin.account.themeTitle}
