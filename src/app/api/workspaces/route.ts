@@ -3,6 +3,7 @@ import { and, asc, eq, inArray } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail, ensureOwnAccount } from "@/lib/account";
+import { isSuperAdmin } from "@/lib/superadmin";
 
 // Workspaces do usuario: a conta propria (se existir) + todas em que ele e
 // colaborador. Usado pelo seletor do sidebar.
@@ -13,6 +14,60 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const current = await accountForEmail(email);
+
+  // Super-admin: enxerga TODOS os workspaces. Marca readOnly nos que nao sao
+  // dele nem onde e colaborador (a UI mostra o selinho de somente leitura).
+  if (isSuperAdmin(email)) {
+    const accounts = await db
+      .select({
+        id: schema.accounts.id,
+        ownerEmail: schema.accounts.ownerEmail,
+      })
+      .from(schema.accounts)
+      .orderBy(asc(schema.accounts.id));
+
+    const memberOf = new Set(
+      (
+        await db
+          .select({ accountId: schema.teamMembers.accountId })
+          .from(schema.teamMembers)
+          .where(
+            and(
+              eq(schema.teamMembers.email, email),
+              eq(schema.teamMembers.status, "accepted"),
+            ),
+          )
+      ).map((m) => m.accountId),
+    );
+
+    const ownerEmails = [...new Set(accounts.map((a) => a.ownerEmail))];
+    const profiles = ownerEmails.length
+      ? await db
+          .select({
+            email: schema.userProfiles.email,
+            name: schema.userProfiles.name,
+          })
+          .from(schema.userProfiles)
+          .where(inArray(schema.userProfiles.email, ownerEmails))
+      : [];
+    const nameByEmail = new Map(profiles.map((p) => [p.email, p.name]));
+
+    return NextResponse.json(
+      accounts.map((a) => {
+        const owner = a.ownerEmail === email;
+        const member = memberOf.has(a.id);
+        return {
+          id: a.id,
+          owner,
+          ownerEmail: a.ownerEmail,
+          ownerName: nameByEmail.get(a.ownerEmail) ?? "",
+          active: a.id === current.id,
+          // Dono/colaborador usa normalmente; nos demais, so leitura.
+          readOnly: !owner && !member,
+        };
+      }),
+    );
+  }
 
   const [own] = await db
     .select({ id: schema.accounts.id, ownerEmail: schema.accounts.ownerEmail })
@@ -62,6 +117,7 @@ export async function GET() {
       ownerEmail: w.ownerEmail,
       ownerName: nameByEmail.get(w.ownerEmail) ?? "",
       active: w.id === current.id,
+      readOnly: false,
     })),
   );
 }
@@ -105,7 +161,8 @@ export async function PUT(req: Request) {
   if (!acc)
     return NextResponse.json({ error: "Workspace nao existe" }, { status: 404 });
 
-  if (acc.ownerEmail !== email) {
+  // Super-admin pode entrar em qualquer workspace existente (somente leitura).
+  if (!isSuperAdmin(email) && acc.ownerEmail !== email) {
     const [member] = await db
       .select({ id: schema.teamMembers.id })
       .from(schema.teamMembers)

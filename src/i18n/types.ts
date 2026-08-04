@@ -73,6 +73,8 @@ export interface Admin {
     userFallback: string;
     /** Rotulo do proprio workspace no seletor de workspaces. */
     myWorkspace: string;
+    /** Selinho de acesso somente leitura (visao de super-admin). */
+    readonly?: string;
   };
   common: {
     search: string;

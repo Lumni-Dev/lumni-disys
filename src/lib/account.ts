@@ -3,6 +3,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { EXAMPLE_CV_NAME, exampleCvDataUrl } from "@/lib/example-cv";
+import { isSuperAdmin } from "@/lib/superadmin";
 
 export type Account = { id: number; publicToken: string };
 
@@ -85,6 +86,8 @@ async function ownedAccount(email: string): Promise<Account | null> {
 
 /** O e-mail tem acesso a esta conta? (dono ou colaborador dela) */
 async function hasAccess(email: string, accountId: number): Promise<boolean> {
+  // Super-admin enxerga qualquer workspace (somente leitura), sem vinculo.
+  if (isSuperAdmin(email)) return true;
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
     .from(schema.accounts)

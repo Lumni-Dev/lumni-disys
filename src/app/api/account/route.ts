@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail } from "@/lib/account";
 import { MODULES } from "@/lib/permissions";
+import { isSuperAdmin } from "@/lib/superadmin";
 
 export async function GET() {
   const session = await auth();
@@ -18,10 +19,10 @@ export async function GET() {
     .where(eq(schema.accounts.ownerEmail, email));
   const owner = own?.id === account.id;
 
-  // Modulos que o usuario pode VER: dono ve tudo; colaborador, so os que
-  // tiverem a permissao "view" (usado para montar o menu lateral).
+  // Modulos que o usuario pode VER: dono e super-admin veem tudo; colaborador,
+  // so os que tiverem a permissao "view" (usado para montar o menu lateral).
   let modules: string[];
-  if (owner) {
+  if (owner || isSuperAdmin(email)) {
     modules = MODULES.map((m) => m.key);
   } else {
     const [member] = await db
