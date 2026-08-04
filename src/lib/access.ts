@@ -45,6 +45,8 @@ export type Workspace = {
   ownerEmail: string;
   ownerName: string;
   active: boolean;
+  /** Acesso de super-admin somente leitura (nao dono nem colaborador). */
+  readOnly: boolean;
 };
 
 let wsCached: Promise<Workspace[]> | null = null;

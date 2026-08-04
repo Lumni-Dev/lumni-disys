@@ -17,6 +17,7 @@ const pt: Admin = {
     closeMenu: "Fechar menu",
     userFallback: "Usuário",
     myWorkspace: "Meu workspace",
+    readonly: "Somente leitura",
   },
   common: {
     search: "Buscar...",

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail, type Account } from "@/lib/account";
 import type { Action } from "@/lib/permissions";
+import { isSuperAdmin } from "@/lib/superadmin";
 
 type Authz =
   | { account: Account; response: null }
@@ -27,6 +28,14 @@ export async function authorize(
     };
 
   const account = await accountForEmail(email);
+
+  // Super-admin do sistema: acesso somente leitura a qualquer workspace.
+  // Libera apenas acoes de leitura ("view"); escrita (create/edit/delete)
+  // cai nas regras normais abaixo (dono/colaborador), entao ele nunca
+  // altera dados de workspace alheio nem deixa rastro.
+  if (isSuperAdmin(email) && action === "view") {
+    return { account, response: null };
+  }
 
   // Dono da conta: acesso total.
   const [own] = await db
