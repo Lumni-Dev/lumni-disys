@@ -59,16 +59,3 @@ export function AddButton({
   );
 }
 
-export function IconButton({
-  children,
-  ...props
-}: { children: ReactNode } & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      {...props}
-      className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-muted shadow-sm transition-all duration-200 hover:border-accent/40 hover:text-foreground active:scale-[0.98]"
-    >
-      {children}
-    </button>
-  );
-}

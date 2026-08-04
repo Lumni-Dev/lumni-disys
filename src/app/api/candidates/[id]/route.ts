@@ -73,11 +73,11 @@ export async function PUT(req: Request, { params }: Params) {
     .update(schema.candidates)
     .set({
       jobId: job.id,
-      name: body.name,
+      name: String(body.name ?? "").slice(0, 160),
       role: job.title,
-      email: body.email ?? "",
+      email: String(body.email ?? "").slice(0, 200),
       stage: body.stage ?? "Triagem",
-      linkedin: body.linkedin ?? "",
+      linkedin: String(body.linkedin ?? "").slice(0, 300),
       cvName,
       cvBase64,
       matchScore,
@@ -86,8 +86,26 @@ export async function PUT(req: Request, { params }: Params) {
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Conectado: mudar a etapa do candidato move o(s) card(s) dele no pipeline
-  // para o fim da nova coluna (mantem processos e candidatos em sincronia).
+  // Conectado: mantem o(s) card(s) do candidato coerentes com o nome e a vaga
+  // atuais (por ID), para o pipeline nao mostrar nome/vaga/empresa antigos.
+  await db
+    .update(schema.pipelineCards)
+    .set({
+      name: row.name,
+      jobId: job.id,
+      companyId: job.companyId,
+      job: job.title,
+      company: job.company,
+    })
+    .where(
+      and(
+        eq(schema.pipelineCards.candidateId, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
+
+  // Mudar a etapa do candidato move o(s) card(s) dele no pipeline para o fim
+  // da nova coluna (mantem processos e candidatos em sincronia).
   if (existing.stage !== row.stage) {
     const [tail] = await db
       .select({ n: count() })

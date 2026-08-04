@@ -86,15 +86,28 @@ function FormModal({
 }: {
   open: boolean;
   onClose: () => void;
-  onSubmit: () => boolean;
+  onSubmit: () => boolean | Promise<boolean>;
   title: string;
   subtitle: string;
   children: React.ReactNode;
   secondaryAction?: React.ReactNode;
 }) {
-  function submit(e: FormEvent) {
+  const { admin } = useI18n();
+  const [error, setError] = useState(false);
+  const [busy, setBusy] = useState(false);
+  // Fecha so quando o save conclui; se falhar, mantem aberto e avisa.
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    if (onSubmit()) onClose();
+    if (busy) return;
+    setBusy(true);
+    setError(false);
+    try {
+      if (await onSubmit()) onClose();
+    } catch {
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
   }
   return (
     <Modal open={open} onClose={onClose} title={title} subtitle={subtitle}>
@@ -102,6 +115,11 @@ function FormModal({
         <div className="grid grid-cols-1 gap-2.5 p-2.5 sm:grid-cols-2">
           {children}
         </div>
+        {error && (
+          <p className="px-2.5 pb-1 text-xs text-red-400">
+            {admin.common.saveError ?? "Erro ao salvar. Tente novamente."}
+          </p>
+        )}
         <ModalFooter onCancel={onClose} secondaryAction={secondaryAction} />
       </form>
     </Modal>
@@ -218,7 +236,7 @@ export function CompanyModal({
       onClose={onClose}
       title={company ? t.editTitle : t.newTitle}
       subtitle={company ? t.editSubtitle : t.newSubtitle}
-      onSubmit={() => {
+      onSubmit={async () => {
         const ok = run({
           name: isBlank(name),
           sector: isBlank(sector),
@@ -236,7 +254,7 @@ export function CompanyModal({
         const location = isBrazil
           ? `${city} - ${uf}`
           : `${cityText.trim()} - ${stateText.trim()} (${country})`;
-        onSave({
+        await onSave({
           id: company?.id ?? 0,
           name: name.trim(),
           // CNPJ (Brasil) ou documento fiscal (exterior), gravado no banco.
@@ -400,7 +418,7 @@ export function JobModal({
       onClose={onClose}
       title={job ? t.editTitle : t.newTitle}
       subtitle={job ? t.editSubtitle : t.newSubtitle}
-      onSubmit={() => {
+      onSubmit={async () => {
         const from = moneyToNumber(salaryFrom);
         const to = moneyToNumber(salaryTo);
         const order = from > 0 && to > 0 && from > to;
@@ -416,7 +434,7 @@ export function JobModal({
           salaryOrder: order,
         });
         if (!ok) return false;
-        onSave({
+        await onSave({
           id: job?.id ?? 0,
           title: title.trim(),
           // Vinculo por ID; o nome vai junto so como rotulo (o servidor o
@@ -593,7 +611,7 @@ export function CandidateModal({
       onClose={onClose}
       title={candidate ? t.editTitle : t.newTitle}
       subtitle={candidate ? t.editSubtitle : t.newSubtitle}
-      onSubmit={() => {
+      onSubmit={async () => {
         const ok = run({
           name: isBlank(name),
           email: !isEmail(email),
@@ -602,7 +620,7 @@ export function CandidateModal({
           cv: !hasCv,
         });
         if (!ok) return false;
-        onSave({
+        await onSave({
           id: candidate?.id ?? 0,
           name: name.trim(),
           email: email.trim(),
@@ -749,13 +767,13 @@ export function ProcessModal({
           </button>
         ) : undefined
       }
-      onSubmit={() => {
+      onSubmit={async () => {
         const ok = run({
           name: editing ? false : isBlank(candidateId),
           stage: isBlank(stage),
         });
         if (!ok) return false;
-        onSave(
+        await onSave(
           {
             id: card?.id ?? 0,
             candidateId: editing

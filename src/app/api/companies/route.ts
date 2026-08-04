@@ -33,10 +33,10 @@ export async function POST(req: Request) {
     .insert(schema.companies)
     .values({
       accountId: account.id,
-      name: body.name,
+      name: String(body.name ?? "").slice(0, 160),
       cnpj: String(body.cnpj ?? "").slice(0, 40),
-      sector: body.sector ?? "",
-      location: body.location ?? "",
+      sector: String(body.sector ?? "").slice(0, 120),
+      location: String(body.location ?? "").slice(0, 160),
       status: body.status ?? "Ativa",
     })
     .returning();

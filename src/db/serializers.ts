@@ -86,6 +86,7 @@ type CandidateRow = {
   name: string;
   role: string;
   email: string;
+  phone?: string;
   stage: string;
   linkedin: string;
   cvName?: string;
@@ -103,6 +104,7 @@ export function serializeCandidate(r: CandidateRow) {
     name: r.name,
     role: r.role,
     email: r.email,
+    phone: r.phone ?? "",
     stage: r.stage,
     linkedin: r.linkedin,
     hasCv: r.hasCv ?? Boolean(r.cvBase64),

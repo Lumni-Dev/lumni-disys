@@ -15,8 +15,6 @@ export const LOCALES = [
 
 export type LocaleCode = (typeof LOCALES)[number]["code"];
 
-export const DEFAULT_LOCALE: LocaleCode = "pt";
-
 /** Chave usada no localStorage para lembrar o idioma escolhido. */
 export const STORAGE_KEY = "disys.lang";
 

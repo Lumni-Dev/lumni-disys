@@ -55,7 +55,7 @@ export default function AccountPage() {
   const image = photo ?? session?.user?.image ?? null;
 
   const [nameEdit, setNameEdit] = useState<string | null>(null);
-  const [cargo, setCargo] = useState("Administrador");
+  const [cargo, setCargo] = useState("");
   const [phone, setPhone] = useState("");
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);

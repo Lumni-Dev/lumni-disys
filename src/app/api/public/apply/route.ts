@@ -22,19 +22,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
 
   const role = String(body.jobTitle ?? "").slice(0, 160);
+  const jobId = Number(body.jobId);
 
-  // Mesma pessoa na mesma vaga: nao duplica o candidato nem infla o contador.
-  const [dup] = await db
-    .select({ id: schema.candidates.id })
-    .from(schema.candidates)
-    .where(
-      and(
-        eq(schema.candidates.accountId, account.id),
-        eq(schema.candidates.email, email.slice(0, 200)),
-        eq(schema.candidates.role, role),
-      ),
-    );
-  if (dup) return NextResponse.json({ ok: true }, { status: 200 });
+  // Mesma pessoa na mesma vaga (vinculo por jobId): nao duplica o candidato
+  // nem infla a contagem, mesmo que dois cargos tenham o mesmo titulo.
+  if (Number.isFinite(jobId)) {
+    const [dup] = await db
+      .select({ id: schema.candidates.id })
+      .from(schema.candidates)
+      .where(
+        and(
+          eq(schema.candidates.accountId, account.id),
+          eq(schema.candidates.email, email.slice(0, 200)),
+          eq(schema.candidates.jobId, jobId),
+        ),
+      );
+    if (dup) return NextResponse.json({ ok: true }, { status: 200 });
+  }
 
   // Curriculo: data URL base64, com teto de tamanho no servidor (~2 MB).
   const cvData =
@@ -45,7 +49,6 @@ export async function POST(req: Request) {
       : "";
 
   // Dados da vaga: empresa para o card e titulo/descricao para a analise.
-  const jobId = Number(body.jobId);
   let job: {
     title: string;
     company: string;
@@ -89,6 +92,7 @@ export async function POST(req: Request) {
       email: email.slice(0, 200),
       stage: "Triagem",
       linkedin: String(body.linkedin ?? "").slice(0, 300),
+      phone: String(body.phone ?? "").slice(0, 40),
       cvName,
       cvBase64: cvData,
       matchScore,

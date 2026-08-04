@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     .values({
       accountId: account.id,
       companyId: company.id,
-      title: body.title,
+      title: String(body.title ?? "").slice(0, 200),
       company: company.name,
       description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",

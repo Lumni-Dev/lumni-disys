@@ -114,6 +114,8 @@ export type Candidate = {
   name: string;
   role: string;
   email: string;
+  /** Telefone (E.164) informado na candidatura publica. */
+  phone?: string;
   stage: (typeof stages)[number];
   modifiedAt: string;
   /** Hora (HH:mm, fuso de Sao Paulo) da ultima modificacao. */

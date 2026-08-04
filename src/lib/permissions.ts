@@ -43,6 +43,28 @@ export function permissionsFrom(map: Record<string, Action[]>): Permissions {
   return p;
 }
 
+const MODULE_KEYS = new Set(MODULES.map((m) => m.key));
+const ACTION_KEYS = new Set<string>(ACTIONS.map((a) => a.key));
+
+/**
+ * Converte a matriz de permissoes do body em linhas para o banco, aceitando
+ * SOMENTE modulos/acoes conhecidos (descarta chaves arbitrarias/desconhecidas).
+ */
+export function validPermissionRows(
+  memberId: number,
+  permissions: Record<string, Record<string, boolean>> = {},
+): { memberId: number; module: string; action: string }[] {
+  const rows: { memberId: number; module: string; action: string }[] = [];
+  for (const [module, actions] of Object.entries(permissions ?? {})) {
+    if (!MODULE_KEYS.has(module)) continue;
+    for (const [action, allowed] of Object.entries(actions ?? {})) {
+      if (allowed && ACTION_KEYS.has(action))
+        rows.push({ memberId, module, action });
+    }
+  }
+  return rows;
+}
+
 export function countPermissions(p: Permissions) {
   let total = 0;
   let pages = 0;
@@ -52,12 +74,6 @@ export function countPermissions(p: Permissions) {
     if (n > 0) pages++;
   }
   return { total, pages };
-}
-
-export function pagesWithAccess(p: Permissions) {
-  return MODULES.filter((m) => ACTIONS.some((a) => p[m.key]?.[a.key])).map(
-    (m) => m.label,
-  );
 }
 
 export const initialTeam: Member[] = [

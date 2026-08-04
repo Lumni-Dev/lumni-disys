@@ -35,6 +35,7 @@ const en: Admin = {
     cancel: "Cancel",
     saving: "Saving...",
     saved: "Saved!",
+    saveError: "Something went wrong. Please try again.",
     confirm: "Confirm",
     loading: "Loading...",
     noResults: "0 results",
