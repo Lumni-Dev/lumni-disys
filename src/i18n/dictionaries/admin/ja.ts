@@ -17,6 +17,14 @@ const ja: Admin = {
     closeMenu: "メニューを閉じる",
     userFallback: "ユーザー",
     myWorkspace: "マイワークスペース",
+    readonly: "閲覧のみ",
+  },
+  deleteBlocked: {
+    title: "削除できません",
+    companyHasJobs: (n) =>
+      `この会社には求人が${n}件あります。会社を削除する前に、求人を削除するか関連付けを解除してください。`,
+    jobHasCandidates: (n) =>
+      `この求人には候補者が${n}名います。求人を削除する前に、候補者を削除してください。`,
   },
   common: {
     search: "検索...",
@@ -297,6 +305,7 @@ const ja: Admin = {
       job: "求人",
       company: "企業",
       stage: "ステージ",
+      remove: "選考から削除",
     },
     member: {
       editTitle: "メンバーを編集",

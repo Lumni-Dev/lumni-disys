@@ -17,6 +17,14 @@ const ar: Admin = {
     closeMenu: "إغلاق القائمة",
     userFallback: "مستخدم",
     myWorkspace: "مساحة عملي",
+    readonly: "للقراءة فقط",
+  },
+  deleteBlocked: {
+    title: "لا يمكن الحذف",
+    companyHasJobs: (n) =>
+      `تحتوي هذه الشركة على ${n} وظيفة. احذف الوظائف أو ألغِ ربطها قبل حذف الشركة.`,
+    jobHasCandidates: (n) =>
+      `تحتوي هذه الوظيفة على ${n} مرشح. احذف المرشحين قبل حذف الوظيفة.`,
   },
   common: {
     search: "بحث...",
@@ -296,6 +304,7 @@ const ar: Admin = {
       job: "الوظيفة",
       company: "الشركة",
       stage: "المرحلة",
+      remove: "إزالة من العملية",
     },
     member: {
       editTitle: "تعديل العضو",

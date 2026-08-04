@@ -17,6 +17,14 @@ const nl: Admin = {
     closeMenu: "Menu sluiten",
     userFallback: "Gebruiker",
     myWorkspace: "Mijn workspace",
+    readonly: "Alleen-lezen",
+  },
+  deleteBlocked: {
+    title: "Kan niet verwijderen",
+    companyHasJobs: (n) =>
+      `Dit bedrijf heeft ${n} vacature${n === 1 ? "" : "s"}. Verwijder of ontkoppel de vacatures voordat je het bedrijf verwijdert.`,
+    jobHasCandidates: (n) =>
+      `Deze vacature heeft ${n} ${n === 1 ? "kandidaat" : "kandidaten"}. Verwijder de kandidaten voordat je de vacature verwijdert.`,
   },
   common: {
     search: "Zoeken...",
@@ -297,6 +305,7 @@ const nl: Admin = {
       job: "Vacature",
       company: "Bedrijf",
       stage: "Fase",
+      remove: "Uit proces verwijderen",
     },
     member: {
       editTitle: "Lid bewerken",

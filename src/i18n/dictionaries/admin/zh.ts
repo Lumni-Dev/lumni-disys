@@ -17,6 +17,14 @@ const zh: Admin = {
     closeMenu: "关闭菜单",
     userFallback: "用户",
     myWorkspace: "我的工作区",
+    readonly: "只读",
+  },
+  deleteBlocked: {
+    title: "无法删除",
+    companyHasJobs: (n) =>
+      `该公司有 ${n} 个职位。请先删除或取消关联这些职位，再删除公司。`,
+    jobHasCandidates: (n) =>
+      `该职位有 ${n} 位候选人。请先删除候选人，再删除职位。`,
   },
   common: {
     search: "搜索……",
@@ -293,6 +301,7 @@ const zh: Admin = {
       job: "职位",
       company: "公司",
       stage: "阶段",
+      remove: "从流程中移除",
     },
     member: {
       editTitle: "编辑成员",

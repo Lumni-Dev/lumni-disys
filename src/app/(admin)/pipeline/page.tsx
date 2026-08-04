@@ -118,10 +118,11 @@ export default function PipelinePage() {
   }
 
   // Remove o candidato do processo (exclui o card; o candidato permanece).
+  // Fecha o modal na hora; a exclusao e o recarregamento seguem em segundo plano.
   async function removeCard(id: number) {
+    setEditing(null);
     await api.del(`/api/pipeline/${id}`);
     setColumns(await api.get<Column[]>("/api/pipeline"));
-    setEditing(null);
   }
 
   function exportAll() {

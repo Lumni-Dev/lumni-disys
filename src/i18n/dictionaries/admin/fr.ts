@@ -17,6 +17,14 @@ const fr: Admin = {
     closeMenu: "Fermer le menu",
     userFallback: "Utilisateur",
     myWorkspace: "Mon espace de travail",
+    readonly: "Lecture seule",
+  },
+  deleteBlocked: {
+    title: "Suppression impossible",
+    companyHasJobs: (n) =>
+      `Cette entreprise a ${n} poste${n === 1 ? "" : "s"}. Supprimez ou dissociez les postes avant de supprimer l'entreprise.`,
+    jobHasCandidates: (n) =>
+      `Ce poste a ${n} candidat${n === 1 ? "" : "s"}. Supprimez les candidats avant de supprimer le poste.`,
   },
   common: {
     search: "Rechercher...",
@@ -297,6 +305,7 @@ const fr: Admin = {
       job: "Offre",
       company: "Entreprise",
       stage: "Étape",
+      remove: "Retirer du processus",
     },
     member: {
       editTitle: "Modifier le membre",
