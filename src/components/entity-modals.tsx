@@ -5,7 +5,12 @@ import Link from "next/link";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
-import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
+import {
+  CnpjInput,
+  MoneyInput,
+  moneyToNumber,
+  formatMoney,
+} from "@/components/ui/masked-input";
 import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
 import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
 import { fetchCnpj, sameCity } from "@/lib/cnpj";
@@ -378,8 +383,12 @@ export function JobModal({
   const [type, setType] = useState(job?.type ?? "");
   const [openings, setOpenings] = useState(String(job?.openings ?? ""));
   const [status, setStatus] = useState<string>(job?.status ?? "");
-  const [salaryFrom, setSalaryFrom] = useState("");
-  const [salaryTo, setSalaryTo] = useState("");
+  const [salaryFrom, setSalaryFrom] = useState(
+    job?.salaryFrom ? formatMoney(String(job.salaryFrom)) : "",
+  );
+  const [salaryTo, setSalaryTo] = useState(
+    job?.salaryTo ? formatMoney(String(job.salaryTo)) : "",
+  );
   const { run, invalid, hasError } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.job;
@@ -421,6 +430,9 @@ export function JobModal({
           level,
           type,
           openings: Number(openings) || 0,
+          // Faixa salarial gravada em centavos.
+          salaryFrom: Math.round(from * 100),
+          salaryTo: Math.round(to * 100),
           // O total de candidatos e um contador automatico, nao editavel.
           applicants: job?.applicants ?? 0,
           status: status as Job["status"],
@@ -770,7 +782,10 @@ export function ProcessModal({
             onChange={(v) => {
               setCandidateId(v);
               const c = candidates.find((x) => String(x.id) === v);
-              if (c && isBlank(stage)) setStage(c.stage);
+              // Default: etapa atual do candidato, se for uma etapa valida
+              // (candidato fora do processo tem "-", entao cai em Triagem).
+              if (c && isBlank(stage))
+                setStage(stages.includes(c.stage) ? c.stage : "Triagem");
             }}
             options={candidates.map((c) => ({
               value: String(c.id),

@@ -32,6 +32,8 @@ const stageTone: Record<string, Tone> = {
   "Teste técnico": "amber",
   "Entrevista final": "red",
   Proposta: "green",
+  // Fora do processo (card removido em Processos).
+  "-": "neutral",
 };
 
 export default function CandidatesPage() {

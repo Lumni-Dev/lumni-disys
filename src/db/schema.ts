@@ -61,6 +61,9 @@ export const jobs = pgTable("jobs", {
   openings: integer().notNull().default(1),
   // Contador automatico de candidaturas (nao editavel no modal).
   applicants: integer().notNull().default(0),
+  // Faixa salarial em centavos (0 = nao informado).
+  salaryFrom: integer().notNull().default(0),
+  salaryTo: integer().notNull().default(0),
   status: varchar({ length: 40 }).notNull().default("Aberta"),
   ...timestamps,
 });

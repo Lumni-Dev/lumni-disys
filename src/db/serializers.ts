@@ -55,6 +55,8 @@ type JobRow = {
   level: string;
   openings: number;
   applicants: number;
+  salaryFrom: number;
+  salaryTo: number;
   status: string;
   createdAt: Date | string;
 };
@@ -71,6 +73,8 @@ export function serializeJob(r: JobRow, applicants: number = r.applicants) {
     // Candidatos = numero real de candidatos da vaga (calculado nas rotas);
     // o valor da coluna e apenas o padrao quando nao informado.
     applicants,
+    salaryFrom: r.salaryFrom,
+    salaryTo: r.salaryTo,
     status: r.status,
     postedAt: formatDate(r.createdAt),
   };
