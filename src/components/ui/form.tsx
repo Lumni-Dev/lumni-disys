@@ -74,7 +74,13 @@ export function Input({
       type={type}
       {...props}
       onChange={handleChange}
-      className={cx(controlClass, !!invalid && "ring-1 ring-accent", className)}
+      // truncate: texto longo vira reticencias (uma linha, sem quebrar).
+      className={cx(
+        controlClass,
+        "truncate",
+        !!invalid && "ring-1 ring-accent",
+        className,
+      )}
       style={{
         ...invalidStyle(invalid, style),
         ...(upper ? { textTransform: "uppercase" } : {}),
