@@ -760,7 +760,7 @@ export function ProcessModal({
     >
       <Field label={t.candidate} full req>
         {editing ? (
-          <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-foreground">
+          <p className="truncate rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-foreground">
             {nameLabel || "—"}
           </p>
         ) : (
@@ -781,12 +781,12 @@ export function ProcessModal({
         )}
       </Field>
       <Field label={t.job}>
-        <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
+        <p className="truncate rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
           {jobLabel || "—"}
         </p>
       </Field>
       <Field label={t.company}>
-        <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
+        <p className="truncate rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
           {companyLabel || "—"}
         </p>
       </Field>
