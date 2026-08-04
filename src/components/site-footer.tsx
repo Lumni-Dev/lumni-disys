@@ -99,10 +99,7 @@ export function SiteFooter() {
             <p>Lumni · Serviços Digitais · CNPJ 65.613.389/0001-96</p>
             <p className="mt-1">{copyright}</p>
           </div>
-          <nav
-            aria-label="Páginas legais"
-            className="flex items-center gap-5 text-xs text-muted"
-          >
+          <nav className="flex items-center gap-5 text-xs text-muted">
             <a
               href="https://lumni.dev.br/privacy"
               target="_blank"

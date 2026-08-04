@@ -74,17 +74,16 @@ export interface Admin {
     /** Rotulo do proprio workspace no seletor de workspaces. */
     myWorkspace: string;
     /** Selinho de acesso somente leitura (visao de super-admin). */
-    readonly?: string;
+    readonly: string;
   };
   /** Aviso de exclusao bloqueada por dependencias (empresa com vagas, etc.). */
-  deleteBlocked?: {
+  deleteBlocked: {
     title: string;
     companyHasJobs(n: number): string;
     jobHasCandidates(n: number): string;
   };
   common: {
     search: string;
-    add: string;
     edit: string;
     remove: string;
     save: string;
@@ -92,7 +91,7 @@ export interface Admin {
     saving: string;
     saved: string;
     /** Aviso generico quando um save falha (rede/validacao/servidor). */
-    saveError?: string;
+    saveError: string;
     confirm: string;
     loading: string;
     noResults: string;
@@ -100,12 +99,9 @@ export interface Admin {
     filters: string;
     export: string;
     exportExcel: string;
-    back: string;
     close: string;
-    select: string;
     selectAll: string;
     actions: string;
-    status: string;
     previous: string;
     next: string;
     selectToExport: string;
@@ -274,8 +270,6 @@ export interface Admin {
   };
   modals: {
     select: string;
-    /** Placeholder dos campos de busca com sugestoes. */
-    searchOrType: string;
     confirmMessage: string;
     permissionsByPage: string;
     page: string;
@@ -295,7 +289,6 @@ export interface Admin {
       city: string;
       taxId: string;
       stateProvince: string;
-      openings: string;
       status: string;
       selectCity: string;
       selectStateFirst: string;
@@ -334,7 +327,6 @@ export interface Admin {
       jobHint: string;
       jobHintLink: string;
       linkedin: string;
-      stage: string;
       linkedinPlaceholder: string;
     };
     process: {
@@ -347,7 +339,7 @@ export interface Admin {
       company: string;
       stage: string;
       /** Botao de remover o candidato do processo (exclui o card). */
-      remove?: string;
+      remove: string;
     };
     member: {
       editTitle: string;

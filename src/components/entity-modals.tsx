@@ -117,7 +117,7 @@ function FormModal({
         </div>
         {error && (
           <p className="px-2.5 pb-1 text-xs text-red-400">
-            {admin.common.saveError ?? "Erro ao salvar. Tente novamente."}
+            {admin.common.saveError}
           </p>
         )}
         <ModalFooter onCancel={onClose} secondaryAction={secondaryAction} />
@@ -763,7 +763,7 @@ export function ProcessModal({
             onClick={() => onDelete(card.id)}
             className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-red-400 transition-all duration-200 hover:border-red-400/40 hover:bg-red-500/10 active:scale-[0.98]"
           >
-            {t.remove ?? "Remover do processo"}
+            {t.remove}
           </button>
         ) : undefined
       }
