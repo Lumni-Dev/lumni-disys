@@ -52,15 +52,33 @@ export function Input({
   invalid = 0,
   className,
   style,
+  type,
+  onChange,
   ...props
 }: { invalid?: number } & React.InputHTMLAttributes<HTMLInputElement>) {
   const ref = useShake<HTMLInputElement>(invalid);
+  // Padroniza o texto em UPPERCASE (gravado assim no banco). Nao vale para
+  // e-mail/URL/numeros: uppercase quebraria o match de login/convite e a
+  // semantica desses campos.
+  const upper = type === undefined || type === "text" || type === "search";
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> | undefined =
+    upper && onChange
+      ? (e) => {
+          e.target.value = e.target.value.toUpperCase();
+          onChange(e);
+        }
+      : onChange;
   return (
     <input
       ref={ref}
+      type={type}
       {...props}
+      onChange={handleChange}
       className={cx(controlClass, !!invalid && "ring-1 ring-accent", className)}
-      style={invalidStyle(invalid, style)}
+      style={{
+        ...invalidStyle(invalid, style),
+        ...(upper ? { textTransform: "uppercase" } : {}),
+      }}
     />
   );
 }

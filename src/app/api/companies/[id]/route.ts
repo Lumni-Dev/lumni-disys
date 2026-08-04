@@ -18,6 +18,7 @@ export async function PUT(req: Request, { params }: Params) {
     .update(schema.companies)
     .set({
       name: body.name,
+      cnpj: String(body.cnpj ?? "").slice(0, 40),
       sector: body.sector ?? "",
       location: body.location ?? "",
       status: body.status ?? "Ativa",

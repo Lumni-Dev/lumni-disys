@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     .values({
       accountId: account.id,
       name: body.name,
+      cnpj: String(body.cnpj ?? "").slice(0, 40),
       sector: body.sector ?? "",
       location: body.location ?? "",
       status: body.status ?? "Ativa",

@@ -1,0 +1,1 @@
+ALTER TABLE "companies" ADD COLUMN "cnpj" varchar(40) DEFAULT '' NOT NULL;
