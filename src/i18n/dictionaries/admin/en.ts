@@ -305,6 +305,7 @@ const en: Admin = {
       job: "Job",
       company: "Company",
       stage: "Stage",
+      remove: "Remove from process",
     },
     member: {
       editTitle: "Edit member",

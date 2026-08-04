@@ -344,6 +344,8 @@ export interface Admin {
       job: string;
       company: string;
       stage: string;
+      /** Botao de remover o candidato do processo (exclui o card). */
+      remove?: string;
     };
     member: {
       editTitle: string;

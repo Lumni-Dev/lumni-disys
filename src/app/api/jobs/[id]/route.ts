@@ -70,6 +70,16 @@ export async function DELETE(_req: Request, { params }: Params) {
         },
         { status: 409 },
       );
+
+    // Conectado: remove do pipeline eventuais cards dessa vaga (por titulo).
+    await db
+      .delete(schema.pipelineCards)
+      .where(
+        and(
+          eq(schema.pipelineCards.job, job.title),
+          eq(schema.pipelineCards.accountId, account.id),
+        ),
+      );
   }
 
   await db

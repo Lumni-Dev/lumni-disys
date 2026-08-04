@@ -90,6 +90,7 @@ function FormModal({
   title,
   subtitle,
   children,
+  secondaryAction,
 }: {
   open: boolean;
   onClose: () => void;
@@ -97,6 +98,7 @@ function FormModal({
   title: string;
   subtitle: string;
   children: React.ReactNode;
+  secondaryAction?: React.ReactNode;
 }) {
   function submit(e: FormEvent) {
     e.preventDefault();
@@ -108,7 +110,7 @@ function FormModal({
         <div className="grid grid-cols-1 gap-2.5 p-2.5 sm:grid-cols-2">
           {children}
         </div>
-        <ModalFooter onCancel={onClose} />
+        <ModalFooter onCancel={onClose} secondaryAction={secondaryAction} />
       </form>
     </Modal>
   );
@@ -697,6 +699,7 @@ export function ProcessModal({
   open,
   onClose,
   onSave,
+  onDelete,
   card,
   currentStage,
   stages = STAGES,
@@ -704,6 +707,7 @@ export function ProcessModal({
   open: boolean;
   onClose: () => void;
   onSave: (card: PipelineCard, stage: string) => void;
+  onDelete?: (id: number) => void;
   card?: PipelineCard | null;
   currentStage?: string;
   stages?: string[];
@@ -747,6 +751,17 @@ export function ProcessModal({
       onClose={onClose}
       title={card ? t.editTitle : t.newTitle}
       subtitle={card ? t.editSubtitle : t.newSubtitle}
+      secondaryAction={
+        card && onDelete ? (
+          <button
+            type="button"
+            onClick={() => onDelete(card.id)}
+            className="rounded-lg border border-border px-2.5 py-1.5 text-sm font-medium text-red-400 transition-all duration-200 hover:border-red-400/40 hover:bg-red-500/10 active:scale-[0.98]"
+          >
+            {t.remove ?? "Remover do processo"}
+          </button>
+        ) : undefined
+      }
       onSubmit={() => {
         const ok = run({
           name: isBlank(name),
