@@ -77,6 +77,25 @@ export async function DELETE() {
     );
 
   await db.transaction(async (tx) => {
+    // Auditoria: registra a exclusao antes de apagar, ja que nada mais sobra.
+    await tx.insert(schema.deletedAccounts).values({
+      accountId: acc.id,
+      ownerEmail: acc.ownerEmail,
+      accountCreatedAt: acc.createdAt,
+      companiesCount: await tx.$count(
+        schema.companies,
+        eq(schema.companies.accountId, acc.id),
+      ),
+      jobsCount: await tx.$count(schema.jobs, eq(schema.jobs.accountId, acc.id)),
+      candidatesCount: await tx.$count(
+        schema.candidates,
+        eq(schema.candidates.accountId, acc.id),
+      ),
+      teamMembersCount: await tx.$count(
+        schema.teamMembers,
+        eq(schema.teamMembers.accountId, acc.id),
+      ),
+    });
     await tx
       .delete(schema.pipelineCards)
       .where(eq(schema.pipelineCards.accountId, acc.id));

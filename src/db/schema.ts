@@ -131,6 +131,23 @@ export const userProfiles = pgTable(
   (t) => [uniqueIndex("user_profiles_email_key").on(t.email)],
 );
 
+// Log de auditoria: uma linha por workspace excluido. A exclusao apaga tudo
+// em definitivo, entao este registro e o unico historico que sobra.
+export const deletedAccounts = pgTable("deleted_accounts", {
+  id: serial().primaryKey(),
+  // Id que a conta tinha em accounts (sem FK: a linha original ja foi apagada).
+  accountId: integer().notNull(),
+  ownerEmail: varchar({ length: 200 }).notNull(),
+  // Quando a conta original foi criada.
+  accountCreatedAt: timestamp({ withTimezone: true }).notNull(),
+  // O que foi apagado junto com a conta.
+  companiesCount: integer().notNull().default(0),
+  jobsCount: integer().notNull().default(0),
+  candidatesCount: integer().notNull().default(0),
+  teamMembersCount: integer().notNull().default(0),
+  deletedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
 export const memberPermissions = pgTable(
   "member_permissions",
   {
