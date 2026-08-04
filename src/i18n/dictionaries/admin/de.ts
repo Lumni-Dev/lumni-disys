@@ -17,6 +17,14 @@ const de: Admin = {
     closeMenu: "Menü schließen",
     userFallback: "Benutzer",
     myWorkspace: "Mein Workspace",
+    readonly: "Nur Lesen",
+  },
+  deleteBlocked: {
+    title: "Löschen nicht möglich",
+    companyHasJobs: (n) =>
+      `Dieses Unternehmen hat ${n} Stelle${n === 1 ? "" : "n"}. Löschen oder trennen Sie die Stellen, bevor Sie das Unternehmen löschen.`,
+    jobHasCandidates: (n) =>
+      `Diese Stelle hat ${n} Kandidat${n === 1 ? "" : "en"}. Löschen Sie die Kandidaten, bevor Sie die Stelle löschen.`,
   },
   common: {
     search: "Suchen...",
@@ -297,6 +305,7 @@ const de: Admin = {
       job: "Stelle",
       company: "Unternehmen",
       stage: "Phase",
+      remove: "Aus dem Prozess entfernen",
     },
     member: {
       editTitle: "Mitglied bearbeiten",

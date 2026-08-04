@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -22,6 +22,7 @@ export async function PUT(req: Request, { params }: Params) {
       cvName: schema.candidates.cvName,
       cvBase64: schema.candidates.cvBase64,
       role: schema.candidates.role,
+      stage: schema.candidates.stage,
       matchScore: schema.candidates.matchScore,
     })
     .from(schema.candidates)
@@ -90,6 +91,30 @@ export async function PUT(req: Request, { params }: Params) {
     .where(and(eq(schema.candidates.id, id), eq(schema.candidates.accountId, account.id)))
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // Conectado: mudar a etapa do candidato move o(s) card(s) dele no pipeline
+  // para o fim da nova coluna (mantem processos e candidatos em sincronia).
+  if (existing.stage !== row.stage) {
+    const [tail] = await db
+      .select({ n: count() })
+      .from(schema.pipelineCards)
+      .where(
+        and(
+          eq(schema.pipelineCards.accountId, account.id),
+          eq(schema.pipelineCards.stage, row.stage),
+        ),
+      );
+    await db
+      .update(schema.pipelineCards)
+      .set({ stage: row.stage, position: tail.n })
+      .where(
+        and(
+          eq(schema.pipelineCards.candidateId, id),
+          eq(schema.pipelineCards.accountId, account.id),
+        ),
+      );
+  }
+
   return NextResponse.json(serializeCandidate(row));
 }
 

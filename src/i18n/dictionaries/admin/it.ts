@@ -17,6 +17,14 @@ const it: Admin = {
     closeMenu: "Chiudi il menu",
     userFallback: "Utente",
     myWorkspace: "Il mio workspace",
+    readonly: "Sola lettura",
+  },
+  deleteBlocked: {
+    title: "Impossibile eliminare",
+    companyHasJobs: (n) =>
+      `Questa azienda ha ${n} posizione${n === 1 ? "" : "i"}. Elimina o scollega le posizioni prima di eliminare l'azienda.`,
+    jobHasCandidates: (n) =>
+      `Questa posizione ha ${n} candidato${n === 1 ? "" : "i"}. Elimina i candidati prima di eliminare la posizione.`,
   },
   common: {
     search: "Cerca...",
@@ -297,6 +305,7 @@ const it: Admin = {
       job: "Posizione",
       company: "Azienda",
       stage: "Fase",
+      remove: "Rimuovi dal processo",
     },
     member: {
       editTitle: "Modifica membro",

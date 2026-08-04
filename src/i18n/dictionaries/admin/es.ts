@@ -17,6 +17,14 @@ const es: Admin = {
     closeMenu: "Cerrar menú",
     userFallback: "Usuario",
     myWorkspace: "Mi workspace",
+    readonly: "Solo lectura",
+  },
+  deleteBlocked: {
+    title: "No se puede eliminar",
+    companyHasJobs: (n) =>
+      `Esta empresa tiene ${n} vacante${n === 1 ? "" : "s"}. Elimina o desvincula las vacantes antes de eliminar la empresa.`,
+    jobHasCandidates: (n) =>
+      `Esta vacante tiene ${n} candidato${n === 1 ? "" : "s"}. Elimina los candidatos antes de eliminar la vacante.`,
   },
   common: {
     search: "Buscar...",
@@ -297,6 +305,7 @@ const es: Admin = {
       job: "Vacante",
       company: "Empresa",
       stage: "Etapa",
+      remove: "Quitar del proceso",
     },
     member: {
       editTitle: "Editar miembro",

@@ -17,6 +17,14 @@ const ko: Admin = {
     closeMenu: "메뉴 닫기",
     userFallback: "사용자",
     myWorkspace: "내 워크스페이스",
+    readonly: "읽기 전용",
+  },
+  deleteBlocked: {
+    title: "삭제할 수 없습니다",
+    companyHasJobs: (n) =>
+      `이 회사에 채용 공고가 ${n}개 있습니다. 회사를 삭제하기 전에 공고를 삭제하거나 연결을 해제하세요.`,
+    jobHasCandidates: (n) =>
+      `이 채용 공고에 후보자가 ${n}명 있습니다. 공고를 삭제하기 전에 후보자를 삭제하세요.`,
   },
   common: {
     search: "검색...",
@@ -294,6 +302,7 @@ const ko: Admin = {
       job: "채용 공고",
       company: "회사",
       stage: "단계",
+      remove: "프로세스에서 제거",
     },
     member: {
       editTitle: "멤버 편집",
