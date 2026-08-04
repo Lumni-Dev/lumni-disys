@@ -194,7 +194,7 @@ export function MemberModal({
         </div>
         {saveError && (
           <p className="px-2.5 pb-1 text-xs text-red-400">
-            {admin.common.saveError ?? "Erro ao salvar. Tente novamente."}
+            {admin.common.saveError}
           </p>
         )}
         <ModalFooter onCancel={onClose} />

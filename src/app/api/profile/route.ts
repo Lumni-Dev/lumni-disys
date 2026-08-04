@@ -55,6 +55,21 @@ export async function PUT(req: Request) {
   if (typeof body.phone === "string") set.phone = body.phone;
   if (typeof body.role === "string") set.role = body.role;
 
+  // Body sem nenhum campo conhecido: nada a gravar (evita SET vazio no upsert).
+  if (Object.keys(set).length === 0) {
+    const [current] = await db
+      .select()
+      .from(schema.userProfiles)
+      .where(eq(schema.userProfiles.email, email));
+    return NextResponse.json({
+      photo: current?.avatarBase64 || null,
+      theme: current?.theme || "white",
+      name: current?.name || "",
+      phone: current?.phone || "",
+      role: current?.role || "",
+    });
+  }
+
   await db
     .insert(schema.userProfiles)
     .values({

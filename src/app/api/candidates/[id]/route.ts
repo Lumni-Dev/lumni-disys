@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -76,7 +76,9 @@ export async function PUT(req: Request, { params }: Params) {
       name: String(body.name ?? "").slice(0, 160),
       role: job.title,
       email: String(body.email ?? "").slice(0, 200),
-      stage: body.stage ?? "Triagem",
+      // A etapa e gerenciada em Processos; a edicao do candidato preserva a
+      // etapa atual do banco (evita reverter uma mudanca feita no pipeline).
+      stage: existing.stage,
       linkedin: String(body.linkedin ?? "").slice(0, 300),
       cvName,
       cvBase64,
@@ -103,29 +105,6 @@ export async function PUT(req: Request, { params }: Params) {
         eq(schema.pipelineCards.accountId, account.id),
       ),
     );
-
-  // Mudar a etapa do candidato move o(s) card(s) dele no pipeline para o fim
-  // da nova coluna (mantem processos e candidatos em sincronia).
-  if (existing.stage !== row.stage) {
-    const [tail] = await db
-      .select({ n: count() })
-      .from(schema.pipelineCards)
-      .where(
-        and(
-          eq(schema.pipelineCards.accountId, account.id),
-          eq(schema.pipelineCards.stage, row.stage),
-        ),
-      );
-    await db
-      .update(schema.pipelineCards)
-      .set({ stage: row.stage, position: tail.n })
-      .where(
-        and(
-          eq(schema.pipelineCards.candidateId, id),
-          eq(schema.pipelineCards.accountId, account.id),
-        ),
-      );
-  }
 
   return NextResponse.json(serializeCandidate(row));
 }

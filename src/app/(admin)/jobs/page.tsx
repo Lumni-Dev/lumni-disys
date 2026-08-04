@@ -353,11 +353,8 @@ export default function JobsPage() {
       <Modal
         open={blockedCands !== null}
         onClose={() => setBlockedCands(null)}
-        title={admin.deleteBlocked?.title ?? "Não é possível excluir"}
-        subtitle={
-          admin.deleteBlocked?.jobHasCandidates(blockedCands ?? 0) ??
-          `Esta vaga tem ${blockedCands ?? 0} candidato(s) cadastrado(s). Exclua os candidatos antes.`
-        }
+        title={admin.deleteBlocked.title}
+        subtitle={admin.deleteBlocked.jobHasCandidates(blockedCands ?? 0)}
       >
         <div className="flex justify-end p-2.5">
           <button

@@ -70,13 +70,11 @@ export default function CandidatesPage() {
   const roles = [...new Set(list.map((c) => c.role))].sort();
   const hasFilters = !!(fStage || fRole);
 
-  // Empresa mostrada abaixo do cargo: a da vaga cujo titulo bate com o cargo
-  // pretendido do candidato (primeira correspondencia).
-  const companyByRole = new Map<string, string>();
+  // Empresa mostrada abaixo do cargo: a da vaga vinculada ao candidato (por
+  // jobId) — exata mesmo quando dois cargos tem o mesmo titulo.
+  const companyByJobId = new Map<number, string>();
   for (const j of jobs) {
-    if (j.title && j.company && !companyByRole.has(j.title)) {
-      companyByRole.set(j.title, j.company);
-    }
+    if (j.company) companyByJobId.set(j.id, j.company);
   }
 
   const q = query.trim().toLowerCase();
@@ -230,9 +228,9 @@ export default function CandidatesPage() {
                 </Td>
                 <Td>
                   <p className="text-muted">{c.role}</p>
-                  {companyByRole.get(c.role) && (
+                  {c.jobId && companyByJobId.get(c.jobId) && (
                     <p className="max-w-[180px] truncate text-[11px] text-muted/70">
-                      {companyByRole.get(c.role)}
+                      {companyByJobId.get(c.jobId)}
                     </p>
                   )}
                 </Td>

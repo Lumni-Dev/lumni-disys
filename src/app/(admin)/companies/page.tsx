@@ -278,11 +278,8 @@ export default function CompaniesPage() {
       <Modal
         open={blockedJobs !== null}
         onClose={() => setBlockedJobs(null)}
-        title={admin.deleteBlocked?.title ?? "Não é possível excluir"}
-        subtitle={
-          admin.deleteBlocked?.companyHasJobs(blockedJobs ?? 0) ??
-          `Esta empresa tem ${blockedJobs ?? 0} vaga(s) cadastrada(s). Exclua ou desvincule as vagas antes.`
-        }
+        title={admin.deleteBlocked.title}
+        subtitle={admin.deleteBlocked.companyHasJobs(blockedJobs ?? 0)}
       >
         <div className="flex justify-end p-2.5">
           <button

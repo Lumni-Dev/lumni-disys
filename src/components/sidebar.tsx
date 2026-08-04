@@ -131,7 +131,7 @@ export function Sidebar() {
             {workspaces.find((w) => w.active)?.readOnly && (
               <span className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-surface-2 px-2 py-1 text-[11px] font-medium text-muted ring-1 ring-white/10">
                 <IconShield className="h-3.5 w-3.5 shrink-0" />
-                {admin.sidebar.readonly ?? "Somente leitura"}
+                {admin.sidebar.readonly}
               </span>
             )}
           </div>

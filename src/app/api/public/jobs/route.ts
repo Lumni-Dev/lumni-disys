@@ -27,5 +27,7 @@ export async function GET(req: Request) {
     .from(schema.jobs)
     .where(and(...conditions))
     .orderBy(asc(schema.jobs.id));
-  return NextResponse.json(rows.map(serializeJob));
+  // Endpoint publico: nao expoe contagem de candidatos (a pagina de carreiras
+  // mostra apenas as vagas). Evita servir o valor obsoleto da coluna.
+  return NextResponse.json(rows.map((r) => serializeJob(r, 0)));
 }
