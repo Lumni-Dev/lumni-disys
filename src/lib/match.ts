@@ -1,8 +1,49 @@
 // Compatibilidade curriculo x vaga via OpenAI (melhor esforco: qualquer
-// falha vira null e a candidatura segue normal). O PDF vai direto para o
-// modelo pela Responses API, sem parser local; apenas PDFs sao analisados.
+// falha vira null e a candidatura segue normal). Suporta as mesmas extensoes
+// aceitas no upload (.pdf, .doc, .docx): o PDF vai direto ao modelo pela
+// Responses API; DOC/DOCX tem o texto extraido no servidor e enviado como texto.
+import mammoth from "mammoth";
+import WordExtractor from "word-extractor";
 
 type OutputItem = { content?: { text?: string }[] };
+
+const DOCX_MIME =
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+type Kind = "pdf" | "docx" | "doc";
+
+function parseDataUrl(url: string): { mime: string; buffer: Buffer } | null {
+  const m = url.match(/^data:([^;]+);base64,(.+)$/);
+  if (!m) return null;
+  return { mime: m[1], buffer: Buffer.from(m[2], "base64") };
+}
+
+// Detecta o tipo pelo mime e, como reforco, pela extensao do nome do arquivo
+// (alguns navegadores enviam um mime generico, sobretudo para .doc).
+function detectKind(mime: string, name: string): Kind | null {
+  const n = name.toLowerCase();
+  if (mime === "application/pdf" || n.endsWith(".pdf")) return "pdf";
+  if (mime === DOCX_MIME || n.endsWith(".docx")) return "docx";
+  if (mime === "application/msword" || n.endsWith(".doc")) return "doc";
+  return null;
+}
+
+// Extrai o texto de arquivos Word (.docx via mammoth, .doc via word-extractor).
+async function extractWordText(
+  kind: "docx" | "doc",
+  buffer: Buffer,
+): Promise<string> {
+  try {
+    if (kind === "docx") {
+      const { value } = await mammoth.extractRawText({ buffer });
+      return value.trim();
+    }
+    const doc = await new WordExtractor().extract(buffer);
+    return doc.getBody().trim();
+  } catch {
+    return "";
+  }
+}
 
 export async function scoreCvMatch(opts: {
   cvDataUrl: string;
@@ -12,15 +53,41 @@ export async function scoreCvMatch(opts: {
 }): Promise<number | null> {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
-  if (!opts.cvDataUrl.startsWith("data:application/pdf")) return null;
+
+  const parsed = parseDataUrl(opts.cvDataUrl);
+  if (!parsed) return null;
+  const kind = detectKind(parsed.mime, opts.cvName || "");
+  if (!kind) return null;
 
   const prompt =
     "Voce e um recrutador tecnico. Avalie a compatibilidade entre o " +
-    "curriculo anexado e a vaga abaixo, considerando experiencia, " +
-    "habilidades e senioridade.\n\n" +
+    "curriculo (anexado ou transcrito abaixo) e a vaga, considerando " +
+    "experiencia, habilidades e senioridade.\n\n" +
     `Vaga: ${opts.jobTitle}\n` +
     `Descricao: ${opts.jobDescription || "(sem descricao)"}\n\n` +
     "Responda APENAS um numero inteiro de 0 a 100, sem nenhum outro texto.";
+
+  // PDF vai como arquivo; DOC/DOCX vao como texto extraido.
+  let content: Record<string, unknown>[];
+  if (kind === "pdf") {
+    content = [
+      {
+        type: "input_file",
+        filename: opts.cvName || "curriculo.pdf",
+        file_data: opts.cvDataUrl,
+      },
+      { type: "input_text", text: prompt },
+    ];
+  } else {
+    const text = await extractWordText(kind, parsed.buffer);
+    if (!text) return null;
+    content = [
+      {
+        type: "input_text",
+        text: `Curriculo (texto extraido do arquivo):\n"""\n${text.slice(0, 20000)}\n"""\n\n${prompt}`,
+      },
+    ];
+  }
 
   try {
     const res = await fetch("https://api.openai.com/v1/responses", {
@@ -31,19 +98,7 @@ export async function scoreCvMatch(opts: {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        input: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "input_file",
-                filename: opts.cvName || "curriculo.pdf",
-                file_data: opts.cvDataUrl,
-              },
-              { type: "input_text", text: prompt },
-            ],
-          },
-        ],
+        input: [{ role: "user", content }],
       }),
       signal: AbortSignal.timeout(25_000),
     });
