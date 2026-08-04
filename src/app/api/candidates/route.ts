@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -82,5 +82,29 @@ export async function POST(req: Request) {
       matchScore,
     })
     .returning();
+
+  // Novo candidato ja entra no pipeline (Processos), na sua etapa inicial,
+  // vinculado por ID; a vaga e a empresa do card vem da vaga pretendida.
+  const inStage = await db
+    .select({ id: schema.pipelineCards.id })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.accountId, account.id),
+        eq(schema.pipelineCards.stage, row.stage),
+      ),
+    );
+  await db.insert(schema.pipelineCards).values({
+    accountId: account.id,
+    candidateId: row.id,
+    jobId: job.id,
+    companyId: job.companyId,
+    name: row.name,
+    job: job.title,
+    company: job.company,
+    stage: row.stage,
+    position: inStage.length,
+  });
+
   return NextResponse.json(serializeCandidate(row), { status: 201 });
 }

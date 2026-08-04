@@ -61,6 +61,16 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!account) return response;
 
   const id = Number((await params).id);
+  const [card] = await db
+    .select({ candidateId: schema.pipelineCards.candidateId })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.id, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
+
   await db
     .delete(schema.pipelineCards)
     .where(
@@ -69,5 +79,19 @@ export async function DELETE(_req: Request, { params }: Params) {
         eq(schema.pipelineCards.accountId, account.id),
       ),
     );
+
+  // Saiu do processo: o candidato deixa de ter etapa ("-" nos Candidatos).
+  if (card?.candidateId) {
+    await db
+      .update(schema.candidates)
+      .set({ stage: "-" })
+      .where(
+        and(
+          eq(schema.candidates.id, card.candidateId),
+          eq(schema.candidates.accountId, account.id),
+        ),
+      );
+  }
+
   return NextResponse.json({ ok: true });
 }

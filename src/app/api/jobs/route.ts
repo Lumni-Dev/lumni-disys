@@ -46,6 +46,8 @@ export async function POST(req: Request) {
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
       openings: Number(body.openings) || 1,
+      salaryFrom: Number(body.salaryFrom) || 0,
+      salaryTo: Number(body.salaryTo) || 0,
       // applicants nasce em 0 e so cresce com candidaturas reais.
       status: body.status ?? "Aberta",
     })

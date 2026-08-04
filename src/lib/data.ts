@@ -88,6 +88,9 @@ export type Job = {
   level: string;
   openings: number;
   applicants: number;
+  /** Faixa salarial em centavos (0 = nao informado). */
+  salaryFrom?: number;
+  salaryTo?: number;
   status: "Aberta" | "Em análise" | "Fechada";
   postedAt?: string;
 };

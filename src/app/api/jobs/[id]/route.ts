@@ -30,6 +30,8 @@ export async function PUT(req: Request, { params }: Params) {
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
       openings: Number(body.openings) || 1,
+      salaryFrom: Number(body.salaryFrom) || 0,
+      salaryTo: Number(body.salaryTo) || 0,
       // applicants e contador automatico: a edicao nao mexe nele.
       status: body.status ?? "Aberta",
     })
