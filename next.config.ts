@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Libs so de servidor para extrair texto de CVs (.doc/.docx): mantidas
+  // externas ao bundle para evitar problemas de empacotamento.
+  serverExternalPackages: ["mammoth", "word-extractor"],
   async headers() {
     return [
       {
