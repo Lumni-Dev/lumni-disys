@@ -3,6 +3,7 @@ import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { resolveJob } from "@/lib/job";
 import { scoreCvMatch } from "@/lib/match";
 
 // A analise de compatibilidade por IA pode levar alguns segundos.
@@ -21,7 +22,7 @@ export async function PUT(req: Request, { params }: Params) {
     .select({
       cvName: schema.candidates.cvName,
       cvBase64: schema.candidates.cvBase64,
-      role: schema.candidates.role,
+      jobId: schema.candidates.jobId,
       stage: schema.candidates.stage,
       matchScore: schema.candidates.matchScore,
     })
@@ -52,35 +53,28 @@ export async function PUT(req: Request, { params }: Params) {
     ? String(body.cvName ?? "").slice(0, 200)
     : existing.cvName;
 
-  // Reanalisa quando o arquivo ou o cargo (vinculo com a vaga) mudam.
-  const role = body.role ?? "";
+  // Vaga pretendida vinculada por ID (obrigatoria e da propria conta).
+  const job = await resolveJob(account.id, body.jobId);
+  if (!job)
+    return NextResponse.json({ error: "Vaga invalida" }, { status: 400 });
+
+  // Reanalisa quando o arquivo ou a vaga vinculada mudam.
   let matchScore = existing.matchScore;
-  if (newCv || role !== existing.role) {
-    const [job] = await db
-      .select({
-        title: schema.jobs.title,
-        description: schema.jobs.description,
-      })
-      .from(schema.jobs)
-      .where(
-        and(eq(schema.jobs.accountId, account.id), eq(schema.jobs.title, role)),
-      )
-      .limit(1);
-    matchScore = job
-      ? await scoreCvMatch({
-          cvDataUrl: cvBase64,
-          cvName,
-          jobTitle: job.title,
-          jobDescription: job.description,
-        })
-      : null;
+  if (newCv || job.id !== existing.jobId) {
+    matchScore = await scoreCvMatch({
+      cvDataUrl: cvBase64,
+      cvName,
+      jobTitle: job.title,
+      jobDescription: job.description,
+    });
   }
 
   const [row] = await db
     .update(schema.candidates)
     .set({
+      jobId: job.id,
       name: body.name,
-      role,
+      role: job.title,
       email: body.email ?? "",
       stage: body.stage ?? "Triagem",
       linkedin: body.linkedin ?? "",

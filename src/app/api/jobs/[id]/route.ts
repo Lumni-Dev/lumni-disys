@@ -4,7 +4,7 @@ import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
 import { resolveCompany } from "@/lib/company";
-import { applicantsByRole } from "@/lib/job";
+import { applicantsByJob } from "@/lib/job";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -36,8 +36,8 @@ export async function PUT(req: Request, { params }: Params) {
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)))
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  const applicants = await applicantsByRole(account.id);
-  return NextResponse.json(serializeJob(row, applicants.get(row.title) ?? 0));
+  const applicants = await applicantsByJob(account.id);
+  return NextResponse.json(serializeJob(row, applicants.get(row.id) ?? 0));
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
@@ -46,42 +46,35 @@ export async function DELETE(_req: Request, { params }: Params) {
 
   const id = Number((await params).id);
 
-  // Integridade: nao exclui vaga que ainda tem candidatos (cargo = titulo).
-  const [job] = await db
-    .select({ title: schema.jobs.title })
-    .from(schema.jobs)
-    .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)));
-  if (job) {
-    const [dep] = await db
-      .select({ n: count() })
-      .from(schema.candidates)
-      .where(
-        and(
-          eq(schema.candidates.role, job.title),
-          eq(schema.candidates.accountId, account.id),
-        ),
-      );
-    if (dep.n > 0)
-      return NextResponse.json(
-        {
-          error: "Vaga com candidatos cadastrados",
-          dependency: "candidates",
-          count: dep.n,
-        },
-        { status: 409 },
-      );
+  // Integridade: nao exclui vaga que ainda tem candidatos vinculados (por ID).
+  const [dep] = await db
+    .select({ n: count() })
+    .from(schema.candidates)
+    .where(
+      and(
+        eq(schema.candidates.jobId, id),
+        eq(schema.candidates.accountId, account.id),
+      ),
+    );
+  if (dep.n > 0)
+    return NextResponse.json(
+      {
+        error: "Vaga com candidatos cadastrados",
+        dependency: "candidates",
+        count: dep.n,
+      },
+      { status: 409 },
+    );
 
-    // Conectado: remove do pipeline eventuais cards dessa vaga (por titulo).
-    await db
-      .delete(schema.pipelineCards)
-      .where(
-        and(
-          eq(schema.pipelineCards.job, job.title),
-          eq(schema.pipelineCards.accountId, account.id),
-        ),
-      );
-  }
-
+  // Conectado: remove do pipeline eventuais cards dessa vaga (por jobId).
+  await db
+    .delete(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.jobId, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
   await db
     .delete(schema.jobs)
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)));

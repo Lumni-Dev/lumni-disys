@@ -66,6 +66,9 @@ export const jobs = pgTable("jobs", {
 export const candidates = pgTable("candidates", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
+  // Vaga pretendida vinculada por ID (fonte da verdade); role guarda so o
+  // titulo denormalizado para exibicao/listas.
+  jobId: integer().references(() => jobs.id, { onDelete: "set null" }),
   name: varchar({ length: 160 }).notNull(),
   role: varchar({ length: 160 }).notNull().default(""),
   email: varchar({ length: 200 }).notNull().default(""),
@@ -86,6 +89,10 @@ export const pipelineCards = pgTable("pipeline_cards", {
   candidateId: integer().references(() => candidates.id, {
     onDelete: "set null",
   }),
+  // Vaga e empresa vinculadas por ID (fonte da verdade); job/company guardam
+  // so os nomes denormalizados para exibicao.
+  jobId: integer().references(() => jobs.id, { onDelete: "set null" }),
+  companyId: integer().references(() => companies.id, { onDelete: "set null" }),
   name: varchar({ length: 160 }).notNull(),
   job: varchar({ length: 200 }).notNull().default(""),
   company: varchar({ length: 160 }).notNull().default(""),

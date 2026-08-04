@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
-import { Combobox } from "@/components/ui/combobox";
 import { CnpjInput, MoneyInput, moneyToNumber } from "@/components/ui/masked-input";
 import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
 import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
@@ -16,18 +15,6 @@ import type { Company, Job, Candidate, PipelineCard } from "@/lib/data";
 
 // Sugestoes dos campos de vinculo: nomes de empresas, titulos de vagas e
 // candidatos da conta, carregados quando o modal abre.
-function useCompanyNames(open: boolean): string[] {
-  const [names, setNames] = useState<string[]>([]);
-  useEffect(() => {
-    if (!open) return;
-    api
-      .get<Company[]>("/api/companies")
-      .then((rows) => setNames(rows.map((c) => c.name)))
-      .catch(() => {});
-  }, [open]);
-  return names;
-}
-
 // Empresas da conta (id + nome) para o vinculo por ID no modal de vaga.
 function useCompanies(open: boolean): Company[] {
   const [rows, setRows] = useState<Company[]>([]);
@@ -553,7 +540,9 @@ export function CandidateModal({
 }) {
   const [name, setName] = useState(candidate?.name ?? "");
   const [email, setEmail] = useState(candidate?.email ?? "");
-  const [role, setRole] = useState(candidate?.role ?? "");
+  const [jobId, setJobId] = useState<string>(
+    candidate?.jobId ? String(candidate.jobId) : "",
+  );
   const [linkedin, setLinkedin] = useState(candidate?.linkedin ?? "");
   const [stage, setStage] = useState<string>(candidate?.stage ?? "");
   // Curriculo obrigatorio: na edicao o arquivo atual vale, e da para trocar.
@@ -565,10 +554,8 @@ export function CandidateModal({
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.candidate;
-  // Sugere os titulos das vagas cadastradas para facilitar o vinculo
-  // candidato -> vaga (valor livre continua permitido).
+  // Vaga pretendida vinculada por ID: seleciona uma vaga cadastrada.
   const jobs = useJobs(open);
-  const jobTitles = [...new Set(jobs.map((j) => j.title))];
 
   function onCvFile(file: File | undefined) {
     setCvTooBig(false);
@@ -597,7 +584,7 @@ export function CandidateModal({
         const ok = run({
           name: isBlank(name),
           email: !isEmail(email),
-          role: isBlank(role),
+          role: isBlank(jobId),
           linkedin: !isUrl(linkedin),
           stage: isBlank(stage),
           cv: !hasCv,
@@ -607,7 +594,13 @@ export function CandidateModal({
           id: candidate?.id ?? 0,
           name: name.trim(),
           email: email.trim(),
-          role: role.trim(),
+          // Vinculo por ID; o titulo vai junto so como rotulo (o servidor o
+          // rederiva a partir do jobId).
+          jobId: Number(jobId) || null,
+          role:
+            jobs.find((j) => String(j.id) === jobId)?.title ??
+            candidate?.role ??
+            "",
           stage: stage as Candidate["stage"],
           // A data real vem do servidor (updatedAt); este valor e ignorado.
           modifiedAt: candidate?.modifiedAt ?? "",
@@ -636,13 +629,12 @@ export function CandidateModal({
         />
       </Field>
       <Field label={t.desiredRole} full req>
-        <Combobox
+        <Select
           invalid={invalid("role")}
-          maxLength={160}
-          value={role}
-          onChange={setRole}
-          options={jobTitles}
-          placeholder={admin.modals.searchOrType}
+          value={jobId}
+          onChange={setJobId}
+          options={jobs.map((j) => ({ value: String(j.id), label: j.title }))}
+          emptyLabel={admin.modals.select}
         />
       </Field>
       <p className="rounded-lg border border-dashed border-border bg-surface-2/40 px-2.5 py-2 text-center text-xs text-muted sm:col-span-2">
@@ -712,38 +704,28 @@ export function ProcessModal({
   currentStage?: string;
   stages?: string[];
 }) {
-  const [name, setName] = useState(card?.name ?? "");
-  const [job, setJob] = useState(card?.job ?? "");
-  const [company, setCompany] = useState(card?.company ?? "");
+  const [candidateId, setCandidateId] = useState<string>(
+    card?.candidateId ? String(card.candidateId) : "",
+  );
   const [stage, setStage] = useState(currentStage ?? "");
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.process;
   const candidates = useCandidates(open);
   const jobs = useJobs(open);
-  const companyNames = useCompanyNames(open);
-  const jobTitles = [...new Set(jobs.map((j) => j.title))];
 
-  // Escolher um candidato preenche o que estiver em branco: etapa atual dele
-  // e, se o cargo pretendido bater com uma vaga, a vaga e a empresa.
-  function pickCandidate(v: string) {
-    const c = candidates.find((x) => x.name === v);
-    if (!c) return;
-    if (!card && isBlank(stage)) setStage(c.stage);
-    if (isBlank(job) && c.role) {
-      const j = jobs.find((x) => x.title === c.role);
-      if (j) {
-        setJob(j.title);
-        if (isBlank(company)) setCompany(j.company);
-      }
-    }
-  }
-
-  // Escolher uma vaga sempre traz a empresa dela junto.
-  function pickJob(v: string) {
-    const j = jobs.find((x) => x.title === v);
-    if (j?.company) setCompany(j.company);
-  }
+  const editing = Boolean(card);
+  // Candidato escolhido (novo) ou o do card (edicao). A vaga e a empresa sao
+  // derivadas da vaga pretendida do candidato (por ID) — somente exibicao.
+  const selected = candidates.find((c) => String(c.id) === candidateId);
+  const derivedJob = selected?.jobId
+    ? jobs.find((j) => j.id === selected.jobId)
+    : undefined;
+  const nameLabel = editing ? (card?.name ?? "") : (selected?.name ?? "");
+  const jobLabel = editing ? (card?.job ?? "") : (derivedJob?.title ?? "");
+  const companyLabel = editing
+    ? (card?.company ?? "")
+    : (derivedJob?.company ?? "");
 
   return (
     <FormModal
@@ -764,18 +746,19 @@ export function ProcessModal({
       }
       onSubmit={() => {
         const ok = run({
-          name: isBlank(name),
-          job: isBlank(job),
-          company: isBlank(company),
+          name: editing ? false : isBlank(candidateId),
           stage: isBlank(stage),
         });
         if (!ok) return false;
         onSave(
           {
             id: card?.id ?? 0,
-            name: name.trim(),
-            job: job.trim(),
-            company: company.trim(),
+            candidateId: editing
+              ? (card?.candidateId ?? null)
+              : Number(candidateId) || null,
+            name: nameLabel,
+            job: jobLabel,
+            company: companyLabel,
           },
           stage,
         );
@@ -783,36 +766,36 @@ export function ProcessModal({
       }}
     >
       <Field label={t.candidate} full req>
-        <Combobox
-          invalid={invalid("name")}
-          maxLength={160}
-          value={name}
-          onChange={setName}
-          onPick={pickCandidate}
-          options={candidates.map((c) => c.name)}
-          placeholder={admin.modals.searchOrType}
-        />
+        {editing ? (
+          <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-foreground">
+            {nameLabel || "—"}
+          </p>
+        ) : (
+          <Select
+            invalid={invalid("name")}
+            value={candidateId}
+            onChange={(v) => {
+              setCandidateId(v);
+              const c = candidates.find((x) => String(x.id) === v);
+              if (c && isBlank(stage)) setStage(c.stage);
+            }}
+            options={candidates.map((c) => ({
+              value: String(c.id),
+              label: c.name,
+            }))}
+            emptyLabel={admin.modals.select}
+          />
+        )}
       </Field>
-      <Field label={t.job} req>
-        <Combobox
-          invalid={invalid("job")}
-          maxLength={200}
-          value={job}
-          onChange={setJob}
-          onPick={pickJob}
-          options={jobTitles}
-          placeholder={admin.modals.searchOrType}
-        />
+      <Field label={t.job}>
+        <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
+          {jobLabel || "—"}
+        </p>
       </Field>
-      <Field label={t.company} req>
-        <Combobox
-          invalid={invalid("company")}
-          maxLength={160}
-          value={company}
-          onChange={setCompany}
-          options={companyNames}
-          placeholder={admin.modals.searchOrType}
-        />
+      <Field label={t.company}>
+        <p className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted">
+          {companyLabel || "—"}
+        </p>
       </Field>
       <Field label={t.stage} full req>
         <Select

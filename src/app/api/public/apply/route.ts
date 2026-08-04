@@ -46,13 +46,18 @@ export async function POST(req: Request) {
 
   // Dados da vaga: empresa para o card e titulo/descricao para a analise.
   const jobId = Number(body.jobId);
-  let job: { title: string; company: string; description: string } | null =
-    null;
+  let job: {
+    title: string;
+    company: string;
+    companyId: number | null;
+    description: string;
+  } | null = null;
   if (Number.isFinite(jobId)) {
     const [row] = await db
       .select({
         title: schema.jobs.title,
         company: schema.jobs.company,
+        companyId: schema.jobs.companyId,
         description: schema.jobs.description,
       })
       .from(schema.jobs)
@@ -78,8 +83,9 @@ export async function POST(req: Request) {
     .insert(schema.candidates)
     .values({
       accountId: account.id,
+      jobId: job ? jobId : null,
       name: name.slice(0, 160),
-      role,
+      role: job ? job.title : role,
       email: email.slice(0, 200),
       stage: "Triagem",
       linkedin: String(body.linkedin ?? "").slice(0, 300),
@@ -90,7 +96,7 @@ export async function POST(req: Request) {
     .returning({ id: schema.candidates.id });
 
   // O numero de candidatos da vaga e derivado da tabela de candidatos
-  // (role = titulo), entao nao ha mais contador a incrementar aqui.
+  // (vinculo por jobId), entao nao ha mais contador a incrementar aqui.
   const jobCompany = job?.company ?? "";
 
   // A candidatura ja entra no kanban de processos, no fim da Triagem,
@@ -107,8 +113,10 @@ export async function POST(req: Request) {
   await db.insert(schema.pipelineCards).values({
     accountId: account.id,
     candidateId: candidate?.id ?? null,
+    jobId: job ? jobId : null,
+    companyId: job?.companyId ?? null,
     name: name.slice(0, 160),
-    job: role,
+    job: job ? job.title : role,
     company: jobCompany.slice(0, 160),
     stage: "Triagem",
     position: inStage.length,

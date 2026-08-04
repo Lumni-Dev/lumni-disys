@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCandidate } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { resolveJob } from "@/lib/job";
 import { scoreCvMatch } from "@/lib/match";
 
 // A analise de compatibilidade por IA pode levar alguns segundos.
@@ -16,6 +17,7 @@ export async function GET() {
   const rows = await db
     .select({
       id: schema.candidates.id,
+      jobId: schema.candidates.jobId,
       name: schema.candidates.name,
       role: schema.candidates.role,
       email: schema.candidates.email,
@@ -51,34 +53,27 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   const cvName = String(body.cvName ?? "").slice(0, 200);
-  const role = body.role ?? "";
 
-  // Vaga vinculada pelo cargo pretendido: alimenta a analise por IA.
-  const [job] = await db
-    .select({
-      title: schema.jobs.title,
-      description: schema.jobs.description,
-    })
-    .from(schema.jobs)
-    .where(
-      and(eq(schema.jobs.accountId, account.id), eq(schema.jobs.title, role)),
-    )
-    .limit(1);
-  const matchScore = job
-    ? await scoreCvMatch({
-        cvDataUrl: cvData,
-        cvName,
-        jobTitle: job.title,
-        jobDescription: job.description,
-      })
-    : null;
+  // Vaga pretendida vinculada por ID (obrigatoria e da propria conta). O role
+  // guarda o titulo denormalizado e alimenta a analise por IA.
+  const job = await resolveJob(account.id, body.jobId);
+  if (!job)
+    return NextResponse.json({ error: "Vaga invalida" }, { status: 400 });
+
+  const matchScore = await scoreCvMatch({
+    cvDataUrl: cvData,
+    cvName,
+    jobTitle: job.title,
+    jobDescription: job.description,
+  });
 
   const [row] = await db
     .insert(schema.candidates)
     .values({
       accountId: account.id,
+      jobId: job.id,
       name: body.name,
-      role,
+      role: job.title,
       email: body.email ?? "",
       stage: body.stage ?? "Triagem",
       linkedin: body.linkedin ?? "",

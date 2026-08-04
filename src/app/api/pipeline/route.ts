@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
+import { resolveJob } from "@/lib/job";
 
 const STAGES = [
   "Triagem",
@@ -25,7 +26,15 @@ export async function GET() {
     stage,
     cards: cards
       .filter((c) => c.stage === stage)
-      .map((c) => ({ id: c.id, name: c.name, job: c.job, company: c.company })),
+      .map((c) => ({
+        id: c.id,
+        candidateId: c.candidateId,
+        jobId: c.jobId,
+        companyId: c.companyId,
+        name: c.name,
+        job: c.job,
+        company: c.company,
+      })),
   }));
 
   return NextResponse.json(columns);
@@ -38,8 +47,33 @@ export async function POST(req: Request) {
   const body = await req.json();
   const stage = body.stage ?? STAGES[0];
 
+  // Candidato vinculado por ID (obrigatorio e da propria conta). A vaga e a
+  // empresa do card sao derivadas da vaga pretendida do candidato (por ID).
+  const candId = Number(body.candidateId);
+  const [candidate] = Number.isInteger(candId)
+    ? await db
+        .select({
+          id: schema.candidates.id,
+          name: schema.candidates.name,
+          jobId: schema.candidates.jobId,
+        })
+        .from(schema.candidates)
+        .where(
+          and(
+            eq(schema.candidates.id, candId),
+            eq(schema.candidates.accountId, account.id),
+          ),
+        )
+    : [];
+  if (!candidate)
+    return NextResponse.json({ error: "Candidato invalido" }, { status: 400 });
+
+  const job = candidate.jobId
+    ? await resolveJob(account.id, candidate.jobId)
+    : null;
+
   const inStage = await db
-    .select()
+    .select({ id: schema.pipelineCards.id })
     .from(schema.pipelineCards)
     .where(
       and(
@@ -48,48 +82,43 @@ export async function POST(req: Request) {
       ),
     );
 
-  // Vincula o card a um candidato existente com o mesmo nome, para que mover
-  // o card no pipeline reflita no funil e nas atividades do dashboard.
-  const [candidate] = await db
-    .select({ id: schema.candidates.id })
-    .from(schema.candidates)
-    .where(
-      and(
-        eq(schema.candidates.accountId, account.id),
-        eq(schema.candidates.name, body.name),
-      ),
-    )
-    .orderBy(asc(schema.candidates.id))
-    .limit(1);
-
   const [row] = await db
     .insert(schema.pipelineCards)
     .values({
       accountId: account.id,
-      candidateId: candidate?.id ?? null,
-      name: body.name,
-      job: body.job ?? "",
-      company: body.company ?? "",
+      candidateId: candidate.id,
+      jobId: job?.id ?? null,
+      companyId: job?.companyId ?? null,
+      name: candidate.name,
+      job: job?.title ?? "",
+      company: job?.company ?? "",
       stage,
       position: inStage.length,
     })
     .returning();
 
-  // Sincroniza a etapa do candidato vinculado com a etapa inicial do card.
-  if (candidate?.id) {
-    await db
-      .update(schema.candidates)
-      .set({ stage })
-      .where(
-        and(
-          eq(schema.candidates.id, candidate.id),
-          eq(schema.candidates.accountId, account.id),
-        ),
-      );
-  }
+  // Sincroniza a etapa do candidato com a etapa inicial do card.
+  await db
+    .update(schema.candidates)
+    .set({ stage })
+    .where(
+      and(
+        eq(schema.candidates.id, candidate.id),
+        eq(schema.candidates.accountId, account.id),
+      ),
+    );
 
   return NextResponse.json(
-    { id: row.id, name: row.name, job: row.job, company: row.company, stage },
+    {
+      id: row.id,
+      candidateId: row.candidateId,
+      jobId: row.jobId,
+      companyId: row.companyId,
+      name: row.name,
+      job: row.job,
+      company: row.company,
+      stage,
+    },
     { status: 201 },
   );
 }

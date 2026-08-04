@@ -12,10 +12,9 @@ export async function PUT(req: Request, { params }: Params) {
   const id = Number((await params).id);
   const body = await req.json();
 
+  // So etapa e posicao sao editaveis; nome/vaga/empresa derivam do candidato
+  // (vinculo por ID) e nao mudam pelo card.
   const set: Record<string, unknown> = {};
-  if (body.name !== undefined) set.name = body.name;
-  if (body.job !== undefined) set.job = body.job;
-  if (body.company !== undefined) set.company = body.company;
   if (body.stage !== undefined) set.stage = body.stage;
   if (body.position !== undefined) set.position = Number(body.position);
 
@@ -47,6 +46,9 @@ export async function PUT(req: Request, { params }: Params) {
 
   return NextResponse.json({
     id: row.id,
+    candidateId: row.candidateId,
+    jobId: row.jobId,
+    companyId: row.companyId,
     name: row.name,
     job: row.job,
     company: row.company,
