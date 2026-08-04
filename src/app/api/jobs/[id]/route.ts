@@ -4,6 +4,7 @@ import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
 import { resolveCompany } from "@/lib/company";
+import { applicantsByRole } from "@/lib/job";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -35,7 +36,8 @@ export async function PUT(req: Request, { params }: Params) {
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)))
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(serializeJob(row));
+  const applicants = await applicantsByRole(account.id);
+  return NextResponse.json(serializeJob(row, applicants.get(row.title) ?? 0));
 }
 
 export async function DELETE(_req: Request, { params }: Params) {

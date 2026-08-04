@@ -105,7 +105,10 @@ export default function Home() {
       who: c.name,
       what: admin.dashboard.movedTo(admin.stages[c.stage] ?? c.stage),
       role: c.role,
-      time: c.modifiedAt,
+      // Data e hora (hh:mm) no fuso de Sao Paulo, separados por " - ".
+      time: c.modifiedAtTime
+        ? `${c.modifiedAt} - ${c.modifiedAtTime}`
+        : c.modifiedAt,
     }));
   const pageCount = Math.ceil(activities.length / ACTIVITY_PAGE_SIZE);
   const start = (page - 1) * ACTIVITY_PAGE_SIZE;
