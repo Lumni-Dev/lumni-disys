@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { accountByToken } from "@/lib/account";
 import { scoreCvMatch } from "@/lib/match";
@@ -89,15 +89,9 @@ export async function POST(req: Request) {
     })
     .returning({ id: schema.candidates.id });
 
+  // O numero de candidatos da vaga e derivado da tabela de candidatos
+  // (role = titulo), entao nao ha mais contador a incrementar aqui.
   const jobCompany = job?.company ?? "";
-  if (job) {
-    await db
-      .update(schema.jobs)
-      .set({ applicants: sql`${schema.jobs.applicants} + 1` })
-      .where(
-        and(eq(schema.jobs.id, jobId), eq(schema.jobs.accountId, account.id)),
-      );
-  }
 
   // A candidatura ja entra no kanban de processos, no fim da Triagem,
   // vinculada ao candidato (mover o card depois atualiza a etapa dele).

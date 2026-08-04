@@ -1,10 +1,25 @@
 import { emptyPermissions, type Member } from "@/lib/permissions";
 
+// Datas/horas sempre no fuso de Sao Paulo (os timestamps do banco sao UTC).
+const SAO_PAULO = "America/Sao_Paulo";
+
 export function formatDate(value: Date | string) {
-  const d = new Date(value);
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  return `${dd}/${mm}/${d.getFullYear()}`;
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: SAO_PAULO,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+/** Hora (HH:mm) no fuso de Sao Paulo, para exibir ao lado da data. */
+export function formatTime(value: Date | string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: SAO_PAULO,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(value));
 }
 
 type CompanyRow = {
@@ -41,7 +56,7 @@ type JobRow = {
   status: string;
   createdAt: Date | string;
 };
-export function serializeJob(r: JobRow) {
+export function serializeJob(r: JobRow, applicants: number = r.applicants) {
   return {
     id: r.id,
     title: r.title,
@@ -51,7 +66,9 @@ export function serializeJob(r: JobRow) {
     type: r.type,
     level: r.level,
     openings: r.openings,
-    applicants: r.applicants,
+    // Candidatos = numero real de candidatos da vaga (calculado nas rotas);
+    // o valor da coluna e apenas o padrao quando nao informado.
+    applicants,
     status: r.status,
     postedAt: formatDate(r.createdAt),
   };
@@ -84,6 +101,7 @@ export function serializeCandidate(r: CandidateRow) {
     cvName: r.cvName ?? "",
     matchScore: r.matchScore ?? null,
     modifiedAt: formatDate(r.updatedAt),
+    modifiedAtTime: formatTime(r.updatedAt),
   };
 }
 

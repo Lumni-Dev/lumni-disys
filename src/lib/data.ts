@@ -109,6 +109,8 @@ export type Candidate = {
   email: string;
   stage: (typeof stages)[number];
   modifiedAt: string;
+  /** Hora (HH:mm, fuso de Sao Paulo) da ultima modificacao. */
+  modifiedAtTime?: string;
   linkedin?: string;
   hasCv?: boolean;
   cvName?: string;
