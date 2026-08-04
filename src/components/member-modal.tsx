@@ -102,13 +102,14 @@ export function MemberModal({
   );
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);
+  const [saveError, setSaveError] = useState(false);
   const invalid = (k: string) => (errs[k] ? attempt : 0);
 
   const hasPermission = MODULES.some((m) =>
     ACTIONS.some((a) => permissions[m.key]?.[a.key]),
   );
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
     const errors = {
       email: !isEmail(email),
@@ -121,13 +122,19 @@ export function MemberModal({
       setAttempt((a) => a + 1);
       return;
     }
-    onSave({
-      name: name.trim(),
-      email: email.trim(),
-      role: role.trim(),
-      permissions,
-    });
-    onClose();
+    setSaveError(false);
+    try {
+      await onSave({
+        name: name.trim(),
+        email: email.trim(),
+        role: role.trim(),
+        permissions,
+      });
+      onClose();
+    } catch {
+      // Ex.: 409 "e-mail ja convidado" — mantem o modal aberto e avisa.
+      setSaveError(true);
+    }
   }
 
   return (
@@ -185,6 +192,11 @@ export function MemberModal({
             )}
           </div>
         </div>
+        {saveError && (
+          <p className="px-2.5 pb-1 text-xs text-red-400">
+            {admin.common.saveError ?? "Erro ao salvar. Tente novamente."}
+          </p>
+        )}
         <ModalFooter onCancel={onClose} />
       </form>
     </Modal>

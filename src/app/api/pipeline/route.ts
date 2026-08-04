@@ -68,6 +68,22 @@ export async function POST(req: Request) {
   if (!candidate)
     return NextResponse.json({ error: "Candidato invalido" }, { status: 400 });
 
+  // Um candidato tem no maximo um card no processo (evita duplicados).
+  const [existingCard] = await db
+    .select({ id: schema.pipelineCards.id })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.candidateId, candidate.id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
+  if (existingCard)
+    return NextResponse.json(
+      { error: "Candidato ja esta no processo" },
+      { status: 409 },
+    );
+
   const job = candidate.jobId
     ? await resolveJob(account.id, candidate.jobId)
     : null;

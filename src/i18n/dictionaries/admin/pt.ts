@@ -39,6 +39,7 @@ const pt: Admin = {
     cancel: "Cancelar",
     saving: "Gravando...",
     saved: "Gravado!",
+    saveError: "Erro ao salvar. Tente novamente.",
     confirm: "Confirmar",
     loading: "Carregando...",
     noResults: "0 resultados",

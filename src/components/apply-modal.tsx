@@ -63,7 +63,7 @@ export function ApplyModal({
       email: !isEmail(email),
       phone: !isPhone(phone),
       linkedin: !isUrl(linkedin),
-      message: !message.trim(),
+      // Mensagem e opcional (nao e armazenada): nao bloqueia o envio.
       cv: !cvData,
     };
     setErrs(errors);

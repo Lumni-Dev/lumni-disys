@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
 
@@ -16,7 +16,22 @@ export async function PUT(req: Request, { params }: Params) {
   // (vinculo por ID) e nao mudam pelo card.
   const set: Record<string, unknown> = {};
   if (body.stage !== undefined) set.stage = body.stage;
-  if (body.position !== undefined) set.position = Number(body.position);
+  if (body.position !== undefined) {
+    set.position = Number(body.position);
+  } else if (body.stage !== undefined) {
+    // Mudou de etapa sem posicao explicita (ex.: edicao pelo modal): manda o
+    // card para o fim da nova coluna, evitando colisao de posicao.
+    const [tail] = await db
+      .select({ n: count() })
+      .from(schema.pipelineCards)
+      .where(
+        and(
+          eq(schema.pipelineCards.accountId, account.id),
+          eq(schema.pipelineCards.stage, body.stage),
+        ),
+      );
+    set.position = tail.n;
+  }
 
   const [row] = await db
     .update(schema.pipelineCards)

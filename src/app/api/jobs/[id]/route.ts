@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -24,7 +24,7 @@ export async function PUT(req: Request, { params }: Params) {
     .update(schema.jobs)
     .set({
       companyId: company.id,
-      title: body.title,
+      title: String(body.title ?? "").slice(0, 200),
       company: company.name,
       description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",
@@ -38,6 +38,28 @@ export async function PUT(req: Request, { params }: Params) {
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)))
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // Propaga titulo/empresa aos denormalizados vinculados por ID (cargo do
+  // candidato e job/company/companyId dos cards do pipeline).
+  await db
+    .update(schema.candidates)
+    .set({ role: row.title })
+    .where(
+      and(
+        eq(schema.candidates.jobId, id),
+        eq(schema.candidates.accountId, account.id),
+      ),
+    );
+  await db
+    .update(schema.pipelineCards)
+    .set({ job: row.title, company: row.company, companyId: row.companyId })
+    .where(
+      and(
+        eq(schema.pipelineCards.jobId, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
+
   const applicants = await applicantsByJob(account.id);
   return NextResponse.json(serializeJob(row, applicants.get(row.id) ?? 0));
 }
@@ -68,7 +90,17 @@ export async function DELETE(_req: Request, { params }: Params) {
       { status: 409 },
     );
 
-  // Conectado: remove do pipeline eventuais cards dessa vaga (por jobId).
+  // Conectado: remove do pipeline os cards dessa vaga (por jobId) e tira os
+  // candidatos desses cards do processo (etapa "-").
+  const cards = await db
+    .select({ candidateId: schema.pipelineCards.candidateId })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.jobId, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
   await db
     .delete(schema.pipelineCards)
     .where(
@@ -77,6 +109,19 @@ export async function DELETE(_req: Request, { params }: Params) {
         eq(schema.pipelineCards.accountId, account.id),
       ),
     );
+  const candIds = cards
+    .map((c) => c.candidateId)
+    .filter((x): x is number => x != null);
+  if (candIds.length)
+    await db
+      .update(schema.candidates)
+      .set({ stage: "-" })
+      .where(
+        and(
+          inArray(schema.candidates.id, candIds),
+          eq(schema.candidates.accountId, account.id),
+        ),
+      );
   await db
     .delete(schema.jobs)
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)));

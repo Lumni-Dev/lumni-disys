@@ -5,6 +5,7 @@ import {
   varchar,
   text,
   timestamp,
+  index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -43,7 +44,7 @@ export const companies = pgTable("companies", {
   openings: integer().notNull().default(0),
   status: varchar({ length: 40 }).notNull().default("Ativa"),
   ...timestamps,
-});
+}, (t) => [index("companies_account_id_idx").on(t.accountId)]);
 
 export const jobs = pgTable("jobs", {
   id: serial().primaryKey(),
@@ -66,7 +67,10 @@ export const jobs = pgTable("jobs", {
   salaryTo: integer().notNull().default(0),
   status: varchar({ length: 40 }).notNull().default("Aberta"),
   ...timestamps,
-});
+}, (t) => [
+  index("jobs_account_id_idx").on(t.accountId),
+  index("jobs_company_id_idx").on(t.companyId),
+]);
 
 export const candidates = pgTable("candidates", {
   id: serial().primaryKey(),
@@ -79,6 +83,9 @@ export const candidates = pgTable("candidates", {
   email: varchar({ length: 200 }).notNull().default(""),
   stage: varchar({ length: 40 }).notNull().default("Triagem"),
   linkedin: varchar({ length: 300 }).notNull().default(""),
+  // Telefone informado na candidatura publica (E.164; vazio nos cadastros
+  // manuais, que nao coletam telefone).
+  phone: varchar({ length: 40 }).notNull().default(""),
   // Curriculo anexado na candidatura publica (data URL base64, ate ~2 MB).
   cvName: varchar({ length: 200 }).notNull().default(""),
   cvBase64: text().notNull().default(""),
@@ -86,7 +93,10 @@ export const candidates = pgTable("candidates", {
   // candidatura; null quando nao analisado.
   matchScore: integer(),
   ...timestamps,
-});
+}, (t) => [
+  index("candidates_account_id_idx").on(t.accountId),
+  index("candidates_job_id_idx").on(t.jobId),
+]);
 
 export const pipelineCards = pgTable("pipeline_cards", {
   id: serial().primaryKey(),
@@ -104,7 +114,12 @@ export const pipelineCards = pgTable("pipeline_cards", {
   stage: varchar({ length: 40 }).notNull(),
   position: integer().notNull().default(0),
   ...timestamps,
-});
+}, (t) => [
+  index("pipeline_cards_account_id_idx").on(t.accountId),
+  index("pipeline_cards_candidate_id_idx").on(t.candidateId),
+  index("pipeline_cards_job_id_idx").on(t.jobId),
+  index("pipeline_cards_company_id_idx").on(t.companyId),
+]);
 
 export const teamMembers = pgTable(
   "team_members",

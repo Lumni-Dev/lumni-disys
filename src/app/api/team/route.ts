@@ -5,19 +5,8 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { validPermissionRows } from "@/lib/permissions";
 import { sendInviteEmail } from "@/lib/mail";
-
-type PermInput = Record<string, Record<string, boolean>>;
-
-function permissionRows(memberId: number, permissions: PermInput = {}) {
-  const rows: { memberId: number; module: string; action: string }[] = [];
-  for (const [module, actions] of Object.entries(permissions)) {
-    for (const [action, allowed] of Object.entries(actions)) {
-      if (allowed) rows.push({ memberId, module, action });
-    }
-  }
-  return rows;
-}
 
 export async function GET() {
   const { account, response } = await authorize("team", "view");
@@ -57,6 +46,7 @@ export async function POST(req: Request) {
   if (!account) return response;
 
   const body = await req.json();
+  const email = String(body.email ?? "").slice(0, 200);
 
   // Mesmo e-mail duas vezes no mesmo workspace: erro claro em vez de 500.
   const [dup] = await db
@@ -65,7 +55,7 @@ export async function POST(req: Request) {
     .where(
       and(
         eq(schema.teamMembers.accountId, account.id),
-        eq(schema.teamMembers.email, body.email),
+        eq(schema.teamMembers.email, email),
       ),
     );
   if (dup)
@@ -81,15 +71,23 @@ export async function POST(req: Request) {
     .insert(schema.teamMembers)
     .values({
       accountId: account.id,
-      name: body.name,
-      email: body.email,
-      role: body.role ?? "",
+      name: String(body.name ?? "").slice(0, 160),
+      email,
+      role: String(body.role ?? "").slice(0, 120),
       status: "pending",
       inviteToken,
     })
     .returning();
 
-  const rows = permissionRows(member.id, body.permissions);
+  // Permissoes: SOMENTE o dono do workspace concede (evita escalada por
+  // proxy). Nao-dono convida sem permissoes; o dono ajusta depois.
+  const [acc] = await db
+    .select({ ownerEmail: schema.accounts.ownerEmail })
+    .from(schema.accounts)
+    .where(eq(schema.accounts.id, account.id));
+  const session0 = await auth();
+  const isOwner = acc?.ownerEmail === (session0?.user?.email ?? "");
+  const rows = isOwner ? validPermissionRows(member.id, body.permissions) : [];
   if (rows.length) await db.insert(schema.memberPermissions).values(rows);
 
   // Envio best-effort: se o SMTP falhar, o convite continua criado e o

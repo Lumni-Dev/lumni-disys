@@ -91,6 +91,8 @@ export interface Admin {
     cancel: string;
     saving: string;
     saved: string;
+    /** Aviso generico quando um save falha (rede/validacao/servidor). */
+    saveError?: string;
     confirm: string;
     loading: string;
     noResults: string;

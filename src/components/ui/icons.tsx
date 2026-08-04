@@ -72,12 +72,6 @@ export const IconSearch = (p: IconProps) => (
   </Svg>
 );
 
-export const IconBell = (p: IconProps) => (
-  <Svg {...p}>
-    <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0" />
-  </Svg>
-);
-
 export const IconClose = (p: IconProps) => (
   <Svg strokeWidth={2} {...p}>
     <path d="M18 6L6 18M6 6l12 12" />
