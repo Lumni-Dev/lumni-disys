@@ -309,6 +309,7 @@ const pt: Admin = {
       job: "Vaga",
       company: "Empresa",
       stage: "Etapa",
+      remove: "Remover do processo",
     },
     member: {
       editTitle: "Editar colaborador",

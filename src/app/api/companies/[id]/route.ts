@@ -35,6 +35,12 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!account) return response;
 
   const id = Number((await params).id);
+  const [company] = await db
+    .select({ name: schema.companies.name })
+    .from(schema.companies)
+    .where(
+      and(eq(schema.companies.id, id), eq(schema.companies.accountId, account.id)),
+    );
 
   // Integridade: nao exclui empresa que ainda tem vagas vinculadas (por ID).
   const [dep] = await db
@@ -52,6 +58,17 @@ export async function DELETE(_req: Request, { params }: Params) {
       },
       { status: 409 },
     );
+
+  // Conectado: remove do pipeline eventuais cards dessa empresa (por nome).
+  if (company)
+    await db
+      .delete(schema.pipelineCards)
+      .where(
+        and(
+          eq(schema.pipelineCards.company, company.name),
+          eq(schema.pipelineCards.accountId, account.id),
+        ),
+      );
 
   await db
     .delete(schema.companies)

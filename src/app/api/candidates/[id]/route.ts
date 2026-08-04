@@ -98,6 +98,16 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!account) return response;
 
   const id = Number((await params).id);
+
+  // Conectado: remove o card do candidato no pipeline (senao ficaria orfao).
+  await db
+    .delete(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.candidateId, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
   await db
     .delete(schema.candidates)
     .where(and(eq(schema.candidates.id, id), eq(schema.candidates.accountId, account.id)));

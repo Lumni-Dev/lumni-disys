@@ -117,6 +117,13 @@ export default function PipelinePage() {
     setColumns(cols);
   }
 
+  // Remove o candidato do processo (exclui o card; o candidato permanece).
+  async function removeCard(id: number) {
+    await api.del(`/api/pipeline/${id}`);
+    setColumns(await api.get<Column[]>("/api/pipeline"));
+    setEditing(null);
+  }
+
   function exportAll() {
     downloadExcel(
       admin.pipeline.fileName,
@@ -266,6 +273,7 @@ export default function PipelinePage() {
         stages={stages}
         onClose={() => setEditing(null)}
         onSave={save}
+        onDelete={removeCard}
       />
     </PageShell>
   );
