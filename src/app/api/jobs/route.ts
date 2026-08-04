@@ -3,6 +3,7 @@ import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { resolveCompany } from "@/lib/company";
 
 export async function GET() {
   const { account, response } = await authorize("jobs", "view");
@@ -21,12 +22,20 @@ export async function POST(req: Request) {
   if (!account) return response;
 
   const body = await req.json();
+
+  // Empresa vinculada por ID (obrigatoria e da propria conta). O nome vai
+  // denormalizado para exibicao/listas publicas.
+  const company = await resolveCompany(account.id, body.companyId);
+  if (!company)
+    return NextResponse.json({ error: "Empresa invalida" }, { status: 400 });
+
   const [row] = await db
     .insert(schema.jobs)
     .values({
       accountId: account.id,
+      companyId: company.id,
       title: body.title,
-      company: body.company ?? "",
+      company: company.name,
       description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",

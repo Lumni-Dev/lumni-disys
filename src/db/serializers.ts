@@ -15,13 +15,15 @@ type CompanyRow = {
   openings: number;
   status: string;
 };
-export function serializeCompany(r: CompanyRow) {
+export function serializeCompany(r: CompanyRow, openings: number = r.openings) {
   return {
     id: r.id,
     name: r.name,
     sector: r.sector,
     location: r.location,
-    openings: r.openings,
+    // Vagas somadas das vagas "Aberta" da empresa (calculado nas rotas); o
+    // valor da coluna e apenas o padrao quando nao informado.
+    openings,
     status: r.status,
   };
 }
@@ -29,6 +31,7 @@ export function serializeCompany(r: CompanyRow) {
 type JobRow = {
   id: number;
   title: string;
+  companyId: number | null;
   company: string;
   description: string;
   type: string;
@@ -42,6 +45,7 @@ export function serializeJob(r: JobRow) {
   return {
     id: r.id,
     title: r.title,
+    companyId: r.companyId,
     company: r.company,
     description: r.description,
     type: r.type,

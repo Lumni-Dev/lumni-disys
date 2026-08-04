@@ -78,6 +78,8 @@ export const companies: Company[] = range(30).map((i) => ({
 export type Job = {
   id: number;
   title: string;
+  /** Empresa vinculada por ID (a fonte da verdade do vinculo). */
+  companyId?: number | null;
   company: string;
   description: string;
   type: string;

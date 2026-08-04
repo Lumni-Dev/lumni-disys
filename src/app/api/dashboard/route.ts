@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { PgColumn, PgTable } from "drizzle-orm/pg-core";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
@@ -49,12 +49,14 @@ export async function GET() {
     .select({ n: count() })
     .from(schema.companies)
     .where(and(eq(schema.companies.accountId, acc), eq(schema.companies.status, "Ativa")));
+  // Vagas somadas (posicoes), nao contagem de registros: total = soma de
+  // openings de todas as vagas; abertas = soma das vagas com status "Aberta".
   const [jobsTotal] = await db
-    .select({ n: count() })
+    .select({ n: sql<number>`coalesce(sum(${schema.jobs.openings}), 0)` })
     .from(schema.jobs)
     .where(eq(schema.jobs.accountId, acc));
   const [jobsOpen] = await db
-    .select({ n: count() })
+    .select({ n: sql<number>`coalesce(sum(${schema.jobs.openings}), 0)` })
     .from(schema.jobs)
     .where(and(eq(schema.jobs.accountId, acc), eq(schema.jobs.status, "Aberta")));
   const [candidatesTotal] = await db
@@ -88,7 +90,7 @@ export async function GET() {
   return NextResponse.json({
     stats: {
       companies: { active: companiesActive.n, total: companiesTotal.n },
-      jobs: { open: jobsOpen.n, total: jobsTotal.n },
+      jobs: { open: Number(jobsOpen.n), total: Number(jobsTotal.n) },
       candidates: { total: candidatesTotal.n },
       pipeline: { total: pipelineTotal.n },
     },

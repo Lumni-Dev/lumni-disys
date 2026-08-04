@@ -46,6 +46,9 @@ export const companies = pgTable("companies", {
 export const jobs = pgTable("jobs", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
+  // Empresa vinculada por ID (fonte da verdade do vinculo). A coluna company
+  // abaixo guarda so o nome denormalizado, para exibicao/listas publicas.
+  companyId: integer().references(() => companies.id, { onDelete: "set null" }),
   title: varchar({ length: 200 }).notNull(),
   company: varchar({ length: 160 }).notNull().default(""),
   // Descricao da vaga (ate 5000 caracteres, limitado na API).

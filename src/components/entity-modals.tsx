@@ -28,6 +28,19 @@ function useCompanyNames(open: boolean): string[] {
   return names;
 }
 
+// Empresas da conta (id + nome) para o vinculo por ID no modal de vaga.
+function useCompanies(open: boolean): Company[] {
+  const [rows, setRows] = useState<Company[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    api
+      .get<Company[]>("/api/companies")
+      .then(setRows)
+      .catch(() => {});
+  }, [open]);
+  return rows;
+}
+
 function useJobs(open: boolean): Job[] {
   const [jobs, setJobs] = useState<Job[]>([]);
   useEffect(() => {
@@ -138,7 +151,6 @@ export function CompanyModal({
   const [city, setCity] = useState(loc.includes(" - ") ? loc.split(" - ")[0] : "");
   const [stateText, setStateText] = useState("");
   const [cityText, setCityText] = useState("");
-  const [openings, setOpenings] = useState(String(company?.openings ?? ""));
   const [status, setStatus] = useState<string>(company?.status ?? "");
   const [countries, setCountries] = useState<string[]>([]);
   const [states, setStates] = useState<UF[]>([]);
@@ -217,7 +229,6 @@ export function CompanyModal({
           name: isBlank(name),
           sector: isBlank(sector),
           country: isBlank(country),
-          openings: !isCount(openings),
           status: isBlank(status),
           ...(isBrazil
             ? { cnpj: !isCnpj(cnpj), uf: isBlank(uf), city: isBlank(city) }
@@ -236,7 +247,9 @@ export function CompanyModal({
           name: name.trim(),
           sector: sector.trim(),
           location,
-          openings: Number(openings) || 0,
+          // openings e calculado no servidor a partir das vagas; o valor
+          // enviado e ignorado (mantido so para o tipo Company).
+          openings: company?.openings ?? 0,
           status: status as Company["status"],
         });
         return true;
@@ -341,15 +354,6 @@ export function CompanyModal({
         </>
       )}
 
-      <Field label={t.openings} req>
-        <Input
-          inputMode="numeric"
-          maxLength={5}
-          invalid={invalid("openings")}
-          value={openings}
-          onChange={(e) => setOpenings(e.target.value.replace(/\D/g, ""))}
-        />
-      </Field>
       <Field label={t.status} req>
         <Select
           value={status}
@@ -375,7 +379,9 @@ export function JobModal({
   job?: Job | null;
 }) {
   const [title, setTitle] = useState(job?.title ?? "");
-  const [company, setCompany] = useState(job?.company ?? "");
+  const [companyId, setCompanyId] = useState<string>(
+    job?.companyId ? String(job.companyId) : "",
+  );
   const [description, setDescription] = useState(job?.description ?? "");
   const [level, setLevel] = useState(job?.level ?? "");
   const [type, setType] = useState(job?.type ?? "");
@@ -386,7 +392,7 @@ export function JobModal({
   const { run, invalid, hasError } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.job;
-  const companyNames = useCompanyNames(open);
+  const companies = useCompanies(open);
 
   return (
     <FormModal
@@ -400,7 +406,7 @@ export function JobModal({
         const order = from > 0 && to > 0 && from > to;
         const ok = run({
           title: isBlank(title),
-          company: isBlank(company),
+          company: isBlank(companyId),
           level: isBlank(level),
           type: isBlank(type),
           openings: !isCount(openings),
@@ -413,7 +419,13 @@ export function JobModal({
         onSave({
           id: job?.id ?? 0,
           title: title.trim(),
-          company: company.trim(),
+          // Vinculo por ID; o nome vai junto so como rotulo (o servidor o
+          // rederiva a partir do companyId).
+          companyId: Number(companyId) || null,
+          company:
+            companies.find((c) => String(c.id) === companyId)?.name ??
+            job?.company ??
+            "",
           description: description.trim(),
           level,
           type,
@@ -434,13 +446,15 @@ export function JobModal({
         />
       </Field>
       <Field label={t.company} full req>
-        <Combobox
+        <Select
           invalid={invalid("company")}
-          maxLength={160}
-          value={company}
-          onChange={setCompany}
-          options={companyNames}
-          placeholder={admin.modals.searchOrType}
+          value={companyId}
+          onChange={setCompanyId}
+          options={companies.map((c) => ({
+            value: String(c.id),
+            label: c.name,
+          }))}
+          emptyLabel={admin.modals.select}
         />
       </Field>
       <p className="rounded-lg border border-dashed border-border bg-surface-2/40 px-2.5 py-2 text-center text-xs text-muted sm:col-span-2">
