@@ -3,6 +3,7 @@ import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCompany } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { openingsByCompany } from "@/lib/company";
 
 export async function GET() {
   const { account, response } = await authorize("companies", "view");
@@ -13,7 +14,12 @@ export async function GET() {
     .from(schema.companies)
     .where(eq(schema.companies.accountId, account.id))
     .orderBy(asc(schema.companies.id));
-  return NextResponse.json(rows.map(serializeCompany));
+
+  // Vagas = soma das vagas "Aberta" vinculadas (por companyId) a cada empresa.
+  const openings = await openingsByCompany(account.id);
+  return NextResponse.json(
+    rows.map((r) => serializeCompany(r, openings.get(r.id) ?? 0)),
+  );
 }
 
 export async function POST(req: Request) {
@@ -21,6 +27,8 @@ export async function POST(req: Request) {
   if (!account) return response;
 
   const body = await req.json();
+  // openings nao vem mais do formulario: e calculado a partir das vagas.
+  // Uma empresa recem-criada ainda nao tem vagas vinculadas por ID -> 0.
   const [row] = await db
     .insert(schema.companies)
     .values({
@@ -28,9 +36,8 @@ export async function POST(req: Request) {
       name: body.name,
       sector: body.sector ?? "",
       location: body.location ?? "",
-      openings: Number(body.openings) || 0,
       status: body.status ?? "Ativa",
     })
     .returning();
-  return NextResponse.json(serializeCompany(row), { status: 201 });
+  return NextResponse.json(serializeCompany(row, 0), { status: 201 });
 }
