@@ -16,11 +16,12 @@ import { IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { CompanyModal } from "@/components/entity-modals";
+import { Modal } from "@/components/ui/modal";
 import { type Company } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
-import { api } from "@/lib/api-client";
+import { api, ApiError } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 10;
@@ -42,6 +43,8 @@ export default function CompaniesPage() {
   const [editing, setEditing] = useState<Company | null>(null);
   const [fSector, setFSector] = useState("");
   const [fStatus, setFStatus] = useState("");
+  // Quantidade de vagas que impede a exclusao da empresa (null = modal fechado).
+  const [blockedJobs, setBlockedJobs] = useState<number | null>(null);
 
   useEffect(() => {
     api
@@ -83,8 +86,16 @@ export default function CompaniesPage() {
   }
 
   async function remove(id: number) {
-    await api.del(`/api/companies/${id}`);
-    setList((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await api.del(`/api/companies/${id}`);
+      setList((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      // Exclusao bloqueada por dependencias (vagas): avisa em modal.
+      if (err instanceof ApiError && err.status === 409) {
+        const data = err.data as { count?: number } | null;
+        setBlockedJobs(data?.count ?? 0);
+      }
+    }
   }
 
   function exportSelected() {
@@ -263,6 +274,26 @@ export default function CompaniesPage() {
         onClose={() => setEditing(null)}
         onSave={save}
       />
+
+      <Modal
+        open={blockedJobs !== null}
+        onClose={() => setBlockedJobs(null)}
+        title={admin.deleteBlocked?.title ?? "Não é possível excluir"}
+        subtitle={
+          admin.deleteBlocked?.companyHasJobs(blockedJobs ?? 0) ??
+          `Esta empresa tem ${blockedJobs ?? 0} vaga(s) cadastrada(s). Exclua ou desvincule as vagas antes.`
+        }
+      >
+        <div className="flex justify-end p-2.5">
+          <button
+            type="button"
+            onClick={() => setBlockedJobs(null)}
+            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:bg-white active:scale-[0.98]"
+          >
+            {admin.common.close}
+          </button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

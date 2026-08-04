@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCompany } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -35,6 +35,24 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!account) return response;
 
   const id = Number((await params).id);
+
+  // Integridade: nao exclui empresa que ainda tem vagas vinculadas (por ID).
+  const [dep] = await db
+    .select({ n: count() })
+    .from(schema.jobs)
+    .where(
+      and(eq(schema.jobs.companyId, id), eq(schema.jobs.accountId, account.id)),
+    );
+  if (dep.n > 0)
+    return NextResponse.json(
+      {
+        error: "Empresa com vagas cadastradas",
+        dependency: "jobs",
+        count: dep.n,
+      },
+      { status: 409 },
+    );
+
   await db
     .delete(schema.companies)
     .where(and(eq(schema.companies.id, id), eq(schema.companies.accountId, account.id)));

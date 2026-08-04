@@ -1,9 +1,30 @@
+// Erro de API que preserva o status HTTP e o corpo da resposta, para o
+// chamador poder reagir (ex.: 409 de exclusao bloqueada por dependencias).
+export class ApiError extends Error {
+  status: number;
+  data: unknown;
+  constructor(status: number, data: unknown) {
+    super(`Request failed: ${status}`);
+    this.name = "ApiError";
+    this.status = status;
+    this.data = data;
+  }
+}
+
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
-  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  if (!res.ok) {
+    let data: unknown = null;
+    try {
+      data = await res.json();
+    } catch {
+      // Resposta sem corpo JSON: mantem data nulo.
+    }
+    throw new ApiError(res.status, data);
+  }
   return res.json();
 }
 
@@ -15,6 +36,5 @@ export const api = {
     request<T>(url, { method: "PUT", body: JSON.stringify(body) }),
   patch: <T>(url: string, body: unknown) =>
     request<T>(url, { method: "PATCH", body: JSON.stringify(body) }),
-  del: (url: string) =>
-    request<{ ok: boolean }>(url, { method: "DELETE" }),
+  del: (url: string) => request<{ ok: boolean }>(url, { method: "DELETE" }),
 };

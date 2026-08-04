@@ -22,12 +22,13 @@ import {
 import { useAccess } from "@/lib/access";
 import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
+import { Modal } from "@/components/ui/modal";
 import { type Job } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cx } from "@/lib/utils";
-import { api } from "@/lib/api-client";
+import { api, ApiError } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 9;
@@ -58,6 +59,8 @@ export default function JobsPage() {
   const [fStatus, setFStatus] = useState("");
   const access = useAccess();
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  // Quantidade de candidatos que impede a exclusao da vaga (null = fechado).
+  const [blockedCands, setBlockedCands] = useState<number | null>(null);
 
   // Copia o link publico direto desta vaga (token da conta + id).
   function shareJob(id: number) {
@@ -113,8 +116,16 @@ export default function JobsPage() {
   }
 
   async function remove(id: number) {
-    await api.del(`/api/jobs/${id}`);
-    setList((prev) => prev.filter((v) => v.id !== id));
+    try {
+      await api.del(`/api/jobs/${id}`);
+      setList((prev) => prev.filter((v) => v.id !== id));
+    } catch (err) {
+      // Exclusao bloqueada por dependencias (candidatos): avisa em modal.
+      if (err instanceof ApiError && err.status === 409) {
+        const data = err.data as { count?: number } | null;
+        setBlockedCands(data?.count ?? 0);
+      }
+    }
   }
 
   function exportSelected() {
@@ -338,6 +349,26 @@ export default function JobsPage() {
         onClose={() => setEditing(null)}
         onSave={save}
       />
+
+      <Modal
+        open={blockedCands !== null}
+        onClose={() => setBlockedCands(null)}
+        title={admin.deleteBlocked?.title ?? "Não é possível excluir"}
+        subtitle={
+          admin.deleteBlocked?.jobHasCandidates(blockedCands ?? 0) ??
+          `Esta vaga tem ${blockedCands ?? 0} candidato(s) cadastrado(s). Exclua os candidatos antes.`
+        }
+      >
+        <div className="flex justify-end p-2.5">
+          <button
+            type="button"
+            onClick={() => setBlockedCands(null)}
+            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:bg-white active:scale-[0.98]"
+          >
+            {admin.common.close}
+          </button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

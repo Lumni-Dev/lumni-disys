@@ -19,6 +19,17 @@ const pt: Admin = {
     myWorkspace: "Meu workspace",
     readonly: "Somente leitura",
   },
+  deleteBlocked: {
+    title: "Não é possível excluir",
+    companyHasJobs: (n) =>
+      `Esta empresa tem ${n} vaga${n === 1 ? "" : "s"} cadastrada${
+        n === 1 ? "" : "s"
+      }. Exclua ou desvincule as vagas antes de excluir a empresa.`,
+    jobHasCandidates: (n) =>
+      `Esta vaga tem ${n} candidato${n === 1 ? "" : "s"} cadastrado${
+        n === 1 ? "" : "s"
+      }. Exclua os candidatos antes de excluir a vaga.`,
+  },
   common: {
     search: "Buscar...",
     add: "Adicionar",
