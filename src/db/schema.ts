@@ -36,6 +36,8 @@ export const companies = pgTable("companies", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
   name: varchar({ length: 160 }).notNull(),
+  // CNPJ (Brasil) ou documento fiscal (exterior) informado no cadastro.
+  cnpj: varchar({ length: 40 }).notNull().default(""),
   sector: varchar({ length: 120 }).notNull().default(""),
   location: varchar({ length: 160 }).notNull().default(""),
   openings: integer().notNull().default(0),

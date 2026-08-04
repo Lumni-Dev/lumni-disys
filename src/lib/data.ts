@@ -60,6 +60,8 @@ function modifiedDate(i: number) {
 export type Company = {
   id: number;
   name: string;
+  /** CNPJ (Brasil) ou documento fiscal (exterior). */
+  cnpj?: string;
   sector: string;
   location: string;
   openings: number;

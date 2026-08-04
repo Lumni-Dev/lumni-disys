@@ -134,7 +134,7 @@ export function CompanyModal({
   const [name, setName] = useState(company?.name ?? "");
   const [sector, setSector] = useState(company?.sector ?? "");
   const [country, setCountry] = useState("Brasil");
-  const [cnpj, setCnpj] = useState("");
+  const [cnpj, setCnpj] = useState(company?.cnpj ?? "");
   const [taxId, setTaxId] = useState("");
   const [uf, setUf] = useState(loc.includes(" - ") ? loc.split(" - ")[1] : "");
   const [city, setCity] = useState(loc.includes(" - ") ? loc.split(" - ")[0] : "");
@@ -234,6 +234,8 @@ export function CompanyModal({
         onSave({
           id: company?.id ?? 0,
           name: name.trim(),
+          // CNPJ (Brasil) ou documento fiscal (exterior), gravado no banco.
+          cnpj: (isBrazil ? cnpj : taxId).trim(),
           sector: sector.trim(),
           location,
           // openings e calculado no servidor a partir das vagas; o valor
@@ -544,7 +546,6 @@ export function CandidateModal({
     candidate?.jobId ? String(candidate.jobId) : "",
   );
   const [linkedin, setLinkedin] = useState(candidate?.linkedin ?? "");
-  const [stage, setStage] = useState<string>(candidate?.stage ?? "");
   // Curriculo obrigatorio: na edicao o arquivo atual vale, e da para trocar.
   const [cvName, setCvName] = useState(candidate?.cvName ?? "");
   const [cvData, setCvData] = useState("");
@@ -586,7 +587,6 @@ export function CandidateModal({
           email: !isEmail(email),
           role: isBlank(jobId),
           linkedin: !isUrl(linkedin),
-          stage: isBlank(stage),
           cv: !hasCv,
         });
         if (!ok) return false;
@@ -601,7 +601,9 @@ export function CandidateModal({
             jobs.find((j) => String(j.id) === jobId)?.title ??
             candidate?.role ??
             "",
-          stage: stage as Candidate["stage"],
+          // A etapa e gerenciada na pagina de Processos; aqui preserva a atual
+          // (ou "Triagem" no cadastro).
+          stage: (candidate?.stage ?? "Triagem") as Candidate["stage"],
           // A data real vem do servidor (updatedAt); este valor e ignorado.
           modifiedAt: candidate?.modifiedAt ?? "",
           linkedin: linkedin.trim(),
@@ -672,15 +674,6 @@ export function CandidateModal({
           accept=".pdf,.doc,.docx"
           className="hidden"
           onChange={(e) => onCvFile(e.target.files?.[0])}
-        />
-      </Field>
-      <Field label={t.stage} full req>
-        <Select
-          value={stage}
-          onChange={setStage}
-          options={localizedOptions(STAGES, admin.stages)}
-          emptyLabel={admin.modals.select}
-          invalid={invalid("stage")}
         />
       </Field>
     </FormModal>

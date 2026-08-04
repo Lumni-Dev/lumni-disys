@@ -25,6 +25,7 @@ export function formatTime(value: Date | string) {
 type CompanyRow = {
   id: number;
   name: string;
+  cnpj: string;
   sector: string;
   location: string;
   openings: number;
@@ -34,6 +35,7 @@ export function serializeCompany(r: CompanyRow, openings: number = r.openings) {
   return {
     id: r.id,
     name: r.name,
+    cnpj: r.cnpj,
     sector: r.sector,
     location: r.location,
     // Vagas somadas das vagas "Aberta" da empresa (calculado nas rotas); o
