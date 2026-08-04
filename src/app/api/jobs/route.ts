@@ -4,7 +4,7 @@ import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
 import { resolveCompany } from "@/lib/company";
-import { applicantsByRole } from "@/lib/job";
+import { applicantsByJob } from "@/lib/job";
 
 export async function GET() {
   const { account, response } = await authorize("jobs", "view");
@@ -16,10 +16,10 @@ export async function GET() {
     .where(eq(schema.jobs.accountId, account.id))
     .orderBy(asc(schema.jobs.id));
 
-  // Candidatos = numero real de candidatos por vaga (role = titulo).
-  const applicants = await applicantsByRole(account.id);
+  // Candidatos = numero real de candidatos por vaga (vinculo por jobId).
+  const applicants = await applicantsByJob(account.id);
   return NextResponse.json(
-    rows.map((r) => serializeJob(r, applicants.get(r.title) ?? 0)),
+    rows.map((r) => serializeJob(r, applicants.get(r.id) ?? 0)),
   );
 }
 
@@ -50,9 +50,9 @@ export async function POST(req: Request) {
       status: body.status ?? "Aberta",
     })
     .returning();
-  const applicants = await applicantsByRole(account.id);
+  const applicants = await applicantsByJob(account.id);
   return NextResponse.json(
-    serializeJob(row, applicants.get(row.title) ?? 0),
+    serializeJob(row, applicants.get(row.id) ?? 0),
     { status: 201 },
   );
 }

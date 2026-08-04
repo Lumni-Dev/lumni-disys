@@ -76,6 +76,7 @@ export function serializeJob(r: JobRow, applicants: number = r.applicants) {
 
 type CandidateRow = {
   id: number;
+  jobId: number | null;
   name: string;
   role: string;
   email: string;
@@ -92,6 +93,7 @@ type CandidateRow = {
 export function serializeCandidate(r: CandidateRow) {
   return {
     id: r.id,
+    jobId: r.jobId,
     name: r.name,
     role: r.role,
     email: r.email,

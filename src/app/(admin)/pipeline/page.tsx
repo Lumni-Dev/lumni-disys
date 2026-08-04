@@ -99,19 +99,14 @@ export default function PipelinePage() {
 
   async function save(card: PipelineCard, stage: string) {
     if (card.id === 0) {
+      // Novo card: vincula por candidateId; vaga/empresa derivam do candidato.
       await api.post("/api/pipeline", {
-        name: card.name,
-        job: card.job,
-        company: card.company,
+        candidateId: card.candidateId,
         stage,
       });
     } else {
-      await api.put(`/api/pipeline/${card.id}`, {
-        name: card.name,
-        job: card.job,
-        company: card.company,
-        stage,
-      });
+      // Edicao: so a etapa muda (o resto e derivado por ID).
+      await api.put(`/api/pipeline/${card.id}`, { stage });
     }
     const cols = await api.get<Column[]>("/api/pipeline");
     setColumns(cols);

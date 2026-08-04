@@ -104,6 +104,8 @@ export const jobs: Job[] = range(30).map((i) => ({
 
 export type Candidate = {
   id: number;
+  /** Vaga pretendida vinculada por ID (fonte da verdade do vinculo). */
+  jobId?: number | null;
   name: string;
   role: string;
   email: string;
@@ -139,6 +141,10 @@ export const candidates: Candidate[] = range(30).map((i) => {
 
 export type PipelineCard = {
   id: number;
+  /** Candidato, vaga e empresa vinculados por ID (fonte da verdade). */
+  candidateId?: number | null;
+  jobId?: number | null;
+  companyId?: number | null;
   name: string;
   job: string;
   company: string;
