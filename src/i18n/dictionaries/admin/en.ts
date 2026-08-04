@@ -19,6 +19,13 @@ const en: Admin = {
     myWorkspace: "My workspace",
     readonly: "Read only",
   },
+  deleteBlocked: {
+    title: "Can't delete",
+    companyHasJobs: (n) =>
+      `This company has ${n} job${n === 1 ? "" : "s"}. Delete or unlink the jobs before deleting the company.`,
+    jobHasCandidates: (n) =>
+      `This job has ${n} candidate${n === 1 ? "" : "s"}. Delete the candidates before deleting the job.`,
+  },
   common: {
     search: "Search...",
     add: "Add",

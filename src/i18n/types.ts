@@ -76,6 +76,12 @@ export interface Admin {
     /** Selinho de acesso somente leitura (visao de super-admin). */
     readonly?: string;
   };
+  /** Aviso de exclusao bloqueada por dependencias (empresa com vagas, etc.). */
+  deleteBlocked?: {
+    title: string;
+    companyHasJobs(n: number): string;
+    jobHasCandidates(n: number): string;
+  };
   common: {
     search: string;
     add: string;

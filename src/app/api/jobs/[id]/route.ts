@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
@@ -45,6 +45,33 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!account) return response;
 
   const id = Number((await params).id);
+
+  // Integridade: nao exclui vaga que ainda tem candidatos (cargo = titulo).
+  const [job] = await db
+    .select({ title: schema.jobs.title })
+    .from(schema.jobs)
+    .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)));
+  if (job) {
+    const [dep] = await db
+      .select({ n: count() })
+      .from(schema.candidates)
+      .where(
+        and(
+          eq(schema.candidates.role, job.title),
+          eq(schema.candidates.accountId, account.id),
+        ),
+      );
+    if (dep.n > 0)
+      return NextResponse.json(
+        {
+          error: "Vaga com candidatos cadastrados",
+          dependency: "candidates",
+          count: dep.n,
+        },
+        { status: 409 },
+      );
+  }
+
   await db
     .delete(schema.jobs)
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)));
