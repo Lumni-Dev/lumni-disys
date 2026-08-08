@@ -14,7 +14,6 @@ import { useSidebar } from "./sidebar-context";
 import { useProfile } from "./profile-context";
 import {
   IconDashboard,
-  IconBuilding,
   IconBriefcase,
   IconUsers,
   IconFile,
@@ -33,7 +32,6 @@ const nav: {
   Icon: typeof IconDashboard;
 }[] = [
   { href: "/dashboard", key: "dashboard", Icon: IconDashboard },
-  { href: "/companies", key: "companies", Icon: IconBuilding },
   { href: "/jobs", key: "jobs", Icon: IconBriefcase },
   { href: "/candidates", key: "candidates", Icon: IconUsers },
   { href: "/pipeline", key: "pipeline", Icon: IconFile },

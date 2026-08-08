@@ -12,7 +12,6 @@ export type Member = {
 
 export const MODULES = [
   { key: "dashboard", label: "Dashboard" },
-  { key: "companies", label: "Empresas" },
   { key: "jobs", label: "Vagas" },
   { key: "candidates", label: "Candidatos" },
   { key: "pipeline", label: "Processos" },
@@ -94,7 +93,6 @@ export const initialTeam: Member[] = [
     role: "Gestor",
     permissions: permissionsFrom({
       dashboard: ["view"],
-      companies: ["view"],
       jobs: ["view"],
       candidates: ["view"],
       pipeline: ["view"],
@@ -106,7 +104,6 @@ export const initialTeam: Member[] = [
     role: "Administradora",
     permissions: permissionsFrom({
       dashboard: ["view", "create", "edit", "delete"],
-      companies: ["view", "create", "edit", "delete"],
       jobs: ["view", "create", "edit", "delete"],
       candidates: ["view", "create", "edit", "delete"],
       pipeline: ["view", "create", "edit", "delete"],

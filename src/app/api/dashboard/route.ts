@@ -41,14 +41,6 @@ export async function GET() {
   if (!account) return response;
   const acc = account.id;
 
-  const [companiesTotal] = await db
-    .select({ n: count() })
-    .from(schema.companies)
-    .where(eq(schema.companies.accountId, acc));
-  const [companiesActive] = await db
-    .select({ n: count() })
-    .from(schema.companies)
-    .where(and(eq(schema.companies.accountId, acc), eq(schema.companies.status, "Ativa")));
   // Vagas somadas (posicoes), nao contagem de registros: total = soma de
   // openings de todas as vagas; abertas = soma das vagas com status "Aberta".
   const [jobsTotal] = await db
@@ -79,24 +71,20 @@ export async function GET() {
     count: byStage.get(stage) ?? 0,
   }));
 
-  const [companiesTrend, jobsTrend, candidatesTrend, pipelineTrend] =
-    await Promise.all([
-      cumulativeSeries(schema.companies, schema.companies.createdAt, schema.companies.accountId, acc),
-      cumulativeSeries(schema.jobs, schema.jobs.createdAt, schema.jobs.accountId, acc),
-      cumulativeSeries(schema.candidates, schema.candidates.createdAt, schema.candidates.accountId, acc),
-      cumulativeSeries(schema.pipelineCards, schema.pipelineCards.createdAt, schema.pipelineCards.accountId, acc),
-    ]);
+  const [jobsTrend, candidatesTrend, pipelineTrend] = await Promise.all([
+    cumulativeSeries(schema.jobs, schema.jobs.createdAt, schema.jobs.accountId, acc),
+    cumulativeSeries(schema.candidates, schema.candidates.createdAt, schema.candidates.accountId, acc),
+    cumulativeSeries(schema.pipelineCards, schema.pipelineCards.createdAt, schema.pipelineCards.accountId, acc),
+  ]);
 
   return NextResponse.json({
     stats: {
-      companies: { active: companiesActive.n, total: companiesTotal.n },
       jobs: { open: Number(jobsOpen.n), total: Number(jobsTotal.n) },
       candidates: { total: candidatesTotal.n },
       pipeline: { total: pipelineTotal.n },
     },
     funnel,
     trends: {
-      companies: companiesTrend,
       jobs: jobsTrend,
       candidates: candidatesTrend,
       pipeline: pipelineTrend,

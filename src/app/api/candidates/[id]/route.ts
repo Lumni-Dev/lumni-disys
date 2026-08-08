@@ -95,7 +95,6 @@ export async function PUT(req: Request, { params }: Params) {
     .set({
       name: row.name,
       jobId: job.id,
-      companyId: job.companyId,
       job: job.title,
       company: job.company,
     })

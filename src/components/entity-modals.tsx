@@ -6,33 +6,17 @@ import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { Select, type Option } from "@/components/ui/select";
 import {
-  CnpjInput,
   MoneyInput,
   moneyToNumber,
   formatMoney,
 } from "@/components/ui/masked-input";
-import { isBlank, isEmail, isUrl, isCnpj, isCount } from "@/lib/validation";
-import { fetchCountries, fetchStates, fetchCities, type UF } from "@/lib/ibge";
-import { fetchCnpj, sameCity } from "@/lib/cnpj";
+import { isBlank, isEmail, isUrl, isCount } from "@/lib/validation";
 import { api } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
-import type { Company, Job, Candidate, PipelineCard } from "@/lib/data";
+import type { Job, Candidate, PipelineCard } from "@/lib/data";
 
-// Sugestoes dos campos de vinculo: nomes de empresas, titulos de vagas e
-// candidatos da conta, carregados quando o modal abre.
-// Empresas da conta (id + nome) para o vinculo por ID no modal de vaga.
-function useCompanies(open: boolean): Company[] {
-  const [rows, setRows] = useState<Company[]>([]);
-  useEffect(() => {
-    if (!open) return;
-    api
-      .get<Company[]>("/api/companies")
-      .then(setRows)
-      .catch(() => {});
-  }, [open]);
-  return rows;
-}
-
+// Sugestoes dos campos de vinculo: titulos de vagas e candidatos da conta,
+// carregados quando o modal abre.
 function useJobs(open: boolean): Job[] {
   const [jobs, setJobs] = useState<Job[]>([]);
   useEffect(() => {
@@ -142,245 +126,6 @@ function useValidation() {
   return { run, invalid, hasError };
 }
 
-export function CompanyModal({
-  open,
-  onClose,
-  onSave,
-  company,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onSave: (c: Company) => void;
-  company?: Company | null;
-}) {
-  const loc = company?.location ?? "";
-  const [name, setName] = useState(company?.name ?? "");
-  const [sector, setSector] = useState(company?.sector ?? "");
-  const [country, setCountry] = useState("Brasil");
-  const [cnpj, setCnpj] = useState(company?.cnpj ?? "");
-  const [taxId, setTaxId] = useState("");
-  const [uf, setUf] = useState(loc.includes(" - ") ? loc.split(" - ")[1] : "");
-  const [city, setCity] = useState(loc.includes(" - ") ? loc.split(" - ")[0] : "");
-  const [stateText, setStateText] = useState("");
-  const [cityText, setCityText] = useState("");
-  const [status, setStatus] = useState<string>(company?.status ?? "");
-  const [countries, setCountries] = useState<string[]>([]);
-  const [states, setStates] = useState<UF[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [cnpjLoading, setCnpjLoading] = useState(false);
-  const lastCnpj = useRef(""); // ultimo CNPJ resolvido com sucesso
-  const fetchingCnpj = useRef(""); // CNPJ em busca agora (evita chamada dupla)
-  const { run, invalid } = useValidation();
-  const { admin } = useI18n();
-  const t = admin.modals.company;
-
-  const isBrazil = country === "Brasil";
-
-  useEffect(() => {
-    fetchCountries().then(setCountries);
-    fetchStates().then(setStates);
-  }, []);
-  useEffect(() => {
-    fetchCities(uf).then(setCities);
-  }, [uf]);
-
-  function changeCountry(v: string) {
-    setCountry(v);
-    // Troca de país zera a localização e o documento fiscal.
-    setCnpj("");
-    setTaxId("");
-    setUf("");
-    setCity("");
-    setStateText("");
-    setCityText("");
-    lastCnpj.current = "";
-  }
-
-  // Busca os dados do CNPJ na BrasilAPI e preenche os demais campos —
-  // nome, setor, pais, estado, cidade e o status padrao. So marca o CNPJ
-  // como resolvido em caso de sucesso: uma falha transitoria pode ser
-  // refeita no proximo change/blur.
-  async function lookupCnpj(v: string) {
-    const digits = v.replace(/\D/g, "");
-    if (digits.length !== 14) return;
-    if (digits === lastCnpj.current || digits === fetchingCnpj.current) return;
-    fetchingCnpj.current = digits;
-    setCnpjLoading(true);
-    const info = await fetchCnpj(digits);
-    setCnpjLoading(false);
-    fetchingCnpj.current = "";
-    if (!info) return;
-    lastCnpj.current = digits;
-    setCountry("Brasil");
-    if (info.name) setName(info.name);
-    if (info.sector) setSector(info.sector);
-    if (info.uf) {
-      setUf(info.uf);
-      const list = await fetchCities(info.uf);
-      setCity(list.find((c) => sameCity(c, info.city)) ?? "");
-    }
-    // Vagas em aberto nao vem do CNPJ; status assume a situacao cadastral,
-    // sem sobrescrever uma escolha ja feita.
-    setStatus((cur) => cur || (info.active ? "Ativa" : "Pausada"));
-  }
-
-  // Dispara a busca a cada digitacao (quando completa) e ao sair do campo.
-  function changeCnpj(v: string) {
-    setCnpj(v);
-    void lookupCnpj(v);
-  }
-
-  return (
-    <FormModal
-      open={open}
-      onClose={onClose}
-      title={company ? t.editTitle : t.newTitle}
-      subtitle={company ? t.editSubtitle : t.newSubtitle}
-      onSubmit={async () => {
-        const ok = run({
-          name: isBlank(name),
-          sector: isBlank(sector),
-          country: isBlank(country),
-          status: isBlank(status),
-          ...(isBrazil
-            ? { cnpj: !isCnpj(cnpj), uf: isBlank(uf), city: isBlank(city) }
-            : {
-                taxId: isBlank(taxId),
-                stateText: isBlank(stateText),
-                cityText: isBlank(cityText),
-              }),
-        });
-        if (!ok) return false;
-        const location = isBrazil
-          ? `${city} - ${uf}`
-          : `${cityText.trim()} - ${stateText.trim()} (${country})`;
-        await onSave({
-          id: company?.id ?? 0,
-          name: name.trim(),
-          // CNPJ (Brasil) ou documento fiscal (exterior), gravado no banco.
-          cnpj: (isBrazil ? cnpj : taxId).trim(),
-          sector: sector.trim(),
-          location,
-          // openings e calculado no servidor a partir das vagas; o valor
-          // enviado e ignorado (mantido so para o tipo Company).
-          openings: company?.openings ?? 0,
-          status: status as Company["status"],
-        });
-        return true;
-      }}
-    >
-      {/* CNPJ primeiro: ao localizar, preenche nome, setor, UF, cidade e status. */}
-      {isBrazil ? (
-        <Field label={t.cnpj} full req>
-          <CnpjInput
-            invalid={invalid("cnpj")}
-            placeholder="00.000.000/0000-00"
-            value={cnpj}
-            onChange={changeCnpj}
-            onBlur={() => void lookupCnpj(cnpj)}
-          />
-          {cnpjLoading && (
-            <span className="text-xs text-muted">{t.cnpjLookup}</span>
-          )}
-        </Field>
-      ) : (
-        <Field label={t.taxId} full req>
-          <Input
-            invalid={invalid("taxId")}
-            maxLength={40}
-            placeholder={t.taxIdPlaceholder}
-            value={taxId}
-            onChange={(e) => setTaxId(e.target.value)}
-          />
-        </Field>
-      )}
-
-      <Field label={t.name} full req>
-        <Input
-          invalid={invalid("name")}
-          maxLength={160}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </Field>
-
-      <Field label={t.country} req>
-        <Select
-          value={country}
-          onChange={changeCountry}
-          options={countries}
-          emptyLabel={admin.modals.select}
-          invalid={invalid("country")}
-        />
-      </Field>
-      <Field label={t.sector} req>
-        <Input
-          invalid={invalid("sector")}
-          maxLength={120}
-          value={sector}
-          onChange={(e) => setSector(e.target.value)}
-        />
-      </Field>
-
-      {isBrazil ? (
-        <>
-          <Field label={t.state} req>
-            <Select
-              value={uf}
-              onChange={(v) => {
-                setUf(v);
-                setCity("");
-              }}
-              options={states.map((s) => ({ value: s.sigla, label: s.nome }))}
-              emptyLabel={admin.modals.select}
-              invalid={invalid("uf")}
-            />
-          </Field>
-          <Field label={t.city} req>
-            <Select
-              value={city}
-              onChange={setCity}
-              options={cities}
-              disabled={!uf}
-              placeholder={uf ? t.selectCity : t.selectStateFirst}
-              invalid={invalid("city")}
-            />
-          </Field>
-        </>
-      ) : (
-        <>
-          <Field label={t.stateProvince} req>
-            <Input
-              invalid={invalid("stateText")}
-              maxLength={120}
-              value={stateText}
-              onChange={(e) => setStateText(e.target.value)}
-            />
-          </Field>
-          <Field label={t.city} req>
-            <Input
-              invalid={invalid("cityText")}
-              maxLength={120}
-              value={cityText}
-              onChange={(e) => setCityText(e.target.value)}
-            />
-          </Field>
-        </>
-      )}
-
-      <Field label={t.status} req>
-        <Select
-          value={status}
-          onChange={setStatus}
-          options={localizedOptions(["Ativa", "Pausada"], admin.status)}
-          emptyLabel={admin.modals.select}
-          invalid={invalid("status")}
-        />
-      </Field>
-    </FormModal>
-  );
-}
-
 export function JobModal({
   open,
   onClose,
@@ -393,9 +138,6 @@ export function JobModal({
   job?: Job | null;
 }) {
   const [title, setTitle] = useState(job?.title ?? "");
-  const [companyId, setCompanyId] = useState<string>(
-    job?.companyId ? String(job.companyId) : "",
-  );
   const [description, setDescription] = useState(job?.description ?? "");
   const [level, setLevel] = useState(job?.level ?? "");
   const [type, setType] = useState(job?.type ?? "");
@@ -410,7 +152,6 @@ export function JobModal({
   const { run, invalid, hasError } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.job;
-  const companies = useCompanies(open);
 
   return (
     <FormModal
@@ -424,7 +165,6 @@ export function JobModal({
         const order = from > 0 && to > 0 && from > to;
         const ok = run({
           title: isBlank(title),
-          company: isBlank(companyId),
           level: isBlank(level),
           type: isBlank(type),
           openings: !isCount(openings),
@@ -437,13 +177,8 @@ export function JobModal({
         await onSave({
           id: job?.id ?? 0,
           title: title.trim(),
-          // Vinculo por ID; o nome vai junto so como rotulo (o servidor o
-          // rederiva a partir do companyId).
-          companyId: Number(companyId) || null,
-          company:
-            companies.find((c) => String(c.id) === companyId)?.name ??
-            job?.company ??
-            "",
+          // A empresa e o proprio workspace: o servidor preenche o nome.
+          company: job?.company ?? "",
           description: description.trim(),
           level,
           type,
@@ -466,27 +201,6 @@ export function JobModal({
           onChange={(e) => setTitle(e.target.value)}
         />
       </Field>
-      <Field label={t.company} full req>
-        <Select
-          invalid={invalid("company")}
-          value={companyId}
-          onChange={setCompanyId}
-          options={companies.map((c) => ({
-            value: String(c.id),
-            label: c.name,
-          }))}
-          emptyLabel={admin.modals.select}
-        />
-      </Field>
-      <p className="rounded-lg border border-dashed border-border bg-surface-2/40 px-2.5 py-2 text-center text-xs text-muted sm:col-span-2">
-        {t.companyHint}{" "}
-        <Link
-          href="/companies"
-          className="font-medium text-accent hover:underline"
-        >
-          {t.companyHintLink}
-        </Link>
-      </p>
       <Field label={t.description} full>
         <Textarea
           rows={5}

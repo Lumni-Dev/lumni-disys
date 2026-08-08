@@ -96,10 +96,8 @@ export async function DELETE() {
       accountId: acc.id,
       ownerEmail: acc.ownerEmail,
       accountCreatedAt: acc.createdAt,
-      companiesCount: await tx.$count(
-        schema.companies,
-        eq(schema.companies.accountId, acc.id),
-      ),
+      // O workspace passou a ser a empresa; nao ha mais tabela de empresas.
+      companiesCount: 0,
       jobsCount: await tx.$count(schema.jobs, eq(schema.jobs.accountId, acc.id)),
       candidatesCount: await tx.$count(
         schema.candidates,
@@ -117,9 +115,6 @@ export async function DELETE() {
       .delete(schema.candidates)
       .where(eq(schema.candidates.accountId, acc.id));
     await tx.delete(schema.jobs).where(eq(schema.jobs.accountId, acc.id));
-    await tx
-      .delete(schema.companies)
-      .where(eq(schema.companies.accountId, acc.id));
     // As permissoes caem em cascata (FK member_permissions -> team_members).
     await tx
       .delete(schema.teamMembers)

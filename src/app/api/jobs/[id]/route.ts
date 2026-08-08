@@ -3,7 +3,6 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
-import { resolveCompany } from "@/lib/company";
 import { applicantsByJob } from "@/lib/job";
 
 type Params = { params: Promise<{ id: string }> };
@@ -15,17 +14,18 @@ export async function PUT(req: Request, { params }: Params) {
   const id = Number((await params).id);
   const body = await req.json();
 
-  // Empresa vinculada por ID (obrigatoria e da propria conta).
-  const company = await resolveCompany(account.id, body.companyId);
-  if (!company)
-    return NextResponse.json({ error: "Empresa invalida" }, { status: 400 });
+  // O workspace E a empresa: a vaga mantem o nome do workspace.
+  const [acc] = await db
+    .select({ name: schema.accounts.name })
+    .from(schema.accounts)
+    .where(eq(schema.accounts.id, account.id));
+  const companyName = acc?.name ?? "";
 
   const [row] = await db
     .update(schema.jobs)
     .set({
-      companyId: company.id,
       title: String(body.title ?? "").slice(0, 200),
-      company: company.name,
+      company: companyName,
       description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
@@ -40,7 +40,7 @@ export async function PUT(req: Request, { params }: Params) {
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Propaga titulo/empresa aos denormalizados vinculados por ID (cargo do
-  // candidato e job/company/companyId dos cards do pipeline).
+  // candidato e job/company dos cards do pipeline).
   await db
     .update(schema.candidates)
     .set({ role: row.title })
@@ -52,7 +52,7 @@ export async function PUT(req: Request, { params }: Params) {
     );
   await db
     .update(schema.pipelineCards)
-    .set({ job: row.title, company: row.company, companyId: row.companyId })
+    .set({ job: row.title, company: row.company })
     .where(
       and(
         eq(schema.pipelineCards.jobId, id),

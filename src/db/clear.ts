@@ -16,7 +16,6 @@ async function main() {
   await db.delete(schema.pipelineCards);
   await db.delete(schema.candidates);
   await db.delete(schema.jobs);
-  await db.delete(schema.companies);
 
   await pool.end();
   console.log("Seed data cleared (team members kept).");

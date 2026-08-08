@@ -4,7 +4,7 @@ config({ path: ".env.local" });
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./schema";
-import { companies, jobs, candidates, initialColumns } from "../lib/data";
+import { jobs, candidates, initialColumns } from "../lib/data";
 import { initialTeam, MODULES, ACTIONS } from "../lib/permissions";
 
 async function main() {
@@ -20,17 +20,6 @@ async function main() {
   await db.delete(schema.pipelineCards);
   await db.delete(schema.candidates);
   await db.delete(schema.jobs);
-  await db.delete(schema.companies);
-
-  await db.insert(schema.companies).values(
-    companies.map((c) => ({
-      name: c.name,
-      sector: c.sector,
-      location: c.location,
-      openings: c.openings,
-      status: c.status,
-    })),
-  );
 
   await db.insert(schema.jobs).values(
     jobs.map((j) => ({

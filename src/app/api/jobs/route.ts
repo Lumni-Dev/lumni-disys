@@ -4,8 +4,16 @@ import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
 import { planLimitError } from "@/lib/plan";
-import { resolveCompany } from "@/lib/company";
 import { applicantsByJob } from "@/lib/job";
+
+// Nome do workspace (a empresa), para preencher o campo denormalizado da vaga.
+async function workspaceName(accountId: number): Promise<string> {
+  const [acc] = await db
+    .select({ name: schema.accounts.name })
+    .from(schema.accounts)
+    .where(eq(schema.accounts.id, accountId));
+  return acc?.name ?? "";
+}
 
 export async function GET() {
   const { account, response } = await authorize("jobs", "view");
@@ -34,19 +42,15 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  // Empresa vinculada por ID (obrigatoria e da propria conta). O nome vai
-  // denormalizado para exibicao/listas publicas.
-  const company = await resolveCompany(account.id, body.companyId);
-  if (!company)
-    return NextResponse.json({ error: "Empresa invalida" }, { status: 400 });
+  // O workspace E a empresa: a vaga herda o nome do workspace.
+  const company = await workspaceName(account.id);
 
   const [row] = await db
     .insert(schema.jobs)
     .values({
       accountId: account.id,
-      companyId: company.id,
       title: String(body.title ?? "").slice(0, 200),
-      company: company.name,
+      company,
       description: String(body.description ?? "").slice(0, 5000),
       type: body.type ?? "Remoto",
       level: body.level ?? "Pleno",
