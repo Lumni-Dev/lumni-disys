@@ -24,7 +24,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "already_plus" }, { status: 400 });
 
   // Reusa o cliente do Stripe da conta, se ja existir (evita duplicar).
+  // O ID salvo pode ser do outro modo (test x live, ex.: apos alternar o
+  // STRIPE_MODE): valida no modo atual e descarta se nao existir la.
   let customerId = acc.stripeCustomerId;
+  if (customerId) {
+    try {
+      const existing = await stripe().customers.retrieve(customerId);
+      if (existing.deleted) customerId = "";
+    } catch {
+      customerId = "";
+    }
+  }
   if (!customerId) {
     const customer = await stripe().customers.create({
       email,
