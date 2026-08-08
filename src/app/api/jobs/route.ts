@@ -3,6 +3,7 @@ import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeJob } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { planLimitError } from "@/lib/plan";
 import { resolveCompany } from "@/lib/company";
 import { applicantsByJob } from "@/lib/job";
 
@@ -26,6 +27,10 @@ export async function GET() {
 export async function POST(req: Request) {
   const { account, response } = await authorize("jobs", "create");
   if (!account) return response;
+
+  // Plano Free: ate 1 vaga; o Plus e ilimitado.
+  const limited = await planLimitError(account.id, "jobs");
+  if (limited) return limited;
 
   const body = await req.json();
 

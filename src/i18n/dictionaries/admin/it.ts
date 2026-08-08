@@ -18,6 +18,43 @@ const it: Admin = {
     userFallback: "Utente",
     myWorkspace: "Il mio workspace",
     readonly: "Sola lettura",
+    plan: "Piano",
+  },
+  plan: {
+    title: "Piano",
+    subtitle: "Gestisci il piano del tuo workspace",
+    current: "Piano attuale",
+    freeDesc: "Per iniziare a organizzare il tuo recruiting",
+    plusDesc: "Recluta senza limiti",
+    perMonth: "/mese",
+    featuresFree: ["1 azienda", "1 posizione", "1 candidato"],
+    featuresPlus: [
+      "Aziende illimitate",
+      "Posizioni illimitate",
+      "Candidati illimitati",
+    ],
+    usageTitle: "Utilizzo del piano",
+    usageSubtitle: "Risorse registrate nel workspace",
+    unlimited: "Illimitato",
+    upgrade: "Abbonati a Plus",
+    redirecting: "Reindirizzamento...",
+    renewsAt: (date) => `Si rinnova il ${date}`,
+    endsAt: (date) => `Accesso Plus fino al ${date}`,
+    cancel: "Annulla abbonamento",
+    cancelDesc: "Mantieni Plus fino alla fine del periodo pagato.",
+    resume: "Riprendi abbonamento",
+    checkoutSuccess: "Abbonamento attivato! Benvenuto in Plus.",
+    checkoutCanceled:
+      "Pagamento non completato. Puoi riprovare quando vuoi.",
+    ownerOnly: "Solo il proprietario del workspace può gestire l'abbonamento.",
+    limitTitle: "Limite del piano Free",
+    limitCompanies:
+      "Il piano Free consente di registrare 1 azienda. Abbonati a Plus per registrare senza limiti.",
+    limitJobs:
+      "Il piano Free consente di registrare 1 posizione. Abbonati a Plus per registrare senza limiti.",
+    limitCandidates:
+      "Il piano Free consente di registrare 1 candidato. Abbonati a Plus per registrare senza limiti.",
+    limitCta: "Scopri Plus",
   },
   deleteBlocked: {
     title: "Impossibile eliminare",

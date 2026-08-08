@@ -3,6 +3,7 @@ import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { serializeCompany } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { planLimitError } from "@/lib/plan";
 import { openingsByCompany } from "@/lib/company";
 
 export async function GET() {
@@ -25,6 +26,10 @@ export async function GET() {
 export async function POST(req: Request) {
   const { account, response } = await authorize("companies", "create");
   if (!account) return response;
+
+  // Plano Free: ate 1 empresa; o Plus e ilimitado.
+  const limited = await planLimitError(account.id, "companies");
+  if (limited) return limited;
 
   const body = await req.json();
   // openings nao vem mais do formulario: e calculado a partir das vagas.

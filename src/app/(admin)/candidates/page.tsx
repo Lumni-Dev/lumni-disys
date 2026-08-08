@@ -17,11 +17,12 @@ import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { initials } from "@/lib/utils";
 import { CandidateModal } from "@/components/entity-modals";
+import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { type Candidate, type Job } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
-import { api } from "@/lib/api-client";
+import { api, ApiError } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 
 const PAGE_SIZE = 10;
@@ -55,6 +56,8 @@ export default function CandidatesPage() {
   const [editing, setEditing] = useState<Candidate | null>(null);
   const [fStage, setFStage] = useState("");
   const [fRole, setFRole] = useState("");
+  // Limite de candidatos do plano Free atingido (API devolveu 402).
+  const [limitHit, setLimitHit] = useState(false);
 
   useEffect(() => {
     api
@@ -96,8 +99,17 @@ export default function CandidatesPage() {
 
   async function save(c: Candidate) {
     if (c.id === 0) {
-      const created = await api.post<Candidate>("/api/candidates", c);
-      setList((prev) => [...prev, created]);
+      try {
+        const created = await api.post<Candidate>("/api/candidates", c);
+        setList((prev) => [...prev, created]);
+      } catch (err) {
+        // Teto do plano Free: fecha o form e abre o aviso de upgrade.
+        if (err instanceof ApiError && err.status === 402) {
+          setLimitHit(true);
+          return;
+        }
+        throw err;
+      }
     } else {
       const updated = await api.put<Candidate>(`/api/candidates/${c.id}`, c);
       setList((prev) => prev.map((x) => (x.id === updated.id ? updated : x)));
@@ -325,6 +337,12 @@ export default function CandidatesPage() {
         candidate={editing}
         onClose={() => setEditing(null)}
         onSave={save}
+      />
+
+      <PlanLimitModal
+        resource="candidates"
+        open={limitHit}
+        onClose={() => setLimitHit(false)}
       />
     </PageShell>
   );

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { accountByToken } from "@/lib/account";
+import { planLimitError } from "@/lib/plan";
 import { scoreCvMatch } from "@/lib/match";
 
 // A analise de compatibilidade por IA pode levar alguns segundos.
@@ -39,6 +40,11 @@ export async function POST(req: Request) {
       );
     if (dup) return NextResponse.json({ ok: true }, { status: 200 });
   }
+
+  // Conta no plano Free com o teto de candidatos atingido nao recebe novas
+  // candidaturas publicas (mesma regra do cadastro interno).
+  const limited = await planLimitError(account.id, "candidates");
+  if (limited) return limited;
 
   // Curriculo: data URL base64, com teto de tamanho no servidor (~2 MB).
   const cvData =

@@ -5,6 +5,7 @@ import {
   varchar,
   text,
   timestamp,
+  boolean,
   index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -25,6 +26,17 @@ export const accounts = pgTable(
     id: serial().primaryKey(),
     ownerEmail: varchar({ length: 200 }).notNull(),
     publicToken: varchar({ length: 40 }).notNull(),
+    // Plano de cobranca do workspace: "free" (1 empresa/vaga/candidato) ou
+    // "plus" (ilimitado, assinatura mensal no Stripe).
+    plan: varchar({ length: 20 }).notNull().default("free"),
+    stripeCustomerId: varchar({ length: 80 }).notNull().default(""),
+    stripeSubscriptionId: varchar({ length: 80 }).notNull().default(""),
+    // Status da assinatura no Stripe (active, canceled, past_due...).
+    stripeStatus: varchar({ length: 40 }).notNull().default(""),
+    // Assinatura marcada para encerrar no fim do periodo pago.
+    cancelAtPeriodEnd: boolean().notNull().default(false),
+    // Fim do periodo pago corrente (data de renovacao/encerramento).
+    planRenewsAt: timestamp({ withTimezone: true }),
     ...timestamps,
   },
   (t) => [

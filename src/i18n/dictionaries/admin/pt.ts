@@ -18,6 +18,43 @@ const pt: Admin = {
     userFallback: "Usuário",
     myWorkspace: "Meu workspace",
     readonly: "Somente leitura",
+    plan: "Plano",
+  },
+  plan: {
+    title: "Plano",
+    subtitle: "Gerencie o plano do seu workspace",
+    current: "Plano atual",
+    freeDesc: "Para começar a organizar seu recrutamento",
+    plusDesc: "Para recrutar sem limites",
+    perMonth: "/mês",
+    featuresFree: ["1 empresa", "1 vaga", "1 candidato"],
+    featuresPlus: [
+      "Empresas ilimitadas",
+      "Vagas ilimitadas",
+      "Candidatos ilimitados",
+    ],
+    usageTitle: "Uso do plano",
+    usageSubtitle: "Recursos cadastrados no workspace",
+    unlimited: "Ilimitado",
+    upgrade: "Assinar o Plus",
+    redirecting: "Redirecionando...",
+    renewsAt: (date) => `Renova em ${date}`,
+    endsAt: (date) => `Acesso Plus até ${date}`,
+    cancel: "Cancelar assinatura",
+    cancelDesc: "Você mantém o Plus até o fim do período já pago.",
+    resume: "Retomar assinatura",
+    checkoutSuccess: "Assinatura ativada! Bem-vindo ao Plus.",
+    checkoutCanceled:
+      "Pagamento não concluído. Você pode tentar novamente quando quiser.",
+    ownerOnly: "Somente o dono do workspace pode gerenciar a assinatura.",
+    limitTitle: "Limite do plano Free",
+    limitCompanies:
+      "O plano Free permite cadastrar 1 empresa. Assine o Plus para cadastrar sem limites.",
+    limitJobs:
+      "O plano Free permite cadastrar 1 vaga. Assine o Plus para cadastrar sem limites.",
+    limitCandidates:
+      "O plano Free permite cadastrar 1 candidato. Assine o Plus para cadastrar sem limites.",
+    limitCta: "Conhecer o Plus",
   },
   deleteBlocked: {
     title: "Não é possível excluir",

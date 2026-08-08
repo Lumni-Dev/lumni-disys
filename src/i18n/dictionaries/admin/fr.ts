@@ -18,6 +18,44 @@ const fr: Admin = {
     userFallback: "Utilisateur",
     myWorkspace: "Mon espace de travail",
     readonly: "Lecture seule",
+    plan: "Forfait",
+  },
+  plan: {
+    title: "Forfait",
+    subtitle: "Gérez le forfait de votre espace de travail",
+    current: "Forfait actuel",
+    freeDesc: "Pour commencer à organiser votre recrutement",
+    plusDesc: "Recrutez sans limites",
+    perMonth: "/mois",
+    featuresFree: ["1 entreprise", "1 offre", "1 candidat"],
+    featuresPlus: [
+      "Entreprises illimitées",
+      "Offres illimitées",
+      "Candidats illimités",
+    ],
+    usageTitle: "Utilisation du forfait",
+    usageSubtitle: "Ressources enregistrées dans l'espace de travail",
+    unlimited: "Illimité",
+    upgrade: "S'abonner à Plus",
+    redirecting: "Redirection...",
+    renewsAt: (date) => `Renouvellement le ${date}`,
+    endsAt: (date) => `Accès Plus jusqu'au ${date}`,
+    cancel: "Annuler l'abonnement",
+    cancelDesc: "Vous conservez Plus jusqu'à la fin de la période payée.",
+    resume: "Reprendre l'abonnement",
+    checkoutSuccess: "Abonnement activé ! Bienvenue sur Plus.",
+    checkoutCanceled:
+      "Paiement non finalisé. Vous pouvez réessayer quand vous voulez.",
+    ownerOnly:
+      "Seul le propriétaire de l'espace de travail peut gérer l'abonnement.",
+    limitTitle: "Limite du forfait Free",
+    limitCompanies:
+      "Le forfait Free permet d'enregistrer 1 entreprise. Abonnez-vous à Plus pour un accès illimité.",
+    limitJobs:
+      "Le forfait Free permet d'enregistrer 1 offre. Abonnez-vous à Plus pour un accès illimité.",
+    limitCandidates:
+      "Le forfait Free permet d'enregistrer 1 candidat. Abonnez-vous à Plus pour un accès illimité.",
+    limitCta: "Découvrir Plus",
   },
   deleteBlocked: {
     title: "Suppression impossible",

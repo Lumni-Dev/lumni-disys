@@ -75,6 +75,41 @@ export interface Admin {
     myWorkspace: string;
     /** Selinho de acesso somente leitura (visao de super-admin). */
     readonly: string;
+    /** Item "Plano" no rodape do menu (com badge Free/Plus). */
+    plan: string;
+  };
+  /** Pagina do plano/assinatura (Free x Plus) e avisos de limite. */
+  plan: {
+    title: string;
+    subtitle: string;
+    /** Badge que marca o cartao do plano vigente. */
+    current: string;
+    freeDesc: string;
+    plusDesc: string;
+    perMonth: string;
+    featuresFree: [string, string, string];
+    featuresPlus: [string, string, string];
+    usageTitle: string;
+    usageSubtitle: string;
+    unlimited: string;
+    upgrade: string;
+    redirecting: string;
+    renewsAt(date: string): string;
+    /** Assinatura cancelada: até quando o acesso Plus permanece. */
+    endsAt(date: string): string;
+    cancel: string;
+    cancelDesc: string;
+    resume: string;
+    checkoutSuccess: string;
+    checkoutCanceled: string;
+    /** Aviso para colaboradores: so o dono gerencia a assinatura. */
+    ownerOnly: string;
+    /** Modal de limite atingido nas telas de cadastro. */
+    limitTitle: string;
+    limitCompanies: string;
+    limitJobs: string;
+    limitCandidates: string;
+    limitCta: string;
   };
   /** Aviso de exclusao bloqueada por dependencias (empresa com vagas, etc.). */
   deleteBlocked: {
