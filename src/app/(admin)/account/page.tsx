@@ -13,6 +13,7 @@ import { ConfirmAction } from "@/components/ui/confirm-action";
 import { Tooltip } from "@/components/ui/tooltip";
 import { Avatar } from "@/components/ui/avatar";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { WorkspaceModal } from "@/components/workspace-modal";
 import {
   IconLogout,
   IconCamera,
@@ -41,6 +42,7 @@ export default function AccountPage() {
   // Convidado sem workspace proprio pode criar o seu.
   const workspaces = useWorkspaces();
   const hasOwn = workspaces ? workspaces.some((w) => w.owner) : true;
+  const [wsModalOpen, setWsModalOpen] = useState(false);
 
   async function onSaveTheme() {
     setSavingTheme(true);
@@ -298,14 +300,7 @@ export default function AccountPage() {
                 {admin.account.noOwnWorkspace}
               </p>
             </div>
-            <Button
-              onClick={() => {
-                void api
-                  .post("/api/workspaces", {})
-                  .then(() => window.location.assign("/dashboard"))
-                  .catch(() => {});
-              }}
-            >
+            <Button onClick={() => setWsModalOpen(true)}>
               {admin.account.createWorkspace}
             </Button>
           </CardBody>
@@ -385,6 +380,11 @@ export default function AccountPage() {
         </Card>
       )}
       </div>
+
+      <WorkspaceModal
+        open={wsModalOpen}
+        onClose={() => setWsModalOpen(false)}
+      />
     </PageShell>
   );
 }

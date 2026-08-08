@@ -20,6 +20,15 @@ const nl: Admin = {
     readonly: "Alleen-lezen",
     plan: "Abonnement",
   },
+  workspace: {
+    newWorkspace: "Nieuwe workspace",
+    createTitle: "Workspace maken",
+    createSubtitle: "Maak een workspace om je vacatures te plaatsen",
+    nameLabel: "Workspace-naam",
+    namePlaceholder: "Bijv.: Mijn Bedrijf",
+    hint: "Tip: gebruik de naam van je bedrijf.",
+    create: "Workspace maken",
+  },
   plan: {
     title: "Abonnement",
     subtitle: "Beheer het abonnement van je workspace",
@@ -48,6 +57,8 @@ const nl: Admin = {
       "Betaling niet voltooid. Je kunt het altijd opnieuw proberen.",
     ownerOnly: "Alleen de eigenaar van de workspace kan het abonnement beheren.",
     limitTitle: "Limiet van het Free-abonnement",
+    limitWorkspaces:
+      "Het Free-abonnement staat 1 workspace toe. Abonneer op Plus voor onbeperkte workspaces.",
     limitCompanies:
       "Het Free-abonnement staat 1 bedrijf toe. Abonneer op Plus voor onbeperkt registreren.",
     limitJobs:

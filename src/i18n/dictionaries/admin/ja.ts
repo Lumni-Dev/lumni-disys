@@ -20,6 +20,15 @@ const ja: Admin = {
     readonly: "閲覧のみ",
     plan: "プラン",
   },
+  workspace: {
+    newWorkspace: "新しいワークスペース",
+    createTitle: "ワークスペースを作成",
+    createSubtitle: "ワークスペースを作成して求人の掲載を始めましょう",
+    nameLabel: "ワークスペース名",
+    namePlaceholder: "例: 自社名",
+    hint: "ヒント: 会社名を使うのがおすすめです。",
+    create: "ワークスペースを作成",
+  },
   plan: {
     title: "プラン",
     subtitle: "ワークスペースのプランを管理します",
@@ -43,6 +52,8 @@ const ja: Admin = {
     checkoutCanceled: "支払いが完了しませんでした。いつでも再試行できます。",
     ownerOnly: "サブスクリプションを管理できるのはワークスペースのオーナーのみです。",
     limitTitle: "Free プランの上限",
+    limitWorkspaces:
+      "Free プランで作成できるワークスペースは 1 つです。Plus に登録すると無制限になります。",
     limitCompanies:
       "Free プランで登録できる企業は 1 件です。Plus に登録すると無制限になります。",
     limitJobs:

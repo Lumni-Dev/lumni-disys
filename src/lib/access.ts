@@ -7,7 +7,13 @@ import { api } from "@/lib/api-client";
 // modulos ele pode ver (permissao "view"). Cacheado no modulo para o
 // sidebar e a pagina de conta compartilharem a mesma requisicao.
 
-export type Access = { token: string; owner: boolean; modules: string[] };
+export type Access = {
+  token: string;
+  owner: boolean;
+  modules: string[];
+  /** true quando o usuario ainda nao tem nenhum workspace (onboarding). */
+  noWorkspace?: boolean;
+};
 
 let cached: Promise<Access> | null = null;
 
@@ -41,12 +47,11 @@ export function useAccess(): Access | null {
 
 export type Workspace = {
   id: number;
+  name: string;
   owner: boolean;
   ownerEmail: string;
   ownerName: string;
   active: boolean;
-  /** Acesso de super-admin somente leitura (nao dono nem colaborador). */
-  readOnly: boolean;
 };
 
 let wsCached: Promise<Workspace[]> | null = null;

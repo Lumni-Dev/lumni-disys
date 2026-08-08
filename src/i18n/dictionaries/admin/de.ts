@@ -20,6 +20,16 @@ const de: Admin = {
     readonly: "Nur Lesen",
     plan: "Tarif",
   },
+  workspace: {
+    newWorkspace: "Neuer Workspace",
+    createTitle: "Workspace erstellen",
+    createSubtitle:
+      "Erstelle einen Workspace, um deine Stellen zu veröffentlichen",
+    nameLabel: "Workspace-Name",
+    namePlaceholder: "z. B. Meine Firma",
+    hint: "Tipp: Verwende deinen Firmennamen.",
+    create: "Workspace erstellen",
+  },
   plan: {
     title: "Tarif",
     subtitle: "Verwalte den Tarif deines Workspace",
@@ -48,6 +58,8 @@ const de: Admin = {
       "Zahlung nicht abgeschlossen. Du kannst es jederzeit erneut versuchen.",
     ownerOnly: "Nur der Workspace-Inhaber kann das Abo verwalten.",
     limitTitle: "Limit des Free-Tarifs",
+    limitWorkspaces:
+      "Der Free-Tarif erlaubt 1 Workspace. Abonniere Plus für unbegrenzte Workspaces.",
     limitCompanies:
       "Der Free-Tarif erlaubt 1 Unternehmen. Abonniere Plus für unbegrenzte Einträge.",
     limitJobs:

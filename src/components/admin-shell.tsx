@@ -6,6 +6,7 @@ import { AuthWatch } from "./auth-watch";
 import { ProfileProvider } from "./profile-context";
 import { SidebarProvider } from "./sidebar-context";
 import { Sidebar } from "./sidebar";
+import { OnboardingGate } from "./onboarding-gate";
 
 export function AdminShell({ children }: { children: ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <Sidebar />
             <div className="flex min-w-0 flex-1 flex-col">{children}</div>
           </div>
+          <OnboardingGate />
         </SidebarProvider>
       </ProfileProvider>
     </SessionProvider>

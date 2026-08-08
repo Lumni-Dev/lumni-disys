@@ -22,7 +22,9 @@ import {
   IconChevronLeft,
   IconClose,
   IconCreditCard,
+  IconPlus,
 } from "@/components/ui/icons";
+import { WorkspaceModal } from "@/components/workspace-modal";
 import type { Admin } from "@/i18n/types";
 
 const nav: {
@@ -48,6 +50,7 @@ export function Sidebar() {
   // acesso carrega, mostra tudo (caso comum: dono, que ve tudo mesmo).
   const items = access ? nav.filter((n) => access.modules.includes(n.key)) : nav;
   const workspaces = useWorkspaces();
+  const [wsModalOpen, setWsModalOpen] = useState(false);
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } =
     useSidebar();
 
@@ -129,10 +132,10 @@ export function Sidebar() {
           </button>
         </div>
 
-        {workspaces && workspaces.length > 1 && (
+        {workspaces && workspaces.length > 0 && (
           <div
             className={cx(
-              "shrink-0 border-b border-white/[0.05] p-2.5",
+              "flex shrink-0 flex-col gap-2 border-b border-white/[0.05] p-2.5",
               collapsed && "lg:hidden",
             )}
           >
@@ -141,17 +144,21 @@ export function Sidebar() {
               onChange={switchWorkspace}
               options={workspaces.map((w) => ({
                 value: String(w.id),
-                label: w.owner
-                  ? admin.sidebar.myWorkspace
-                  : w.ownerName || w.ownerEmail,
+                label:
+                  w.name ||
+                  (w.owner
+                    ? admin.sidebar.myWorkspace
+                    : w.ownerName || w.ownerEmail),
               }))}
             />
-            {workspaces.find((w) => w.active)?.readOnly && (
-              <span className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-surface-2 px-2 py-1 text-[11px] font-medium text-muted ring-1 ring-white/10">
-                <IconShield className="h-3.5 w-3.5 shrink-0" />
-                {admin.sidebar.readonly}
-              </span>
-            )}
+            <button
+              type="button"
+              onClick={() => setWsModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+            >
+              <IconPlus className="h-3.5 w-3.5 shrink-0" />
+              {admin.workspace.newWorkspace}
+            </button>
           </div>
         )}
 
@@ -267,6 +274,8 @@ export function Sidebar() {
           </Link>
         </div>
       </aside>
+
+      <WorkspaceModal open={wsModalOpen} onClose={() => setWsModalOpen(false)} />
     </>
   );
 }

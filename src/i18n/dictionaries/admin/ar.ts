@@ -20,6 +20,15 @@ const ar: Admin = {
     readonly: "للقراءة فقط",
     plan: "الخطة",
   },
+  workspace: {
+    newWorkspace: "مساحة عمل جديدة",
+    createTitle: "إنشاء مساحة عمل",
+    createSubtitle: "أنشئ مساحة عمل لبدء نشر وظائفك",
+    nameLabel: "اسم مساحة العمل",
+    namePlaceholder: "مثال: شركتي",
+    hint: "نصيحة: استخدم اسم شركتك.",
+    create: "إنشاء مساحة عمل",
+  },
   plan: {
     title: "الخطة",
     subtitle: "أدر خطة مساحة العمل الخاصة بك",
@@ -47,6 +56,8 @@ const ar: Admin = {
     checkoutCanceled: "لم تكتمل عملية الدفع. يمكنك المحاولة مرة أخرى في أي وقت.",
     ownerOnly: "مالك مساحة العمل فقط يمكنه إدارة الاشتراك.",
     limitTitle: "حد خطة Free",
+    limitWorkspaces:
+      "تسمح خطة Free بمساحة عمل واحدة. اشترك في Plus لمساحات عمل غير محدودة.",
     limitCompanies:
       "تسمح خطة Free بتسجيل شركة واحدة. اشترك في Plus للتسجيل بلا حدود.",
     limitJobs:

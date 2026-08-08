@@ -20,6 +20,15 @@ const ko: Admin = {
     readonly: "읽기 전용",
     plan: "플랜",
   },
+  workspace: {
+    newWorkspace: "새 워크스페이스",
+    createTitle: "워크스페이스 만들기",
+    createSubtitle: "워크스페이스를 만들어 채용 공고 등록을 시작하세요",
+    nameLabel: "워크스페이스 이름",
+    namePlaceholder: "예: 우리 회사",
+    hint: "팁: 회사 이름을 사용하세요.",
+    create: "워크스페이스 만들기",
+  },
   plan: {
     title: "플랜",
     subtitle: "워크스페이스 플랜을 관리하세요",
@@ -43,6 +52,8 @@ const ko: Admin = {
     checkoutCanceled: "결제가 완료되지 않았습니다. 언제든지 다시 시도할 수 있습니다.",
     ownerOnly: "워크스페이스 소유자만 구독을 관리할 수 있습니다.",
     limitTitle: "Free 플랜 한도",
+    limitWorkspaces:
+      "Free 플랜은 워크스페이스 1개만 만들 수 있습니다. 무제한은 Plus를 구독하세요.",
     limitCompanies:
       "Free 플랜은 기업 1개만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
     limitJobs:
