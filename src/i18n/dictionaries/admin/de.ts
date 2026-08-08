@@ -18,6 +18,43 @@ const de: Admin = {
     userFallback: "Benutzer",
     myWorkspace: "Mein Workspace",
     readonly: "Nur Lesen",
+    plan: "Tarif",
+  },
+  plan: {
+    title: "Tarif",
+    subtitle: "Verwalte den Tarif deines Workspace",
+    current: "Aktueller Tarif",
+    freeDesc: "Zum Einstieg in dein Recruiting",
+    plusDesc: "Rekrutiere ohne Grenzen",
+    perMonth: "/Monat",
+    featuresFree: ["1 Unternehmen", "1 Stelle", "1 Kandidat"],
+    featuresPlus: [
+      "Unbegrenzte Unternehmen",
+      "Unbegrenzte Stellen",
+      "Unbegrenzte Kandidaten",
+    ],
+    usageTitle: "Tarifnutzung",
+    usageSubtitle: "Im Workspace angelegte Ressourcen",
+    unlimited: "Unbegrenzt",
+    upgrade: "Plus abonnieren",
+    redirecting: "Weiterleitung...",
+    renewsAt: (date) => `Verlängert sich am ${date}`,
+    endsAt: (date) => `Plus-Zugang bis ${date}`,
+    cancel: "Abo kündigen",
+    cancelDesc: "Du behältst Plus bis zum Ende des bezahlten Zeitraums.",
+    resume: "Abo fortsetzen",
+    checkoutSuccess: "Abo aktiviert! Willkommen bei Plus.",
+    checkoutCanceled:
+      "Zahlung nicht abgeschlossen. Du kannst es jederzeit erneut versuchen.",
+    ownerOnly: "Nur der Workspace-Inhaber kann das Abo verwalten.",
+    limitTitle: "Limit des Free-Tarifs",
+    limitCompanies:
+      "Der Free-Tarif erlaubt 1 Unternehmen. Abonniere Plus für unbegrenzte Einträge.",
+    limitJobs:
+      "Der Free-Tarif erlaubt 1 Stelle. Abonniere Plus für unbegrenzte Einträge.",
+    limitCandidates:
+      "Der Free-Tarif erlaubt 1 Kandidaten. Abonniere Plus für unbegrenzte Einträge.",
+    limitCta: "Plus entdecken",
   },
   deleteBlocked: {
     title: "Löschen nicht möglich",

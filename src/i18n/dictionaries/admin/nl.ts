@@ -18,6 +18,43 @@ const nl: Admin = {
     userFallback: "Gebruiker",
     myWorkspace: "Mijn workspace",
     readonly: "Alleen-lezen",
+    plan: "Abonnement",
+  },
+  plan: {
+    title: "Abonnement",
+    subtitle: "Beheer het abonnement van je workspace",
+    current: "Huidig abonnement",
+    freeDesc: "Om je werving te beginnen organiseren",
+    plusDesc: "Werf zonder limieten",
+    perMonth: "/maand",
+    featuresFree: ["1 bedrijf", "1 vacature", "1 kandidaat"],
+    featuresPlus: [
+      "Onbeperkt bedrijven",
+      "Onbeperkt vacatures",
+      "Onbeperkt kandidaten",
+    ],
+    usageTitle: "Gebruik van het abonnement",
+    usageSubtitle: "Geregistreerde resources in de workspace",
+    unlimited: "Onbeperkt",
+    upgrade: "Abonneer op Plus",
+    redirecting: "Doorsturen...",
+    renewsAt: (date) => `Verlengt op ${date}`,
+    endsAt: (date) => `Plus-toegang tot ${date}`,
+    cancel: "Abonnement opzeggen",
+    cancelDesc: "Je behoudt Plus tot het einde van de betaalde periode.",
+    resume: "Abonnement hervatten",
+    checkoutSuccess: "Abonnement geactiveerd! Welkom bij Plus.",
+    checkoutCanceled:
+      "Betaling niet voltooid. Je kunt het altijd opnieuw proberen.",
+    ownerOnly: "Alleen de eigenaar van de workspace kan het abonnement beheren.",
+    limitTitle: "Limiet van het Free-abonnement",
+    limitCompanies:
+      "Het Free-abonnement staat 1 bedrijf toe. Abonneer op Plus voor onbeperkt registreren.",
+    limitJobs:
+      "Het Free-abonnement staat 1 vacature toe. Abonneer op Plus voor onbeperkt registreren.",
+    limitCandidates:
+      "Het Free-abonnement staat 1 kandidaat toe. Abonneer op Plus voor onbeperkt registreren.",
+    limitCta: "Ontdek Plus",
   },
   deleteBlocked: {
     title: "Kan niet verwijderen",

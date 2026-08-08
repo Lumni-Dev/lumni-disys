@@ -16,6 +16,7 @@ import { IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
 import { CompanyModal } from "@/components/entity-modals";
+import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { Modal } from "@/components/ui/modal";
 import { type Company } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
@@ -45,6 +46,8 @@ export default function CompaniesPage() {
   const [fStatus, setFStatus] = useState("");
   // Quantidade de vagas que impede a exclusao da empresa (null = modal fechado).
   const [blockedJobs, setBlockedJobs] = useState<number | null>(null);
+  // Limite de empresas do plano Free atingido (API devolveu 402).
+  const [limitHit, setLimitHit] = useState(false);
 
   useEffect(() => {
     api
@@ -77,8 +80,17 @@ export default function CompaniesPage() {
 
   async function save(e: Company) {
     if (e.id === 0) {
-      const created = await api.post<Company>("/api/companies", e);
-      setList((prev) => [...prev, created]);
+      try {
+        const created = await api.post<Company>("/api/companies", e);
+        setList((prev) => [...prev, created]);
+      } catch (err) {
+        // Teto do plano Free: fecha o form e abre o aviso de upgrade.
+        if (err instanceof ApiError && err.status === 402) {
+          setLimitHit(true);
+          return;
+        }
+        throw err;
+      }
     } else {
       const updated = await api.put<Company>(`/api/companies/${e.id}`, e);
       setList((prev) => prev.map((x) => (x.id === updated.id ? updated : x)));
@@ -273,6 +285,12 @@ export default function CompaniesPage() {
         company={editing}
         onClose={() => setEditing(null)}
         onSave={save}
+      />
+
+      <PlanLimitModal
+        resource="companies"
+        open={limitHit}
+        onClose={() => setLimitHit(false)}
       />
 
       <Modal

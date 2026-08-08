@@ -15,7 +15,10 @@ export default auth((req) => {
     // o token do convite no redirect).
     pathname.startsWith("/invite") ||
     pathname.startsWith("/api/auth") ||
-    pathname.startsWith("/api/public");
+    pathname.startsWith("/api/public") ||
+    // Webhook do Stripe: chamado pelo Stripe (sem sessao); a rota valida a
+    // assinatura criptografica do evento.
+    pathname.startsWith("/api/stripe/webhook");
 
   // Logado não acessa landing nem login: vai direto para o sistema.
   if (req.auth && isGuestOnly) {

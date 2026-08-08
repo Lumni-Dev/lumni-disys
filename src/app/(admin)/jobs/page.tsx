@@ -22,6 +22,7 @@ import {
 import { useAccess } from "@/lib/access";
 import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
+import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { Modal } from "@/components/ui/modal";
 import { type Job } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
@@ -61,6 +62,8 @@ export default function JobsPage() {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   // Quantidade de candidatos que impede a exclusao da vaga (null = fechado).
   const [blockedCands, setBlockedCands] = useState<number | null>(null);
+  // Limite de vagas do plano Free atingido (API devolveu 402).
+  const [limitHit, setLimitHit] = useState(false);
 
   // Copia o link publico direto desta vaga (token da conta + id).
   function shareJob(id: number) {
@@ -107,8 +110,17 @@ export default function JobsPage() {
 
   async function save(v: Job) {
     if (v.id === 0) {
-      const created = await api.post<Job>("/api/jobs", v);
-      setList((prev) => [...prev, created]);
+      try {
+        const created = await api.post<Job>("/api/jobs", v);
+        setList((prev) => [...prev, created]);
+      } catch (err) {
+        // Teto do plano Free: fecha o form e abre o aviso de upgrade.
+        if (err instanceof ApiError && err.status === 402) {
+          setLimitHit(true);
+          return;
+        }
+        throw err;
+      }
     } else {
       const updated = await api.put<Job>(`/api/jobs/${v.id}`, v);
       setList((prev) => prev.map((x) => (x.id === updated.id ? updated : x)));
@@ -348,6 +360,12 @@ export default function JobsPage() {
         job={editing}
         onClose={() => setEditing(null)}
         onSave={save}
+      />
+
+      <PlanLimitModal
+        resource="jobs"
+        open={limitHit}
+        onClose={() => setLimitHit(false)}
       />
 
       <Modal

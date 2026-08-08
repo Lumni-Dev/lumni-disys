@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -20,6 +21,7 @@ import {
   IconShield,
   IconChevronLeft,
   IconClose,
+  IconCreditCard,
 } from "@/components/ui/icons";
 import type { Admin } from "@/i18n/types";
 
@@ -57,6 +59,22 @@ export function Sidebar() {
       .catch(() => {});
   }
   const accountActive = pathname.startsWith("/account");
+  const planActive = pathname.startsWith("/plan");
+
+  // Plano do workspace ativo, para o badge Free/Plus do menu. A pagina do
+  // plano dispara "plan-updated" quando o plano muda (ex.: apos o checkout),
+  // para o badge nao ficar defasado ate o proximo reload.
+  const [plan, setPlan] = useState<"free" | "plus" | null>(null);
+  useEffect(() => {
+    api
+      .get<{ plan: "free" | "plus" }>("/api/plan")
+      .then((d) => setPlan(d.plan))
+      .catch(() => {});
+    const onPlan = (e: Event) =>
+      setPlan((e as CustomEvent<"free" | "plus">).detail);
+    window.addEventListener("plan-updated", onPlan);
+    return () => window.removeEventListener("plan-updated", onPlan);
+  }, []);
   const userName = session?.user?.name ?? admin.sidebar.userFallback;
   const userEmail = session?.user?.email ?? "";
   const userImage = photo ?? session?.user?.image ?? null;
@@ -182,6 +200,40 @@ export function Sidebar() {
           />
           <span className={hide}>{admin.sidebar.collapse}</span>
         </button>
+
+        <div className="shrink-0 border-t border-white/[0.05] p-2.5">
+          <Link
+            href="/plan"
+            onClick={close}
+            title={collapsed ? admin.sidebar.plan : undefined}
+            className={cx(
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
+              collapsed &&
+                "lg:mx-auto lg:h-10 lg:w-10 lg:justify-center lg:p-0",
+              planActive
+                ? ACTIVE
+                : "text-muted hover:bg-surface-2 hover:text-foreground",
+            )}
+          >
+            <IconCreditCard
+              className={cx("h-5 w-5 shrink-0", !planActive && "text-muted")}
+            />
+            <span className={cx("flex-1", hide)}>{admin.sidebar.plan}</span>
+            {plan && (
+              <span
+                className={cx(
+                  "rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                  plan === "plus"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-surface-2 text-muted ring-1 ring-white/10",
+                  hide,
+                )}
+              >
+                {plan === "plus" ? "Plus" : "Free"}
+              </span>
+            )}
+          </Link>
+        </div>
 
         <div className="shrink-0 border-t border-white/[0.05] p-2.5">
           <Link
