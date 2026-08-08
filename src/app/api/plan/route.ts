@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { accountForEmail } from "@/lib/account";
 import {
-  FREE_LIMITS,
+  PLAN_LIMITS,
   applySubscription,
   billingForEmail,
   resourceCount,
   workspaceCount,
 } from "@/lib/plan";
-import { stripe, plusPriceCents } from "@/lib/stripe";
+import { stripe, priceCents } from "@/lib/stripe";
 
 // Situacao do plano do USUARIO: plano atual, uso dos recursos limitados
 // (workspaces proprios + recursos do workspace ativo) e dados da assinatura.
@@ -41,19 +41,25 @@ export async function GET(req: Request) {
     }
   }
 
+  const plan =
+    billing.plan === "plus" || billing.plan === "max" ? billing.plan : "free";
+
   const account = await accountForEmail(email);
-  const [workspaces, jobs, candidates] = await Promise.all([
+  const [workspaces, jobs, candidates, processes, members] = await Promise.all([
     workspaceCount(email),
     account ? resourceCount(account.id, "jobs") : 0,
     account ? resourceCount(account.id, "candidates") : 0,
+    account ? resourceCount(account.id, "processes") : 0,
+    account ? resourceCount(account.id, "members") : 0,
   ]);
 
   return NextResponse.json({
-    plan: billing.plan === "plus" ? "plus" : "free",
-    usage: { workspaces, jobs, candidates },
-    limits: FREE_LIMITS,
-    // Mensalidade vigente do Plus em centavos (PLUS_PRICE_CENTS no env).
-    priceCents: plusPriceCents(),
+    plan,
+    // Uso do workspace ativo (por empresa) + total de workspaces do usuario.
+    usage: { workspaces, jobs, candidates, processes, members },
+    limits: PLAN_LIMITS[plan],
+    // Mensalidades vigentes em centavos (env), para exibir nos cartoes.
+    prices: { plus: priceCents("plus"), max: priceCents("max") },
     status: billing.stripeStatus,
     cancelAtPeriodEnd: billing.cancelAtPeriodEnd,
     renewsAt: billing.planRenewsAt,

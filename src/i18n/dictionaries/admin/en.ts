@@ -36,6 +36,9 @@ const en: Admin = {
     freeDesc: "To start organizing your recruiting",
     plusDesc: "Recruit without limits",
     perMonth: "/month",
+    maxDesc: "Scale recruiting without limits",
+    perCompanyShort: "/company",
+    companies: "Companies",
     featuresFree: ["1 company", "1 job", "1 candidate"],
     featuresPlus: [
       "Unlimited companies",
@@ -45,7 +48,8 @@ const en: Admin = {
     usageTitle: "Plan usage",
     usageSubtitle: "Resources registered in this workspace",
     unlimited: "Unlimited",
-    upgrade: "Subscribe to Plus",
+    upgrade: "Subscribe to",
+    switchPlan: "Change plan",
     redirecting: "Redirecting...",
     renewsAt: (date) => `Renews on ${date}`,
     endsAt: (date) => `Plus access until ${date}`,
@@ -64,7 +68,11 @@ const en: Admin = {
       "The Free plan allows 1 job. Subscribe to Plus for unlimited entries.",
     limitCandidates:
       "The Free plan allows 1 candidate. Subscribe to Plus for unlimited entries.",
-    limitCta: "See Plus",
+    limitProcesses:
+      "You reached your plan's processes-per-company limit. Upgrade to add more.",
+    limitMembers:
+      "You reached your plan's collaborators-per-company limit. Upgrade to invite more.",
+    limitCta: "See plans",
   },
   deleteBlocked: {
     title: "Can't delete",

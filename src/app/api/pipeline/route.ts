@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
+import { planLimitError } from "@/lib/plan";
 import { resolveJob } from "@/lib/job";
 
 const STAGES = [
@@ -42,6 +43,10 @@ export async function GET() {
 export async function POST(req: Request) {
   const { account, response } = await authorize("pipeline", "create");
   if (!account) return response;
+
+  // Limite de processos por empresa (workspace) conforme o plano.
+  const limited = await planLimitError(account.id, "processes");
+  if (limited) return limited;
 
   const body = await req.json();
   const stage = body.stage ?? STAGES[0];

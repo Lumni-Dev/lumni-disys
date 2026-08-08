@@ -36,12 +36,16 @@ const ko: Admin = {
     freeDesc: "채용 관리를 시작하기 위한 플랜",
     plusDesc: "제한 없이 채용하세요",
     perMonth: "/월",
+    maxDesc: "제한 없이 채용을 확장하세요",
+    perCompanyShort: "/기업",
+    companies: "기업",
     featuresFree: ["기업 1개", "공고 1개", "후보자 1명"],
     featuresPlus: ["기업 무제한", "공고 무제한", "후보자 무제한"],
     usageTitle: "플랜 사용량",
     usageSubtitle: "워크스페이스에 등록된 리소스",
     unlimited: "무제한",
-    upgrade: "Plus 구독하기",
+    upgrade: "구독:",
+    switchPlan: "플랜 변경",
     redirecting: "이동 중...",
     renewsAt: (date) => `${date}에 갱신`,
     endsAt: (date) => `${date}까지 Plus 이용 가능`,
@@ -60,7 +64,11 @@ const ko: Admin = {
       "Free 플랜은 공고 1개만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
     limitCandidates:
       "Free 플랜은 후보자 1명만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
-    limitCta: "Plus 알아보기",
+    limitProcesses:
+      "플랜의 기업당 프로세스 한도에 도달했습니다. 더 추가하려면 업그레이드하세요.",
+    limitMembers:
+      "플랜의 기업당 협업자 한도에 도달했습니다. 더 초대하려면 업그레이드하세요.",
+    limitCta: "플랜 보기",
   },
   deleteBlocked: {
     title: "삭제할 수 없습니다",

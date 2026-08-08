@@ -12,7 +12,7 @@ export function PlanLimitModal({
   open,
   onClose,
 }: {
-  resource: "workspaces" | "jobs" | "candidates";
+  resource: "workspaces" | "jobs" | "candidates" | "processes" | "members";
   open: boolean;
   onClose: () => void;
 }) {
@@ -21,6 +21,8 @@ export function PlanLimitModal({
     workspaces: admin.plan.limitWorkspaces,
     jobs: admin.plan.limitJobs,
     candidates: admin.plan.limitCandidates,
+    processes: admin.plan.limitProcesses,
+    members: admin.plan.limitMembers,
   };
   return (
     <Modal

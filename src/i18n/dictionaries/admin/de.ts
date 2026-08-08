@@ -37,6 +37,9 @@ const de: Admin = {
     freeDesc: "Zum Einstieg in dein Recruiting",
     plusDesc: "Rekrutiere ohne Grenzen",
     perMonth: "/Monat",
+    maxDesc: "Recruiting grenzenlos skalieren",
+    perCompanyShort: "/Firma",
+    companies: "Unternehmen",
     featuresFree: ["1 Unternehmen", "1 Stelle", "1 Kandidat"],
     featuresPlus: [
       "Unbegrenzte Unternehmen",
@@ -46,7 +49,8 @@ const de: Admin = {
     usageTitle: "Tarifnutzung",
     usageSubtitle: "Im Workspace angelegte Ressourcen",
     unlimited: "Unbegrenzt",
-    upgrade: "Plus abonnieren",
+    upgrade: "Abonnieren:",
+    switchPlan: "Tarif wechseln",
     redirecting: "Weiterleitung...",
     renewsAt: (date) => `Verlängert sich am ${date}`,
     endsAt: (date) => `Plus-Zugang bis ${date}`,
@@ -66,7 +70,11 @@ const de: Admin = {
       "Der Free-Tarif erlaubt 1 Stelle. Abonniere Plus für unbegrenzte Einträge.",
     limitCandidates:
       "Der Free-Tarif erlaubt 1 Kandidaten. Abonniere Plus für unbegrenzte Einträge.",
-    limitCta: "Plus entdecken",
+    limitProcesses:
+      "Du hast das Prozess-Limit pro Unternehmen deines Tarifs erreicht. Upgrade, um mehr anzulegen.",
+    limitMembers:
+      "Du hast das Mitarbeiter-Limit pro Unternehmen deines Tarifs erreicht. Upgrade, um mehr einzuladen.",
+    limitCta: "Tarife ansehen",
   },
   deleteBlocked: {
     title: "Löschen nicht möglich",

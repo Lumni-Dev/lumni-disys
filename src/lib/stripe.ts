@@ -17,19 +17,24 @@ export function stripe(): Stripe {
   return client;
 }
 
-/** Produto "Lumni Plus" no modo ativo (o preco vem de PLUS_PRICE_CENTS). */
-export function plusProductId(): string {
-  return env("PRODUCT_PLUS");
+export type PaidTier = "plus" | "max";
+
+/** Produto do Stripe do tier no modo ativo (STRIPE_{MODE}_PRODUCT_{TIER}). */
+export function productId(tier: PaidTier): string {
+  return env(tier === "max" ? "PRODUCT_MAX" : "PRODUCT_PLUS");
 }
 
 /**
- * Valor da mensalidade do Plus em centavos (PLUS_PRICE_CENTS no .env).
+ * Valor da mensalidade do tier em centavos ({PLUS,MAX}_PRICE_CENTS no .env).
  * Controla o valor cobrado no checkout e o exibido na pagina do plano;
  * assinaturas ja ativas mantem o valor com que foram contratadas.
  */
-export function plusPriceCents(): number {
-  const cents = Number(process.env.PLUS_PRICE_CENTS);
-  return Number.isFinite(cents) && cents > 0 ? Math.round(cents) : 1990;
+export function priceCents(tier: PaidTier): number {
+  const raw =
+    tier === "max" ? process.env.MAX_PRICE_CENTS : process.env.PLUS_PRICE_CENTS;
+  const cents = Number(raw);
+  const fallback = tier === "max" ? 18990 : 8990;
+  return Number.isFinite(cents) && cents > 0 ? Math.round(cents) : fallback;
 }
 
 /** Segredo do endpoint de webhook no modo ativo. */

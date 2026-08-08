@@ -36,6 +36,9 @@ const ar: Admin = {
     freeDesc: "لبدء تنظيم عملية التوظيف",
     plusDesc: "وظّف بلا حدود",
     perMonth: "/شهر",
+    maxDesc: "وسّع التوظيف بلا حدود",
+    perCompanyShort: "/شركة",
+    companies: "الشركات",
     featuresFree: ["شركة واحدة", "وظيفة واحدة", "مرشح واحد"],
     featuresPlus: [
       "شركات غير محدودة",
@@ -45,7 +48,8 @@ const ar: Admin = {
     usageTitle: "استخدام الخطة",
     usageSubtitle: "الموارد المسجلة في مساحة العمل",
     unlimited: "غير محدود",
-    upgrade: "اشترك في Plus",
+    upgrade: "اشترك في",
+    switchPlan: "تغيير الخطة",
     redirecting: "جارٍ التحويل...",
     renewsAt: (date) => `يتجدد في ${date}`,
     endsAt: (date) => `وصول Plus حتى ${date}`,
@@ -64,7 +68,11 @@ const ar: Admin = {
       "تسمح خطة Free بتسجيل وظيفة واحدة. اشترك في Plus للتسجيل بلا حدود.",
     limitCandidates:
       "تسمح خطة Free بتسجيل مرشح واحد. اشترك في Plus للتسجيل بلا حدود.",
-    limitCta: "تعرّف على Plus",
+    limitProcesses:
+      "لقد بلغت حد العمليات لكل شركة في خطتك. قم بالترقية لإضافة المزيد.",
+    limitMembers:
+      "لقد بلغت حد المتعاونين لكل شركة في خطتك. قم بالترقية لدعوة المزيد.",
+    limitCta: "عرض الخطط",
   },
   deleteBlocked: {
     title: "لا يمكن الحذف",

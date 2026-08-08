@@ -19,7 +19,8 @@ import { MemberModal } from "@/components/member-modal";
 import { downloadExcel } from "@/lib/export";
 import { useSelection } from "@/lib/use-selection";
 import { SkeletonRows } from "@/components/ui/skeleton";
-import { api } from "@/lib/api-client";
+import { api, ApiError } from "@/lib/api-client";
+import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { useI18n } from "@/i18n/context";
 import type { Admin } from "@/i18n/types";
 import {
@@ -34,6 +35,7 @@ type MemberRow = Member & { id: number };
 export default function TeamPage() {
   const { admin } = useI18n();
   const [list, setList] = useState<MemberRow[]>([]);
+  const [limitHit, setLimitHit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [addOpen, setAddOpen] = useState(false);
@@ -73,8 +75,17 @@ export default function TeamPage() {
         prev.map((m) => (m.email === updated.email ? updated : m)),
       );
     } else {
-      const created = await api.post<MemberRow>("/api/team", c);
-      setList((prev) => [...prev, created]);
+      try {
+        const created = await api.post<MemberRow>("/api/team", c);
+        setList((prev) => [...prev, created]);
+      } catch (err) {
+        // Teto de colaboradores do plano: abre o aviso de upgrade.
+        if (err instanceof ApiError && err.status === 402) {
+          setLimitHit(true);
+          return;
+        }
+        throw err;
+      }
     }
   }
 
@@ -261,6 +272,11 @@ export default function TeamPage() {
         member={editing}
         onClose={() => setEditing(null)}
         onSave={save}
+      />
+      <PlanLimitModal
+        resource="members"
+        open={limitHit}
+        onClose={() => setLimitHit(false)}
       />
     </PageShell>
   );

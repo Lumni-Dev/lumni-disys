@@ -11,7 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ProcessModal } from "@/components/entity-modals";
 import { type Column, type PipelineCard } from "@/lib/data";
 import { downloadExcel } from "@/lib/export";
-import { api } from "@/lib/api-client";
+import { api, ApiError } from "@/lib/api-client";
+import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { useI18n } from "@/i18n/context";
 
 type DropTarget = { stage: string; beforeId: number | null };
@@ -26,6 +27,7 @@ export default function PipelinePage() {
   );
   const [drop, setDrop] = useState<DropTarget | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [limitHit, setLimitHit] = useState(false);
   const [editing, setEditing] = useState<{
     card: PipelineCard;
     stage: string;
@@ -100,10 +102,19 @@ export default function PipelinePage() {
   async function save(card: PipelineCard, stage: string) {
     if (card.id === 0) {
       // Novo card: vincula por candidateId; vaga/empresa derivam do candidato.
-      await api.post("/api/pipeline", {
-        candidateId: card.candidateId,
-        stage,
-      });
+      try {
+        await api.post("/api/pipeline", {
+          candidateId: card.candidateId,
+          stage,
+        });
+      } catch (err) {
+        // Teto de processos do plano: abre o aviso de upgrade.
+        if (err instanceof ApiError && err.status === 402) {
+          setLimitHit(true);
+          return;
+        }
+        throw err;
+      }
     } else {
       // Edicao: so a etapa muda (o resto e derivado por ID).
       await api.put(`/api/pipeline/${card.id}`, { stage });
@@ -270,6 +281,11 @@ export default function PipelinePage() {
         onClose={() => setEditing(null)}
         onSave={save}
         onDelete={removeCard}
+      />
+      <PlanLimitModal
+        resource="processes"
+        open={limitHit}
+        onClose={() => setLimitHit(false)}
       />
     </PageShell>
   );

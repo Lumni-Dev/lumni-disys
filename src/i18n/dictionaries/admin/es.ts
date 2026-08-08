@@ -36,6 +36,9 @@ const es: Admin = {
     freeDesc: "Para empezar a organizar tu reclutamiento",
     plusDesc: "Recluta sin límites",
     perMonth: "/mes",
+    maxDesc: "Escala tu reclutamiento sin límites",
+    perCompanyShort: "/empresa",
+    companies: "Empresas",
     featuresFree: ["1 empresa", "1 vacante", "1 candidato"],
     featuresPlus: [
       "Empresas ilimitadas",
@@ -45,7 +48,8 @@ const es: Admin = {
     usageTitle: "Uso del plan",
     usageSubtitle: "Recursos registrados en el workspace",
     unlimited: "Ilimitado",
-    upgrade: "Suscribirse a Plus",
+    upgrade: "Suscribirse a",
+    switchPlan: "Cambiar de plan",
     redirecting: "Redirigiendo...",
     renewsAt: (date) => `Se renueva el ${date}`,
     endsAt: (date) => `Acceso Plus hasta ${date}`,
@@ -65,7 +69,11 @@ const es: Admin = {
       "El plan Free permite registrar 1 vacante. Suscríbete a Plus para registrar sin límites.",
     limitCandidates:
       "El plan Free permite registrar 1 candidato. Suscríbete a Plus para registrar sin límites.",
-    limitCta: "Conocer Plus",
+    limitProcesses:
+      "Alcanzaste el límite de procesos por empresa de tu plan. Mejora tu plan para agregar más.",
+    limitMembers:
+      "Alcanzaste el límite de colaboradores por empresa de tu plan. Mejora tu plan para invitar más.",
+    limitCta: "Ver planes",
   },
   deleteBlocked: {
     title: "No se puede eliminar",

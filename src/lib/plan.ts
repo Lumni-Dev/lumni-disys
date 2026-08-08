@@ -3,19 +3,39 @@ import { eq } from "drizzle-orm";
 import type Stripe from "stripe";
 import { db, schema } from "@/db";
 
-// Limites do plano Free; o Plus e ilimitado. O plano pertence ao USUARIO
-// (dono): vale para os workspaces dele e para os recursos dentro deles.
-export const FREE_LIMITS = {
-  workspaces: 1,
-  jobs: 1,
-  candidates: 1,
-} as const;
+export type Plan = "free" | "plus" | "max";
 
-export type LimitedResource = "jobs" | "candidates";
+// Limites por plano. O plano pertence ao USUARIO (dono) e vale para os
+// workspaces dele. `workspaces` e um teto TOTAL (empresas do usuario); os
+// demais sao POR WORKSPACE (por empresa). null = ilimitado.
+export type PlanLimits = {
+  workspaces: number | null;
+  jobs: number | null;
+  candidates: number | null;
+  processes: number | null;
+  members: number | null;
+};
+
+export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
+  free: { workspaces: 1, jobs: 1, candidates: 1, processes: 1, members: 1 },
+  plus: { workspaces: 5, jobs: 25, candidates: 25, processes: 25, members: 5 },
+  max: {
+    workspaces: null,
+    jobs: null,
+    candidates: null,
+    processes: null,
+    members: null,
+  },
+};
+
+// Recursos contados POR WORKSPACE (accountId).
+export type LimitedResource = "jobs" | "candidates" | "processes" | "members";
 
 const tables = {
   jobs: schema.jobs,
   candidates: schema.candidates,
+  processes: schema.pipelineCards,
+  members: schema.teamMembers,
 } as const;
 
 /** Linha de cobranca do usuario, criada sob demanda (plano free). */
@@ -36,19 +56,21 @@ export async function billingForEmail(email: string) {
   return row;
 }
 
+function normalizePlan(value: string | undefined): Plan {
+  return value === "plus" || value === "max" ? value : "free";
+}
+
 /** Plano do usuario (por e-mail). */
-export async function planForEmail(email: string): Promise<"free" | "plus"> {
+export async function planForEmail(email: string): Promise<Plan> {
   const [row] = await db
     .select({ plan: schema.userBilling.plan })
     .from(schema.userBilling)
     .where(eq(schema.userBilling.email, email));
-  return row?.plan === "plus" ? "plus" : "free";
+  return normalizePlan(row?.plan);
 }
 
 /** Plano efetivo de um workspace = plano do dono dele. */
-export async function planForAccount(
-  accountId: number,
-): Promise<"free" | "plus"> {
+export async function planForAccount(accountId: number): Promise<Plan> {
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
     .from(schema.accounts)
@@ -75,38 +97,36 @@ export async function workspaceCount(email: string): Promise<number> {
 }
 
 /**
- * Bloqueio de criacao pelo plano: no Free cada recurso tem teto (pelo plano
- * do dono do workspace); atingido, devolve a resposta 402 pronta (o cliente
- * abre o modal de upgrade). No Plus retorna null (sem limite).
+ * Bloqueio de criacao pelo plano: cada recurso tem teto POR WORKSPACE segundo
+ * o plano do dono; atingido, devolve a resposta 402 pronta (o cliente abre o
+ * modal de upgrade). Limite null = ilimitado (Max) -> null (sem bloqueio).
  */
 export async function planLimitError(
   accountId: number,
   resource: LimitedResource,
 ): Promise<NextResponse | null> {
   const plan = await planForAccount(accountId);
-  if (plan === "plus") return null;
+  const limit = PLAN_LIMITS[plan][resource];
+  if (limit == null) return null;
   const count = await resourceCount(accountId, resource);
-  if (count < FREE_LIMITS[resource]) return null;
+  if (count < limit) return null;
   return NextResponse.json(
-    { error: "plan_limit", resource, limit: FREE_LIMITS[resource] },
+    { error: "plan_limit", resource, limit },
     { status: 402 },
   );
 }
 
-/** Bloqueio de criacao de workspace: Free permite 1; Plus e ilimitado. */
+/** Bloqueio de criacao de workspace: teto TOTAL de empresas do usuario. */
 export async function workspaceLimitError(
   email: string,
 ): Promise<NextResponse | null> {
   const plan = await planForEmail(email);
-  if (plan === "plus") return null;
+  const limit = PLAN_LIMITS[plan].workspaces;
+  if (limit == null) return null;
   const count = await workspaceCount(email);
-  if (count < FREE_LIMITS.workspaces) return null;
+  if (count < limit) return null;
   return NextResponse.json(
-    {
-      error: "plan_limit",
-      resource: "workspaces",
-      limit: FREE_LIMITS.workspaces,
-    },
+    { error: "plan_limit", resource: "workspaces", limit },
     { status: 402 },
   );
 }
@@ -123,12 +143,14 @@ export async function applySubscription(
 ): Promise<void> {
   await billingForEmail(email);
   const active = ["active", "trialing", "past_due"].includes(sub.status);
+  // O tier (plus/max) vem da metadata da assinatura, gravada no checkout.
+  const tier: Plan = sub.metadata?.tier === "max" ? "max" : "plus";
   // Na API atual do Stripe o periodo corrente fica nos itens da assinatura.
   const periodEnd = sub.items?.data?.[0]?.current_period_end;
   await db
     .update(schema.userBilling)
     .set({
-      plan: active ? "plus" : "free",
+      plan: active ? tier : "free",
       stripeCustomerId:
         typeof sub.customer === "string" ? sub.customer : sub.customer.id,
       stripeSubscriptionId: sub.id,

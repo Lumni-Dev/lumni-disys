@@ -65,14 +65,14 @@ export function Sidebar() {
   // Plano do workspace ativo, para o badge Free/Plus do menu. A pagina do
   // plano dispara "plan-updated" quando o plano muda (ex.: apos o checkout),
   // para o badge nao ficar defasado ate o proximo reload.
-  const [plan, setPlan] = useState<"free" | "plus" | null>(null);
+  const [plan, setPlan] = useState<"free" | "plus" | "max" | null>(null);
   useEffect(() => {
     api
-      .get<{ plan: "free" | "plus" }>("/api/plan")
+      .get<{ plan: "free" | "plus" | "max" }>("/api/plan")
       .then((d) => setPlan(d.plan))
       .catch(() => {});
     const onPlan = (e: Event) =>
-      setPlan((e as CustomEvent<"free" | "plus">).detail);
+      setPlan((e as CustomEvent<"free" | "plus" | "max">).detail);
     window.addEventListener("plan-updated", onPlan);
     return () => window.removeEventListener("plan-updated", onPlan);
   }, []);
@@ -228,13 +228,13 @@ export function Sidebar() {
               <span
                 className={cx(
                   "rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                  plan === "plus"
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-surface-2 text-muted ring-1 ring-white/10",
+                  plan === "free"
+                    ? "bg-surface-2 text-muted ring-1 ring-white/10"
+                    : "bg-accent text-accent-foreground",
                   hide,
                 )}
               >
-                {plan === "plus" ? "Plus" : "Free"}
+                {plan === "max" ? "Max" : plan === "plus" ? "Plus" : "Free"}
               </span>
             )}
           </Link>

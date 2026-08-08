@@ -36,6 +36,9 @@ const nl: Admin = {
     freeDesc: "Om je werving te beginnen organiseren",
     plusDesc: "Werf zonder limieten",
     perMonth: "/maand",
+    maxDesc: "Schaal werving zonder limieten",
+    perCompanyShort: "/bedrijf",
+    companies: "Bedrijven",
     featuresFree: ["1 bedrijf", "1 vacature", "1 kandidaat"],
     featuresPlus: [
       "Onbeperkt bedrijven",
@@ -45,7 +48,8 @@ const nl: Admin = {
     usageTitle: "Gebruik van het abonnement",
     usageSubtitle: "Geregistreerde resources in de workspace",
     unlimited: "Onbeperkt",
-    upgrade: "Abonneer op Plus",
+    upgrade: "Abonneren op",
+    switchPlan: "Wissel van abonnement",
     redirecting: "Doorsturen...",
     renewsAt: (date) => `Verlengt op ${date}`,
     endsAt: (date) => `Plus-toegang tot ${date}`,
@@ -65,7 +69,11 @@ const nl: Admin = {
       "Het Free-abonnement staat 1 vacature toe. Abonneer op Plus voor onbeperkt registreren.",
     limitCandidates:
       "Het Free-abonnement staat 1 kandidaat toe. Abonneer op Plus voor onbeperkt registreren.",
-    limitCta: "Ontdek Plus",
+    limitProcesses:
+      "Je hebt de limiet voor processen per bedrijf van je abonnement bereikt. Upgrade om meer toe te voegen.",
+    limitMembers:
+      "Je hebt de limiet voor medewerkers per bedrijf van je abonnement bereikt. Upgrade om meer uit te nodigen.",
+    limitCta: "Bekijk abonnementen",
   },
   deleteBlocked: {
     title: "Kan niet verwijderen",

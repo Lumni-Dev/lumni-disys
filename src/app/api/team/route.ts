@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { serializeMember } from "@/db/serializers";
 import { authorize } from "@/lib/authz";
+import { planLimitError } from "@/lib/plan";
 import { validPermissionRows } from "@/lib/permissions";
 import { sendInviteEmail } from "@/lib/mail";
 
@@ -44,6 +45,10 @@ export async function GET() {
 export async function POST(req: Request) {
   const { account, response } = await authorize("team", "create");
   if (!account) return response;
+
+  // Limite de colaboradores por empresa (workspace) conforme o plano.
+  const limited = await planLimitError(account.id, "members");
+  if (limited) return limited;
 
   const body = await req.json();
   const email = String(body.email ?? "").slice(0, 200);

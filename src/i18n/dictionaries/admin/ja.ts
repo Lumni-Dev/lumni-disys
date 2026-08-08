@@ -36,12 +36,16 @@ const ja: Admin = {
     freeDesc: "採用活動の整理を始めるために",
     plusDesc: "制限なしで採用",
     perMonth: "/月",
+    maxDesc: "制限なく採用を拡大",
+    perCompanyShort: "/社",
+    companies: "企業",
     featuresFree: ["企業 1 件", "求人 1 件", "候補者 1 名"],
     featuresPlus: ["企業 無制限", "求人 無制限", "候補者 無制限"],
     usageTitle: "プランの利用状況",
     usageSubtitle: "ワークスペースに登録されたリソース",
     unlimited: "無制限",
-    upgrade: "Plus に登録",
+    upgrade: "登録:",
+    switchPlan: "プランを変更",
     redirecting: "リダイレクト中...",
     renewsAt: (date) => `${date} に更新`,
     endsAt: (date) => `${date} まで Plus を利用可能`,
@@ -60,7 +64,11 @@ const ja: Admin = {
       "Free プランで登録できる求人は 1 件です。Plus に登録すると無制限になります。",
     limitCandidates:
       "Free プランで登録できる候補者は 1 名です。Plus に登録すると無制限になります。",
-    limitCta: "Plus を見る",
+    limitProcesses:
+      "プランの企業ごとのプロセス上限に達しました。追加するにはアップグレードしてください。",
+    limitMembers:
+      "プランの企業ごとのコラボレーター上限に達しました。招待するにはアップグレードしてください。",
+    limitCta: "プランを見る",
   },
   deleteBlocked: {
     title: "削除できません",

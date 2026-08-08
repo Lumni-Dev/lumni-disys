@@ -97,13 +97,21 @@ export interface Admin {
     current: string;
     freeDesc: string;
     plusDesc: string;
+    maxDesc: string;
+    /** Sufixo curto nos limites por empresa (ex.: "/empresa"). */
+    perCompanyShort: string;
+    /** Rotulo "Empresas" para o card de uso e limites de workspace. */
+    companies: string;
     perMonth: string;
     featuresFree: [string, string, string];
     featuresPlus: [string, string, string];
     usageTitle: string;
     usageSubtitle: string;
     unlimited: string;
+    /** Verbo do botao de assinar (ex.: "Assinar"); recebe o nome do tier. */
     upgrade: string;
+    /** Botao para trocar para um tier inferior (downgrade). */
+    switchPlan: string;
     redirecting: string;
     renewsAt(date: string): string;
     /** Assinatura cancelada: até quando o acesso Plus permanece. */
@@ -119,6 +127,8 @@ export interface Admin {
     limitTitle: string;
     limitWorkspaces: string;
     limitCompanies: string;
+    limitProcesses: string;
+    limitMembers: string;
     limitJobs: string;
     limitCandidates: string;
     limitCta: string;
