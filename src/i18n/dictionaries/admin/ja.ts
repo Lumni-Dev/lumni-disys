@@ -37,8 +37,8 @@ const ja: Admin = {
     plusDesc: "制限なしで採用",
     perMonth: "/月",
     maxDesc: "制限なく採用を拡大",
-    perCompanyShort: "/社",
-    companies: "企業",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["企業 1 件", "求人 1 件", "候補者 1 名"],
     featuresPlus: ["企業 無制限", "求人 無制限", "候補者 無制限"],
     usageTitle: "プランの利用状況",
@@ -65,9 +65,9 @@ const ja: Admin = {
     limitCandidates:
       "Free プランで登録できる候補者は 1 名です。Plus に登録すると無制限になります。",
     limitProcesses:
-      "プランの企業ごとのプロセス上限に達しました。追加するにはアップグレードしてください。",
+      "プランの workspace ごとのプロセス上限に達しました。追加するにはアップグレードしてください。",
     limitMembers:
-      "プランの企業ごとのコラボレーター上限に達しました。招待するにはアップグレードしてください。",
+      "プランの workspace ごとのコラボレーター上限に達しました。招待するにはアップグレードしてください。",
     limitCta: "プランを見る",
   },
   deleteBlocked: {

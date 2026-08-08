@@ -38,7 +38,7 @@ type PlanInfo = {
 // Limites por tier, espelhando o servidor (PLAN_LIMITS), para montar os
 // cartoes independentemente do plano atual do usuario. null = ilimitado.
 const TIER_LIMITS: Record<Plan, Limits> = {
-  free: { workspaces: 1, jobs: 1, candidates: 1, processes: 1, members: 1 },
+  free: { workspaces: 1, jobs: 5, candidates: 5, processes: 5, members: 1 },
   plus: { workspaces: 5, jobs: 25, candidates: 25, processes: 25, members: 5 },
   max: {
     workspaces: null,
@@ -206,7 +206,7 @@ export default function PlanPage() {
           title={admin.plan.usageTitle}
           subtitle={admin.plan.usageSubtitle}
         />
-        <CardBody className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+        <CardBody className="grid grid-cols-2 gap-2.5 lg:grid-cols-5">
           {KPIS.map((k) => {
             const used = info?.usage[k.key] ?? 0;
             const limit = info?.limits[k.key] ?? null;

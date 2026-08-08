@@ -37,8 +37,8 @@ const pt: Admin = {
     plusDesc: "Para recrutar sem limites",
     perMonth: "/mês",
     maxDesc: "Para escalar o recrutamento sem limites",
-    perCompanyShort: "/empresa",
-    companies: "Empresas",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["1 empresa", "1 vaga", "1 candidato"],
     featuresPlus: [
       "Empresas ilimitadas",
@@ -70,9 +70,9 @@ const pt: Admin = {
     limitCandidates:
       "O plano Free permite cadastrar 1 candidato. Assine o Plus para cadastrar sem limites.",
     limitProcesses:
-      "Você atingiu o limite de processos por empresa do seu plano. Faça upgrade para cadastrar mais.",
+      "Você atingiu o limite de processos por workspace do seu plano. Faça upgrade para cadastrar mais.",
     limitMembers:
-      "Você atingiu o limite de colaboradores por empresa do seu plano. Faça upgrade para convidar mais.",
+      "Você atingiu o limite de colaboradores por workspace do seu plano. Faça upgrade para convidar mais.",
     limitCta: "Ver planos",
   },
   deleteBlocked: {

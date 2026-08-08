@@ -37,8 +37,8 @@ const fr: Admin = {
     plusDesc: "Recrutez sans limites",
     perMonth: "/mois",
     maxDesc: "Recruter à grande échelle sans limites",
-    perCompanyShort: "/entreprise",
-    companies: "Entreprises",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["1 entreprise", "1 offre", "1 candidat"],
     featuresPlus: [
       "Entreprises illimitées",
@@ -71,9 +71,9 @@ const fr: Admin = {
     limitCandidates:
       "Le forfait Free permet d'enregistrer 1 candidat. Abonnez-vous à Plus pour un accès illimité.",
     limitProcesses:
-      "Vous avez atteint la limite de processus par entreprise de votre forfait. Passez à un forfait supérieur pour en ajouter.",
+      "Vous avez atteint la limite de processus par workspace de votre forfait. Passez à un forfait supérieur pour en ajouter.",
     limitMembers:
-      "Vous avez atteint la limite de collaborateurs par entreprise de votre forfait. Passez à un forfait supérieur pour en inviter.",
+      "Vous avez atteint la limite de collaborateurs par workspace de votre forfait. Passez à un forfait supérieur pour en inviter.",
     limitCta: "Voir les forfaits",
   },
   deleteBlocked: {

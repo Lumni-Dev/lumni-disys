@@ -17,7 +17,7 @@ export type PlanLimits = {
 };
 
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
-  free: { workspaces: 1, jobs: 1, candidates: 1, processes: 1, members: 1 },
+  free: { workspaces: 1, jobs: 5, candidates: 5, processes: 5, members: 1 },
   plus: { workspaces: 5, jobs: 25, candidates: 25, processes: 25, members: 5 },
   max: {
     workspaces: null,

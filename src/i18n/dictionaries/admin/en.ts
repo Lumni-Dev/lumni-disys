@@ -37,8 +37,8 @@ const en: Admin = {
     plusDesc: "Recruit without limits",
     perMonth: "/month",
     maxDesc: "Scale recruiting without limits",
-    perCompanyShort: "/company",
-    companies: "Companies",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["1 company", "1 job", "1 candidate"],
     featuresPlus: [
       "Unlimited companies",
@@ -69,9 +69,9 @@ const en: Admin = {
     limitCandidates:
       "The Free plan allows 1 candidate. Subscribe to Plus for unlimited entries.",
     limitProcesses:
-      "You reached your plan's processes-per-company limit. Upgrade to add more.",
+      "You reached your plan's processes-per-workspace limit. Upgrade to add more.",
     limitMembers:
-      "You reached your plan's collaborators-per-company limit. Upgrade to invite more.",
+      "You reached your plan's collaborators-per-workspace limit. Upgrade to invite more.",
     limitCta: "See plans",
   },
   deleteBlocked: {

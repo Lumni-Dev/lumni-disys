@@ -37,8 +37,8 @@ const ko: Admin = {
     plusDesc: "제한 없이 채용하세요",
     perMonth: "/월",
     maxDesc: "제한 없이 채용을 확장하세요",
-    perCompanyShort: "/기업",
-    companies: "기업",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["기업 1개", "공고 1개", "후보자 1명"],
     featuresPlus: ["기업 무제한", "공고 무제한", "후보자 무제한"],
     usageTitle: "플랜 사용량",
@@ -65,9 +65,9 @@ const ko: Admin = {
     limitCandidates:
       "Free 플랜은 후보자 1명만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
     limitProcesses:
-      "플랜의 기업당 프로세스 한도에 도달했습니다. 더 추가하려면 업그레이드하세요.",
+      "플랜의 workspace당 프로세스 한도에 도달했습니다. 더 추가하려면 업그레이드하세요.",
     limitMembers:
-      "플랜의 기업당 협업자 한도에 도달했습니다. 더 초대하려면 업그레이드하세요.",
+      "플랜의 workspace당 협업자 한도에 도달했습니다. 더 초대하려면 업그레이드하세요.",
     limitCta: "플랜 보기",
   },
   deleteBlocked: {

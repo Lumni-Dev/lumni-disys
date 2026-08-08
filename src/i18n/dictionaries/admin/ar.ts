@@ -37,8 +37,8 @@ const ar: Admin = {
     plusDesc: "وظّف بلا حدود",
     perMonth: "/شهر",
     maxDesc: "وسّع التوظيف بلا حدود",
-    perCompanyShort: "/شركة",
-    companies: "الشركات",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["شركة واحدة", "وظيفة واحدة", "مرشح واحد"],
     featuresPlus: [
       "شركات غير محدودة",
@@ -69,9 +69,9 @@ const ar: Admin = {
     limitCandidates:
       "تسمح خطة Free بتسجيل مرشح واحد. اشترك في Plus للتسجيل بلا حدود.",
     limitProcesses:
-      "لقد بلغت حد العمليات لكل شركة في خطتك. قم بالترقية لإضافة المزيد.",
+      "لقد بلغت حد العمليات لكل workspace في خطتك. قم بالترقية لإضافة المزيد.",
     limitMembers:
-      "لقد بلغت حد المتعاونين لكل شركة في خطتك. قم بالترقية لدعوة المزيد.",
+      "لقد بلغت حد المتعاونين لكل workspace في خطتك. قم بالترقية لدعوة المزيد.",
     limitCta: "عرض الخطط",
   },
   deleteBlocked: {

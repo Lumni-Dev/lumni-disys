@@ -37,8 +37,8 @@ const nl: Admin = {
     plusDesc: "Werf zonder limieten",
     perMonth: "/maand",
     maxDesc: "Schaal werving zonder limieten",
-    perCompanyShort: "/bedrijf",
-    companies: "Bedrijven",
+    perCompanyShort: "/workspace",
+    companies: "Workspaces",
     featuresFree: ["1 bedrijf", "1 vacature", "1 kandidaat"],
     featuresPlus: [
       "Onbeperkt bedrijven",
@@ -70,9 +70,9 @@ const nl: Admin = {
     limitCandidates:
       "Het Free-abonnement staat 1 kandidaat toe. Abonneer op Plus voor onbeperkt registreren.",
     limitProcesses:
-      "Je hebt de limiet voor processen per bedrijf van je abonnement bereikt. Upgrade om meer toe te voegen.",
+      "Je hebt de limiet voor processen per workspace van je abonnement bereikt. Upgrade om meer toe te voegen.",
     limitMembers:
-      "Je hebt de limiet voor medewerkers per bedrijf van je abonnement bereikt. Upgrade om meer uit te nodigen.",
+      "Je hebt de limiet voor medewerkers per workspace van je abonnement bereikt. Upgrade om meer uit te nodigen.",
     limitCta: "Bekijk abonnementen",
   },
   deleteBlocked: {

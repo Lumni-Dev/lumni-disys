@@ -38,8 +38,8 @@ const de: Admin = {
     plusDesc: "Rekrutiere ohne Grenzen",
     perMonth: "/Monat",
     maxDesc: "Recruiting grenzenlos skalieren",
-    perCompanyShort: "/Firma",
-    companies: "Unternehmen",
+    perCompanyShort: "/Workspace",
+    companies: "Workspaces",
     featuresFree: ["1 Unternehmen", "1 Stelle", "1 Kandidat"],
     featuresPlus: [
       "Unbegrenzte Unternehmen",
@@ -71,9 +71,9 @@ const de: Admin = {
     limitCandidates:
       "Der Free-Tarif erlaubt 1 Kandidaten. Abonniere Plus für unbegrenzte Einträge.",
     limitProcesses:
-      "Du hast das Prozess-Limit pro Unternehmen deines Tarifs erreicht. Upgrade, um mehr anzulegen.",
+      "Du hast das Prozess-Limit pro Workspace deines Tarifs erreicht. Upgrade, um mehr anzulegen.",
     limitMembers:
-      "Du hast das Mitarbeiter-Limit pro Unternehmen deines Tarifs erreicht. Upgrade, um mehr einzuladen.",
+      "Du hast das Mitarbeiter-Limit pro Workspace deines Tarifs erreicht. Upgrade, um mehr einzuladen.",
     limitCta: "Tarife ansehen",
   },
   deleteBlocked: {
