@@ -20,6 +20,15 @@ const it: Admin = {
     readonly: "Sola lettura",
     plan: "Piano",
   },
+  workspace: {
+    newWorkspace: "Nuovo workspace",
+    createTitle: "Crea workspace",
+    createSubtitle: "Crea un workspace per iniziare a pubblicare le tue offerte",
+    nameLabel: "Nome del workspace",
+    namePlaceholder: "Es.: La Mia Azienda",
+    hint: "Suggerimento: usa il nome della tua azienda.",
+    create: "Crea workspace",
+  },
   plan: {
     title: "Piano",
     subtitle: "Gestisci il piano del tuo workspace",
@@ -48,6 +57,8 @@ const it: Admin = {
       "Pagamento non completato. Puoi riprovare quando vuoi.",
     ownerOnly: "Solo il proprietario del workspace può gestire l'abbonamento.",
     limitTitle: "Limite del piano Free",
+    limitWorkspaces:
+      "Il piano Free consente 1 workspace. Abbonati a Plus per workspace illimitati.",
     limitCompanies:
       "Il piano Free consente di registrare 1 azienda. Abbonati a Plus per registrare senza limiti.",
     limitJobs:

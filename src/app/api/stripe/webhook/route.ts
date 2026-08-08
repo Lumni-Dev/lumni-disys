@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe, webhookSecret } from "@/lib/stripe";
-import { accountForSubscription, applySubscription } from "@/lib/plan";
+import { applySubscription, emailForSubscription } from "@/lib/plan";
 
-// Webhook do Stripe: mantem o plano da conta espelhando a assinatura.
+// Webhook do Stripe: mantem o plano do usuario espelhando a assinatura.
 // Rota publica (sem sessao) protegida pela assinatura do evento.
 export async function POST(req: Request) {
   const signature = req.headers.get("stripe-signature") ?? "";
@@ -21,29 +21,27 @@ export async function POST(req: Request) {
   }
 
   switch (event.type) {
-    // Pagamento inicial concluido: ativa o Plus na conta do checkout.
+    // Pagamento inicial concluido: ativa o Plus para o usuario do checkout.
     case "checkout.session.completed": {
       const session = event.data.object;
-      const accountId = Number(
-        session.metadata?.accountId ?? session.client_reference_id,
-      );
+      const email = session.metadata?.email;
       const subId =
         typeof session.subscription === "string"
           ? session.subscription
           : session.subscription?.id;
-      if (Number.isFinite(accountId) && accountId > 0 && subId) {
+      if (email && subId) {
         const sub = await stripe().subscriptions.retrieve(subId);
-        await applySubscription(accountId, sub);
+        await applySubscription(email, sub);
       }
       break;
     }
     // Mudancas na assinatura (renovacao, cancelamento agendado, falha de
-    // pagamento, encerramento): reflete o estado atual na conta.
+    // pagamento, encerramento): reflete o estado atual na cobranca.
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const sub = event.data.object;
-      const accountId = await accountForSubscription(sub);
-      if (accountId) await applySubscription(accountId, sub);
+      const email = await emailForSubscription(sub);
+      if (email) await applySubscription(email, sub);
       break;
     }
   }

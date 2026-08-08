@@ -25,6 +25,9 @@ export const accounts = pgTable(
   {
     id: serial().primaryKey(),
     ownerEmail: varchar({ length: 200 }).notNull(),
+    // Nome do workspace, dado pelo dono na criacao (sugestao: o nome da
+    // empresa). Contas antigas ficam com "" e a UI usa o rotulo padrao.
+    name: varchar({ length: 120 }).notNull().default(""),
     publicToken: varchar({ length: 40 }).notNull(),
     // Plano de cobranca do workspace: "free" (1 empresa/vaga/candidato) ou
     // "plus" (ilimitado, assinatura mensal no Stripe).
@@ -171,6 +174,28 @@ export const userProfiles = pgTable(
     ...timestamps,
   },
   (t) => [uniqueIndex("user_profiles_email_key").on(t.email)],
+);
+
+// Cobranca por USUARIO (nao por workspace): o plano do dono vale para todos
+// os workspaces dele. Free = 1 workspace com 1 empresa/vaga/candidato;
+// Plus = tudo ilimitado, assinatura mensal no Stripe.
+export const userBilling = pgTable(
+  "user_billing",
+  {
+    id: serial().primaryKey(),
+    email: varchar({ length: 200 }).notNull(),
+    plan: varchar({ length: 20 }).notNull().default("free"),
+    stripeCustomerId: varchar({ length: 80 }).notNull().default(""),
+    stripeSubscriptionId: varchar({ length: 80 }).notNull().default(""),
+    // Status da assinatura no Stripe (active, canceled, past_due...).
+    stripeStatus: varchar({ length: 40 }).notNull().default(""),
+    // Assinatura marcada para encerrar no fim do periodo pago.
+    cancelAtPeriodEnd: boolean().notNull().default(false),
+    // Fim do periodo pago corrente (data de renovacao/encerramento).
+    planRenewsAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [uniqueIndex("user_billing_email_key").on(t.email)],
 );
 
 // Log de auditoria: uma linha por workspace excluido. A exclusao apaga tudo

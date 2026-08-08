@@ -20,6 +20,15 @@ const en: Admin = {
     readonly: "Read only",
     plan: "Plan",
   },
+  workspace: {
+    newWorkspace: "New workspace",
+    createTitle: "Create workspace",
+    createSubtitle: "Create a workspace to start posting your jobs",
+    nameLabel: "Workspace name",
+    namePlaceholder: "e.g. My Company",
+    hint: "Tip: use your company name.",
+    create: "Create workspace",
+  },
   plan: {
     title: "Plan",
     subtitle: "Manage your workspace plan",
@@ -47,6 +56,8 @@ const en: Admin = {
     checkoutCanceled: "Payment not completed. You can try again anytime.",
     ownerOnly: "Only the workspace owner can manage the subscription.",
     limitTitle: "Free plan limit",
+    limitWorkspaces:
+      "The Free plan allows 1 workspace. Subscribe to Plus for unlimited workspaces.",
     limitCompanies:
       "The Free plan allows 1 company. Subscribe to Plus for unlimited entries.",
     limitJobs:

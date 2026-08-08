@@ -20,6 +20,15 @@ const fr: Admin = {
     readonly: "Lecture seule",
     plan: "Forfait",
   },
+  workspace: {
+    newWorkspace: "Nouvel espace",
+    createTitle: "Créer un espace",
+    createSubtitle: "Créez un espace pour commencer à publier vos offres",
+    nameLabel: "Nom de l'espace",
+    namePlaceholder: "Ex. : Mon Entreprise",
+    hint: "Conseil : utilisez le nom de votre entreprise.",
+    create: "Créer l'espace",
+  },
   plan: {
     title: "Forfait",
     subtitle: "Gérez le forfait de votre espace de travail",
@@ -49,6 +58,8 @@ const fr: Admin = {
     ownerOnly:
       "Seul le propriétaire de l'espace de travail peut gérer l'abonnement.",
     limitTitle: "Limite du forfait Free",
+    limitWorkspaces:
+      "Le forfait Free permet 1 espace. Abonnez-vous à Plus pour des espaces illimités.",
     limitCompanies:
       "Le forfait Free permet d'enregistrer 1 entreprise. Abonnez-vous à Plus pour un accès illimité.",
     limitJobs:

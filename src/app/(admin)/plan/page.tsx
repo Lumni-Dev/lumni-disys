@@ -13,16 +13,31 @@ import { cx } from "@/lib/utils";
 type PlanInfo = {
   plan: "free" | "plus";
   isOwner: boolean;
-  usage: { companies: number; jobs: number; candidates: number };
-  limits: { companies: number; jobs: number; candidates: number };
+  usage: {
+    workspaces: number;
+    companies: number;
+    jobs: number;
+    candidates: number;
+  };
+  limits: {
+    workspaces: number;
+    companies: number;
+    jobs: number;
+    candidates: number;
+  };
   priceCents: number;
   status: string;
   cancelAtPeriodEnd: boolean;
   renewsAt: string | null;
 };
 
-type Resource = "companies" | "jobs" | "candidates";
-const RESOURCES: Resource[] = ["companies", "jobs", "candidates"];
+type Resource = "workspaces" | "companies" | "jobs" | "candidates";
+const RESOURCES: Resource[] = [
+  "workspaces",
+  "companies",
+  "jobs",
+  "candidates",
+];
 
 export default function PlanPage() {
   const { admin } = useI18n();
@@ -107,6 +122,7 @@ export default function PlanPage() {
       currency: "BRL",
     }).format(info.priceCents / 100);
   const resourceLabel: Record<Resource, string> = {
+    workspaces: "Workspaces",
     companies: admin.nav.companies,
     jobs: admin.nav.jobs,
     candidates: admin.nav.candidates,

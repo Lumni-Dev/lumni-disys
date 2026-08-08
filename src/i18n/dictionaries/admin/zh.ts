@@ -20,6 +20,15 @@ const zh: Admin = {
     readonly: "只读",
     plan: "套餐",
   },
+  workspace: {
+    newWorkspace: "新建工作区",
+    createTitle: "创建工作区",
+    createSubtitle: "创建工作区以开始发布职位",
+    nameLabel: "工作区名称",
+    namePlaceholder: "例如：我的公司",
+    hint: "提示：使用您的公司名称。",
+    create: "创建工作区",
+  },
   plan: {
     title: "套餐",
     subtitle: "管理您工作区的套餐",
@@ -43,6 +52,7 @@ const zh: Admin = {
     checkoutCanceled: "付款未完成。您可以随时重试。",
     ownerOnly: "只有工作区所有者才能管理订阅。",
     limitTitle: "Free 套餐限制",
+    limitWorkspaces: "Free 套餐仅可创建 1 个工作区。订阅 Plus 即可创建无限工作区。",
     limitCompanies: "Free 套餐仅可登记 1 家企业。订阅 Plus 即可不限量登记。",
     limitJobs: "Free 套餐仅可登记 1 个职位。订阅 Plus 即可不限量登记。",
     limitCandidates: "Free 套餐仅可登记 1 位候选人。订阅 Plus 即可不限量登记。",

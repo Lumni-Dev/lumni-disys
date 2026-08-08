@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail } from "@/lib/account";
 import { MODULES } from "@/lib/permissions";
-import { isSuperAdmin } from "@/lib/superadmin";
 
 export async function GET() {
   const session = await auth();
@@ -13,16 +12,25 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const account = await accountForEmail(email);
-  const [own] = await db
-    .select({ id: schema.accounts.id })
-    .from(schema.accounts)
-    .where(eq(schema.accounts.ownerEmail, email));
-  const owner = own?.id === account.id;
+  // Sem workspace: o cliente mostra o onboarding de criacao.
+  if (!account)
+    return NextResponse.json({
+      token: "",
+      owner: false,
+      modules: [],
+      noWorkspace: true,
+    });
 
-  // Modulos que o usuario pode VER: dono e super-admin veem tudo; colaborador,
-  // so os que tiverem a permissao "view" (usado para montar o menu lateral).
+  const [acc] = await db
+    .select({ ownerEmail: schema.accounts.ownerEmail })
+    .from(schema.accounts)
+    .where(eq(schema.accounts.id, account.id));
+  const owner = acc?.ownerEmail === email;
+
+  // Modulos que o usuario pode VER: dono ve tudo; colaborador, so os que
+  // tiverem a permissao "view" (usado para montar o menu lateral).
   let modules: string[];
-  if (owner || isSuperAdmin(email)) {
+  if (owner) {
     modules = MODULES.map((m) => m.key);
   } else {
     const [member] = await db
@@ -59,19 +67,24 @@ export async function GET() {
   });
 }
 
-// Exclui o workspace inteiro do dono: todos os dados da conta, os acessos dos
-// colaboradores, o perfil e a propria conta. Irreversivel.
+// Exclui o workspace ATIVO do dono: todos os dados da conta, os acessos dos
+// colaboradores e a propria conta. O perfil do usuario permanece (ele pode
+// ter outros workspaces). Irreversivel.
 export async function DELETE() {
   const session = await auth();
   const email = session?.user?.email;
   if (!email)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const active = await accountForEmail(email);
+  if (!active)
+    return NextResponse.json({ error: "no_workspace" }, { status: 400 });
+
   const [acc] = await db
     .select()
     .from(schema.accounts)
-    .where(eq(schema.accounts.ownerEmail, email));
-  if (!acc)
+    .where(eq(schema.accounts.id, active.id));
+  if (!acc || acc.ownerEmail !== email)
     return NextResponse.json(
       { error: "Somente o dono do workspace pode excluir a conta" },
       { status: 403 },
@@ -111,9 +124,8 @@ export async function DELETE() {
     await tx
       .delete(schema.teamMembers)
       .where(eq(schema.teamMembers.accountId, acc.id));
-    await tx
-      .delete(schema.userProfiles)
-      .where(eq(schema.userProfiles.email, email));
+    // O perfil do usuario permanece (ele pode ter outros workspaces); o
+    // activeAccountId cai para null via FK (onDelete: set null).
     await tx.delete(schema.accounts).where(eq(schema.accounts.id, acc.id));
   });
 

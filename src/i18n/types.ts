@@ -78,6 +78,17 @@ export interface Admin {
     /** Item "Plano" no rodape do menu (com badge Free/Plus). */
     plan: string;
   };
+  /** Criacao e troca de workspace (onboarding, botao "+" e seletor). */
+  workspace: {
+    newWorkspace: string;
+    createTitle: string;
+    createSubtitle: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    /** Dica sob o campo: sugere usar o nome da empresa. */
+    hint: string;
+    create: string;
+  };
   /** Pagina do plano/assinatura (Free x Plus) e avisos de limite. */
   plan: {
     title: string;
@@ -106,6 +117,7 @@ export interface Admin {
     ownerOnly: string;
     /** Modal de limite atingido nas telas de cadastro. */
     limitTitle: string;
+    limitWorkspaces: string;
     limitCompanies: string;
     limitJobs: string;
     limitCandidates: string;

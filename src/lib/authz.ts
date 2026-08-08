@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail, type Account } from "@/lib/account";
 import type { Action } from "@/lib/permissions";
-import { isSuperAdmin } from "@/lib/superadmin";
 
 type Authz =
   | { account: Account; response: null }
@@ -28,21 +27,19 @@ export async function authorize(
     };
 
   const account = await accountForEmail(email);
+  // Sem workspace: o usuario ainda precisa criar o dele no onboarding.
+  if (!account)
+    return {
+      account: null,
+      response: NextResponse.json({ error: "no_workspace" }, { status: 403 }),
+    };
 
-  // Super-admin do sistema: acesso somente leitura a qualquer workspace.
-  // Libera apenas acoes de leitura ("view"); escrita (create/edit/delete)
-  // cai nas regras normais abaixo (dono/colaborador), entao ele nunca
-  // altera dados de workspace alheio nem deixa rastro.
-  if (isSuperAdmin(email) && action === "view") {
-    return { account, response: null };
-  }
-
-  // Dono da conta: acesso total.
-  const [own] = await db
-    .select({ id: schema.accounts.id })
+  // Dono da conta ativa: acesso total.
+  const [acc] = await db
+    .select({ ownerEmail: schema.accounts.ownerEmail })
     .from(schema.accounts)
-    .where(eq(schema.accounts.ownerEmail, email));
-  if (own?.id === account.id) return { account, response: null };
+    .where(eq(schema.accounts.id, account.id));
+  if (acc?.ownerEmail === email) return { account, response: null };
 
   // Colaborador (convite aceito): precisa da permissao do modulo/acao.
   const [member] = await db
