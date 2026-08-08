@@ -12,14 +12,13 @@ export function PlanLimitModal({
   open,
   onClose,
 }: {
-  resource: "workspaces" | "companies" | "jobs" | "candidates";
+  resource: "workspaces" | "jobs" | "candidates";
   open: boolean;
   onClose: () => void;
 }) {
   const { admin } = useI18n();
   const messages = {
     workspaces: admin.plan.limitWorkspaces,
-    companies: admin.plan.limitCompanies,
     jobs: admin.plan.limitJobs,
     candidates: admin.plan.limitCandidates,
   };

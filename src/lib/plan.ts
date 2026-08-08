@@ -7,15 +7,13 @@ import { db, schema } from "@/db";
 // (dono): vale para os workspaces dele e para os recursos dentro deles.
 export const FREE_LIMITS = {
   workspaces: 1,
-  companies: 1,
   jobs: 1,
   candidates: 1,
 } as const;
 
-export type LimitedResource = "companies" | "jobs" | "candidates";
+export type LimitedResource = "jobs" | "candidates";
 
 const tables = {
-  companies: schema.companies,
   jobs: schema.jobs,
   candidates: schema.candidates,
 } as const;

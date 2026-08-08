@@ -58,7 +58,6 @@ export async function POST(req: Request) {
   let job: {
     title: string;
     company: string;
-    companyId: number | null;
     description: string;
   } | null = null;
   if (Number.isFinite(jobId)) {
@@ -66,7 +65,6 @@ export async function POST(req: Request) {
       .select({
         title: schema.jobs.title,
         company: schema.jobs.company,
-        companyId: schema.jobs.companyId,
         description: schema.jobs.description,
       })
       .from(schema.jobs)
@@ -124,7 +122,6 @@ export async function POST(req: Request) {
     accountId: account.id,
     candidateId: candidate?.id ?? null,
     jobId: job ? jobId : null,
-    companyId: job?.companyId ?? null,
     name: name.slice(0, 160),
     job: job ? job.title : role,
     company: jobCompany.slice(0, 160),

@@ -63,7 +63,6 @@ export async function PUT(req: Request, { params }: Params) {
     id: row.id,
     candidateId: row.candidateId,
     jobId: row.jobId,
-    companyId: row.companyId,
     name: row.name,
     job: row.job,
     company: row.company,

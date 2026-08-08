@@ -33,7 +33,6 @@ export type ResolvedJob = {
   id: number;
   title: string;
   description: string;
-  companyId: number | null;
   company: string;
 };
 
@@ -54,7 +53,6 @@ export async function resolveJob(
       id: schema.jobs.id,
       title: schema.jobs.title,
       description: schema.jobs.description,
-      companyId: schema.jobs.companyId,
       company: schema.jobs.company,
     })
     .from(schema.jobs)

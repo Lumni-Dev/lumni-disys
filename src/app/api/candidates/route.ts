@@ -103,7 +103,6 @@ export async function POST(req: Request) {
     accountId: account.id,
     candidateId: row.id,
     jobId: job.id,
-    companyId: job.companyId,
     name: row.name,
     job: job.title,
     company: job.company,

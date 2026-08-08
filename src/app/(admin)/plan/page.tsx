@@ -15,13 +15,11 @@ type PlanInfo = {
   isOwner: boolean;
   usage: {
     workspaces: number;
-    companies: number;
     jobs: number;
     candidates: number;
   };
   limits: {
     workspaces: number;
-    companies: number;
     jobs: number;
     candidates: number;
   };
@@ -31,13 +29,8 @@ type PlanInfo = {
   renewsAt: string | null;
 };
 
-type Resource = "workspaces" | "companies" | "jobs" | "candidates";
-const RESOURCES: Resource[] = [
-  "workspaces",
-  "companies",
-  "jobs",
-  "candidates",
-];
+type Resource = "workspaces" | "jobs" | "candidates";
+const RESOURCES: Resource[] = ["workspaces", "jobs", "candidates"];
 
 export default function PlanPage() {
   const { admin } = useI18n();
@@ -123,7 +116,6 @@ export default function PlanPage() {
     }).format(info.priceCents / 100);
   const resourceLabel: Record<Resource, string> = {
     workspaces: "Workspaces",
-    companies: admin.nav.companies,
     jobs: admin.nav.jobs,
     candidates: admin.nav.candidates,
   };

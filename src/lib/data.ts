@@ -57,31 +57,10 @@ function modifiedDate(i: number) {
   return `${dd}/${mm}/${d.getFullYear()}`;
 }
 
-export type Company = {
-  id: number;
-  name: string;
-  /** CNPJ (Brasil) ou documento fiscal (exterior). */
-  cnpj?: string;
-  sector: string;
-  location: string;
-  openings: number;
-  status: "Ativa" | "Pausada";
-};
-
-export const companies: Company[] = range(30).map((i) => ({
-  id: i + 1,
-  name: companyNames[i % companyNames.length],
-  sector: sectors[i % sectors.length],
-  location: cities[i % cities.length],
-  openings: (i % 6) + 1,
-  status: i % 5 === 0 ? "Pausada" : "Ativa",
-}));
-
 export type Job = {
   id: number;
   title: string;
-  /** Empresa vinculada por ID (a fonte da verdade do vinculo). */
-  companyId?: number | null;
+  /** Nome da empresa = nome do workspace (denormalizado para exibicao). */
   company: string;
   description: string;
   type: string;
@@ -148,10 +127,9 @@ export const candidates: Candidate[] = range(30).map((i) => {
 
 export type PipelineCard = {
   id: number;
-  /** Candidato, vaga e empresa vinculados por ID (fonte da verdade). */
+  /** Candidato e vaga vinculados por ID (fonte da verdade). */
   candidateId?: number | null;
   jobId?: number | null;
-  companyId?: number | null;
   name: string;
   job: string;
   company: string;

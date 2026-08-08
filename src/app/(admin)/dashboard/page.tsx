@@ -15,21 +15,19 @@ type Trend = number[];
 
 type DashboardData = {
   stats: {
-    companies: { active: number; total: number };
     jobs: { open: number; total: number };
     candidates: { total: number };
     pipeline: { total: number };
   };
   funnel: { stage: string; count: number }[];
   trends: {
-    companies: Trend;
     jobs: Trend;
     candidates: Trend;
     pipeline: Trend;
   };
 };
 
-const CARD_HREFS = ["/companies", "/jobs", "/candidates", "/pipeline"];
+const CARD_HREFS = ["/jobs", "/candidates", "/pipeline"];
 
 const ACTIVITY_PAGE_SIZE = 20;
 
@@ -41,10 +39,9 @@ export default function Home() {
   const [page, setPage] = useState(1);
 
   const cardMeta = [
-    { label: admin.dashboard.cards.activeCompanies, href: CARD_HREFS[0] },
-    { label: admin.dashboard.cards.openJobs, href: CARD_HREFS[1] },
-    { label: admin.dashboard.cards.candidates, href: CARD_HREFS[2] },
-    { label: admin.dashboard.cards.activePipeline, href: CARD_HREFS[3] },
+    { label: admin.dashboard.cards.openJobs, href: CARD_HREFS[0] },
+    { label: admin.dashboard.cards.candidates, href: CARD_HREFS[1] },
+    { label: admin.dashboard.cards.activePipeline, href: CARD_HREFS[2] },
   ];
 
   useEffect(() => {
@@ -63,24 +60,18 @@ export default function Home() {
     ? [
         {
           ...cardMeta[0],
-          value: String(data.stats.companies.active),
-          delta: admin.common.totalCount(data.stats.companies.total),
-          data: data.trends.companies,
-        },
-        {
-          ...cardMeta[1],
           value: String(data.stats.jobs.open),
           delta: admin.common.totalCount(data.stats.jobs.total),
           data: data.trends.jobs,
         },
         {
-          ...cardMeta[2],
+          ...cardMeta[1],
           value: String(data.stats.candidates.total),
           delta: admin.dashboard.deltaTalent,
           data: data.trends.candidates,
         },
         {
-          ...cardMeta[3],
+          ...cardMeta[2],
           value: String(data.stats.pipeline.total),
           delta: admin.dashboard.deltaInProgress,
           data: data.trends.pipeline,
@@ -118,10 +109,10 @@ export default function Home() {
     <>
       <Topbar showSearch={false} />
       <div className="flex flex-col gap-2.5 p-2.5">
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
           {data
             ? cards.map((s) => <StatCard key={s.label} {...s} />)
-            : Array.from({ length: 4 }).map((_, i) => (
+            : Array.from({ length: 3 }).map((_, i) => (
                 <Card key={i}>
                   <div className="flex flex-col gap-2.5 p-2.5">
                     <Skeleton className="h-3 w-1/2" />

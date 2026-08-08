@@ -42,16 +42,15 @@ export async function GET(req: Request) {
   }
 
   const account = await accountForEmail(email);
-  const [workspaces, companies, jobs, candidates] = await Promise.all([
+  const [workspaces, jobs, candidates] = await Promise.all([
     workspaceCount(email),
-    account ? resourceCount(account.id, "companies") : 0,
     account ? resourceCount(account.id, "jobs") : 0,
     account ? resourceCount(account.id, "candidates") : 0,
   ]);
 
   return NextResponse.json({
     plan: billing.plan === "plus" ? "plus" : "free",
-    usage: { workspaces, companies, jobs, candidates },
+    usage: { workspaces, jobs, candidates },
     limits: FREE_LIMITS,
     // Mensalidade vigente do Plus em centavos (PLUS_PRICE_CENTS no env).
     priceCents: plusPriceCents(),

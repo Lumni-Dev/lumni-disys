@@ -48,26 +48,12 @@ export const accounts = pgTable(
   ],
 );
 
-export const companies = pgTable("companies", {
-  id: serial().primaryKey(),
-  accountId: integer().references(() => accounts.id),
-  name: varchar({ length: 160 }).notNull(),
-  // CNPJ (Brasil) ou documento fiscal (exterior) informado no cadastro.
-  cnpj: varchar({ length: 40 }).notNull().default(""),
-  sector: varchar({ length: 120 }).notNull().default(""),
-  location: varchar({ length: 160 }).notNull().default(""),
-  openings: integer().notNull().default(0),
-  status: varchar({ length: 40 }).notNull().default("Ativa"),
-  ...timestamps,
-}, (t) => [index("companies_account_id_idx").on(t.accountId)]);
-
 export const jobs = pgTable("jobs", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
-  // Empresa vinculada por ID (fonte da verdade do vinculo). A coluna company
-  // abaixo guarda so o nome denormalizado, para exibicao/listas publicas.
-  companyId: integer().references(() => companies.id, { onDelete: "set null" }),
   title: varchar({ length: 200 }).notNull(),
+  // Nome da empresa denormalizado para exibicao/listas publicas. O workspace
+  // (conta) E a empresa: este campo recebe o nome do workspace no cadastro.
   company: varchar({ length: 160 }).notNull().default(""),
   // Descricao da vaga (ate 5000 caracteres, limitado na API).
   description: text().notNull().default(""),
@@ -84,7 +70,6 @@ export const jobs = pgTable("jobs", {
   ...timestamps,
 }, (t) => [
   index("jobs_account_id_idx").on(t.accountId),
-  index("jobs_company_id_idx").on(t.companyId),
 ]);
 
 export const candidates = pgTable("candidates", {
@@ -119,10 +104,9 @@ export const pipelineCards = pgTable("pipeline_cards", {
   candidateId: integer().references(() => candidates.id, {
     onDelete: "set null",
   }),
-  // Vaga e empresa vinculadas por ID (fonte da verdade); job/company guardam
-  // so os nomes denormalizados para exibicao.
+  // Vaga vinculada por ID (fonte da verdade); job/company guardam so os
+  // nomes denormalizados para exibicao (company = nome do workspace).
   jobId: integer().references(() => jobs.id, { onDelete: "set null" }),
-  companyId: integer().references(() => companies.id, { onDelete: "set null" }),
   name: varchar({ length: 160 }).notNull(),
   job: varchar({ length: 200 }).notNull().default(""),
   company: varchar({ length: 160 }).notNull().default(""),
@@ -133,7 +117,6 @@ export const pipelineCards = pgTable("pipeline_cards", {
   index("pipeline_cards_account_id_idx").on(t.accountId),
   index("pipeline_cards_candidate_id_idx").on(t.candidateId),
   index("pipeline_cards_job_id_idx").on(t.jobId),
-  index("pipeline_cards_company_id_idx").on(t.companyId),
 ]);
 
 export const teamMembers = pgTable(

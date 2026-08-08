@@ -22,33 +22,9 @@ export function formatTime(value: Date | string) {
   }).format(new Date(value));
 }
 
-type CompanyRow = {
-  id: number;
-  name: string;
-  cnpj: string;
-  sector: string;
-  location: string;
-  openings: number;
-  status: string;
-};
-export function serializeCompany(r: CompanyRow, openings: number = r.openings) {
-  return {
-    id: r.id,
-    name: r.name,
-    cnpj: r.cnpj,
-    sector: r.sector,
-    location: r.location,
-    // Vagas somadas das vagas "Aberta" da empresa (calculado nas rotas); o
-    // valor da coluna e apenas o padrao quando nao informado.
-    openings,
-    status: r.status,
-  };
-}
-
 type JobRow = {
   id: number;
   title: string;
-  companyId: number | null;
   company: string;
   description: string;
   type: string;
@@ -64,7 +40,6 @@ export function serializeJob(r: JobRow, applicants: number = r.applicants) {
   return {
     id: r.id,
     title: r.title,
-    companyId: r.companyId,
     company: r.company,
     description: r.description,
     type: r.type,
