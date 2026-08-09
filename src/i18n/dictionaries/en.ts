@@ -15,6 +15,7 @@ const en: Landing = {
     cta: "Get started",
   },
   hero: {
+    badge: "AI-powered resume screening",
     titleLead: "The practical, fast",
     titleAccent: "HR ATS",
     subtitle:

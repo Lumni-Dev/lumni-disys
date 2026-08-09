@@ -15,6 +15,7 @@ const fr: Landing = {
     cta: "Commencer",
   },
   hero: {
+    badge: "Analyse de CV par IA",
     titleLead: "L'ATS RH",
     titleAccent: "pratique et rapide",
     subtitle:

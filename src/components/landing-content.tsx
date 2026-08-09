@@ -21,6 +21,7 @@ import {
   IconSearch,
   IconDashboard,
   IconCheck,
+  IconSparkles,
 } from "@/components/ui/icons";
 
 // Revela o conteudo quando entra na viewport (fade + subida), com stagger
@@ -292,8 +293,18 @@ export function LandingContent({
 
       <main className="relative z-10 mx-auto max-w-6xl px-5">
         <section className="flex flex-col items-center pt-20 pb-16 text-center md:pt-28">
+          <Reveal className="mb-5">
+            <span className="group inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur">
+              <span className="relative flex h-4 w-4 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-lg bg-white/40 opacity-60" />
+                <IconSparkles className="relative h-3.5 w-3.5" />
+              </span>
+              {dict.hero.badge}
+            </span>
+          </Reveal>
           <Reveal
             as="h1"
+            delay={90}
             className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           >
             {dict.hero.titleLead}{" "}
@@ -301,13 +312,13 @@ export function LandingContent({
           </Reveal>
           <Reveal
             as="p"
-            delay={90}
+            delay={170}
             className="mt-5 max-w-xl text-base text-muted sm:text-lg"
           >
             {dict.hero.subtitle}
           </Reveal>
           <Reveal
-            delay={180}
+            delay={250}
             className="mt-8 flex flex-col items-center gap-2.5 sm:flex-row"
           >
             <Link
@@ -323,7 +334,7 @@ export function LandingContent({
               {dict.hero.ctaSecondary}
             </a>
           </Reveal>
-          <Reveal delay={260} className="relative mt-16 w-full max-w-4xl">
+          <Reveal delay={330} className="relative mt-16 w-full max-w-4xl">
             <div className="absolute -inset-x-10 -top-6 bottom-0 rounded-lg bg-white/20 blur-[80px]" />
             <div className="animate-float relative overflow-hidden rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">
               <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">

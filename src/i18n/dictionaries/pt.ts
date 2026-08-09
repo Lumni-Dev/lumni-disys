@@ -15,6 +15,7 @@ const pt: Landing = {
     cta: "Começar",
   },
   hero: {
+    badge: "Análise de currículos por IA",
     titleLead: "O ATS de Recursos Humanos",
     titleAccent: "prático e rápido",
     subtitle:

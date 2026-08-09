@@ -15,6 +15,7 @@ const ru: Landing = {
     cta: "Начать",
   },
   hero: {
+    badge: "Анализ резюме с помощью ИИ",
     titleLead: "ATS для отдела кадров,",
     titleAccent: "простой и быстрый",
     subtitle:

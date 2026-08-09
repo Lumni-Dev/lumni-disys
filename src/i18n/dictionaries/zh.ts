@@ -15,6 +15,7 @@ const zh: Landing = {
     cta: "开始",
   },
   hero: {
+    badge: "AI 简历分析",
     titleLead: "实用又快速的",
     titleAccent: "人力资源 ATS",
     subtitle:

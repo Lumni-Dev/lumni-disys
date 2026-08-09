@@ -15,6 +15,7 @@ const ko: Landing = {
     cta: "시작하기",
   },
   hero: {
+    badge: "AI 이력서 분석",
     titleLead: "실용적이고 빠른",
     titleAccent: "인사 ATS",
     subtitle:

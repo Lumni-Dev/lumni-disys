@@ -15,6 +15,7 @@ const de: Landing = {
     cta: "Loslegen",
   },
   hero: {
+    badge: "KI-Lebenslaufanalyse",
     titleLead: "Das praktische, schnelle",
     titleAccent: "HR-ATS",
     subtitle:

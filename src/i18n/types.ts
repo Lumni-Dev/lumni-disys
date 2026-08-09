@@ -24,6 +24,7 @@ export interface Landing {
     cta: string;
   };
   hero: {
+    badge: string;
     titleLead: string;
     titleAccent: string;
     subtitle: string;

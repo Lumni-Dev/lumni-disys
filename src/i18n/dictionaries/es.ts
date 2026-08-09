@@ -15,6 +15,7 @@ const es: Landing = {
     cta: "Comenzar",
   },
   hero: {
+    badge: "Análisis de CV con IA",
     titleLead: "El ATS de RR. HH.",
     titleAccent: "práctico y rápido",
     subtitle:

@@ -15,6 +15,7 @@ const ja: Landing = {
     cta: "始める",
   },
   hero: {
+    badge: "AIによる履歴書分析",
     titleLead: "実用的で速い",
     titleAccent: "人事ATS",
     subtitle:

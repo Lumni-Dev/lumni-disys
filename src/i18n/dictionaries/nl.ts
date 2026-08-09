@@ -15,6 +15,7 @@ const nl: Landing = {
     cta: "Beginnen",
   },
   hero: {
+    badge: "CV-analyse met AI",
     titleLead: "Het praktische, snelle",
     titleAccent: "HR-ATS",
     subtitle:

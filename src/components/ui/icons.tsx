@@ -189,6 +189,13 @@ export const IconTrash = (p: IconProps) => (
   </Svg>
 );
 
+export const IconSparkles = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3z" />
+    <path d="M19 14l.9 2.4 2.4.9-2.4.9L19 21l-.9-2.4-2.4-.9 2.4-.9L19 14z" />
+  </Svg>
+);
+
 export const IconSpinner = ({ className = "h-4 w-4" }: IconProps) => (
   <svg
     viewBox="0 0 24 24"

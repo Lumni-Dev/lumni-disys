@@ -15,6 +15,7 @@ const ar: Landing = {
     cta: "ابدأ",
   },
   hero: {
+    badge: "تحليل السير الذاتية بالذكاء الاصطناعي",
     titleLead: "نظام ATS للموارد البشرية",
     titleAccent: "عملي وسريع",
     subtitle:
