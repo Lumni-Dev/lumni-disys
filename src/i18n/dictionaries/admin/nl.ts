@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const nl: Admin = {
   nav: {
     dashboard: "Dashboard",
-    companies: "Bedrijven",
     jobs: "Vacatures",
     candidates: "Kandidaten",
     pipeline: "Pijplijn",
@@ -19,15 +18,29 @@ const nl: Admin = {
     myWorkspace: "Mijn workspace",
     readonly: "Alleen-lezen",
     plan: "Abonnement",
+    lightMode: "Lichte modus",
+    darkMode: "Donkere modus",
   },
   workspace: {
-    newWorkspace: "Nieuwe workspace",
     createTitle: "Workspace maken",
     createSubtitle: "Maak een workspace om je vacatures te plaatsen",
     nameLabel: "Workspace-naam",
     namePlaceholder: "Bijv.: Mijn Bedrijf",
     hint: "Tip: gebruik de naam van je bedrijf.",
     create: "Workspace maken",
+    editTitle: "Workspace hernoemen",
+    editSubtitle: "Wijzig de naam van je workspace",
+    title: "Mijn workspaces",
+    subtitle: "Beheer je workspaces",
+    searchPlaceholder: "Workspaces zoeken...",
+    active: "Actief",
+    activate: "Openen",
+    jobsCount: (n) => `${n} ${n === 1 ? "vacature" : "vacatures"}`,
+    empty: "Nog geen workspaces",
+    deleteBlocked: (n) =>
+      `Verwijderen niet mogelijk: ${n} gekoppelde ${n === 1 ? "vacature" : "vacatures"}.`,
+    deleteMessage:
+      "Weet je zeker dat je deze workspace wilt verwijderen? Deze actie is onomkeerbaar.",
   },
   plan: {
     title: "Abonnement",
@@ -63,8 +76,6 @@ const nl: Admin = {
     limitTitle: "Limiet van het Free-abonnement",
     limitWorkspaces:
       "Het Free-abonnement staat 1 workspace toe. Abonneer op Plus voor onbeperkte workspaces.",
-    limitCompanies:
-      "Het Free-abonnement staat 1 bedrijf toe. Abonneer op Plus voor onbeperkt registreren.",
     limitJobs:
       "Het Free-abonnement staat 1 vacature toe. Abonneer op Plus voor onbeperkt registreren.",
     limitCandidates:
@@ -77,8 +88,6 @@ const nl: Admin = {
   },
   deleteBlocked: {
     title: "Kan niet verwijderen",
-    companyHasJobs: (n) =>
-      `Dit bedrijf heeft ${n} vacature${n === 1 ? "" : "s"}. Verwijder of ontkoppel de vacatures voordat je het bedrijf verwijdert.`,
     jobHasCandidates: (n) =>
       `Deze vacature heeft ${n} ${n === 1 ? "kandidaat" : "kandidaten"}. Verwijder de kandidaten voordat je de vacature verwijdert.`,
   },
@@ -144,13 +153,14 @@ const nl: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "Actieve bedrijven",
       openJobs: "Openstaande vacatures",
       candidates: "Kandidaten",
       activePipeline: "Actieve pijplijnen",
+      team: "Teamleden",
     },
     deltaTalent: "in de talentenpool",
     deltaInProgress: "in behandeling",
+    deltaTeam: "in het team",
     funnelTitle: "Wervingstrechter",
     funnelSubtitle: "Kandidaten per fase",
     totalInProcess: "Totaal in proces",
@@ -160,22 +170,6 @@ const nl: Admin = {
     movedTo: (stage) => `verplaatst naar ${stage}`,
     noActivity: "Nog geen recente activiteit.",
     noMovements: "0 updates",
-  },
-  companies: {
-    searchPlaceholder: "Bedrijven zoeken...",
-    add: "Nieuw bedrijf",
-    allSectors: "Alle sectoren",
-    allStatuses: "Alle statussen",
-    listTitle: "Geregistreerde bedrijven",
-    empty: "Geen bedrijven gevonden.",
-    fileName: "bedrijven",
-    cols: {
-      name: "Bedrijf",
-      sector: "Sector",
-      location: "Locatie",
-      openings: "Vacatures",
-      status: "Status",
-    },
   },
   jobs: {
     searchPlaceholder: "Vacatures zoeken...",
@@ -294,25 +288,6 @@ const nl: Admin = {
     permissionsByPage: "Rechten per pagina",
     page: "Pagina",
     selectOnePermission: "Selecteer minstens één recht.",
-    company: {
-      editTitle: "Bedrijf bewerken",
-      newTitle: "Nieuw bedrijf",
-      editSubtitle: "Werk de bedrijfsgegevens bij",
-      newSubtitle: "Registreer een partnerbedrijf",
-      name: "Bedrijfsnaam",
-      sector: "Sector",
-      country: "Land",
-      cnpj: "CNPJ",
-      cnpjLookup: "CNPJ-gegevens ophalen...",
-      state: "Staat",
-      city: "Stad",
-      taxId: "Fiscale registratie",
-      stateProvince: "Staat / Provincie",
-      status: "Status",
-      selectCity: "Selecteer de stad",
-      selectStateFirst: "Kies eerst de staat",
-      taxIdPlaceholder: "Fiscaal nummer / btw / EIN...",
-    },
     job: {
       companyHint: "Als u uw bedrijf niet in de lijst vindt,",
       companyHintLink: "voeg het toe op de bedrijvenpagina",
@@ -412,7 +387,6 @@ const nl: Admin = {
     invalidLink:
       "Deze vacaturelink is niet geldig. Vraag het bedrijf om de volledige link.",
     jobNotFound: "Deze vacature is niet meer beschikbaar.",
-    viewAll: "Alle vacatures bekijken",
     goHome: "Naar home",
   },
   login: {

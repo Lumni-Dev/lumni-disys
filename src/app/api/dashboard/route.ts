@@ -15,7 +15,6 @@ const STAGES = [
 const WEEKS = 8;
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-// Série real: contagem acumulada de registros por semana (createdAt), por conta.
 async function cumulativeSeries(
   table: PgTable,
   createdAt: PgColumn,
@@ -41,8 +40,6 @@ export async function GET() {
   if (!account) return response;
   const acc = account.id;
 
-  // Vagas somadas (posicoes), nao contagem de registros: total = soma de
-  // openings de todas as vagas; abertas = soma das vagas com status "Aberta".
   const [jobsTotal] = await db
     .select({ n: sql<number>`coalesce(sum(${schema.jobs.openings}), 0)` })
     .from(schema.jobs)
@@ -60,6 +57,16 @@ export async function GET() {
     .from(schema.pipelineCards)
     .where(eq(schema.pipelineCards.accountId, acc));
 
+  const [teamTotal] = await db
+    .select({ n: count() })
+    .from(schema.teamMembers)
+    .where(
+      and(
+        eq(schema.teamMembers.accountId, acc),
+        eq(schema.teamMembers.status, "accepted"),
+      ),
+    );
+
   const stageRows = await db
     .select({ stage: schema.candidates.stage, n: count() })
     .from(schema.candidates)
@@ -71,23 +78,27 @@ export async function GET() {
     count: byStage.get(stage) ?? 0,
   }));
 
-  const [jobsTrend, candidatesTrend, pipelineTrend] = await Promise.all([
-    cumulativeSeries(schema.jobs, schema.jobs.createdAt, schema.jobs.accountId, acc),
-    cumulativeSeries(schema.candidates, schema.candidates.createdAt, schema.candidates.accountId, acc),
-    cumulativeSeries(schema.pipelineCards, schema.pipelineCards.createdAt, schema.pipelineCards.accountId, acc),
-  ]);
+  const [jobsTrend, candidatesTrend, pipelineTrend, teamTrend] =
+    await Promise.all([
+      cumulativeSeries(schema.jobs, schema.jobs.createdAt, schema.jobs.accountId, acc),
+      cumulativeSeries(schema.candidates, schema.candidates.createdAt, schema.candidates.accountId, acc),
+      cumulativeSeries(schema.pipelineCards, schema.pipelineCards.createdAt, schema.pipelineCards.accountId, acc),
+      cumulativeSeries(schema.teamMembers, schema.teamMembers.createdAt, schema.teamMembers.accountId, acc),
+    ]);
 
   return NextResponse.json({
     stats: {
       jobs: { open: Number(jobsOpen.n), total: Number(jobsTotal.n) },
       candidates: { total: candidatesTotal.n },
       pipeline: { total: pipelineTotal.n },
+      team: { total: teamTotal.n },
     },
     funnel,
     trends: {
       jobs: jobsTrend,
       candidates: candidatesTrend,
       pipeline: pipelineTrend,
+      team: teamTrend,
     },
   });
 }

@@ -14,9 +14,9 @@ type Ctx = {
   photo: string | null;
   setPhoto: (photo: string | null) => void;
   theme: ThemeKey;
-  // Aplica o tema na hora (preview), sem persistir.
+
   setTheme: (theme: ThemeKey) => void;
-  // Persiste o tema atual no banco.
+
   saveTheme: (theme: ThemeKey) => Promise<void>;
 };
 
@@ -33,12 +33,17 @@ export function useProfile() {
 }
 
 function applyAccent(key: ThemeKey) {
-  if (typeof document !== "undefined") {
-    const t = themeOf(key);
-    const root = document.documentElement.style;
-    root.setProperty("--accent", t.color);
-    root.setProperty("--accent-foreground", t.fg);
+  if (typeof document === "undefined") return;
+  const root = document.documentElement.style;
+
+  if (key === "white") {
+    root.removeProperty("--accent");
+    root.removeProperty("--accent-foreground");
+    return;
   }
+  const t = themeOf(key);
+  root.setProperty("--accent", t.color);
+  root.setProperty("--accent-foreground", t.fg);
 }
 
 export function ProfileProvider({ children }: { children: ReactNode }) {

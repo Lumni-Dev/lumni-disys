@@ -18,32 +18,33 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 };
 
-// Workspace/conta: o projeto de um dono. Todos os dados sao escopados por conta;
-// colaboradores pertencem a uma conta e o link publico usa o public_token.
+
+
 export const accounts = pgTable(
   "accounts",
   {
     id: serial().primaryKey(),
     ownerEmail: varchar({ length: 200 }).notNull(),
-    // Nome do workspace, dado pelo dono na criacao (sugestao: o nome da
-    // empresa). Contas antigas ficam com "" e a UI usa o rotulo padrao.
+
+
     name: varchar({ length: 120 }).notNull().default(""),
     publicToken: varchar({ length: 40 }).notNull(),
-    // Plano de cobranca do workspace: "free" (1 empresa/vaga/candidato) ou
-    // "plus" (ilimitado, assinatura mensal no Stripe).
+
+
     plan: varchar({ length: 20 }).notNull().default("free"),
     stripeCustomerId: varchar({ length: 80 }).notNull().default(""),
     stripeSubscriptionId: varchar({ length: 80 }).notNull().default(""),
-    // Status da assinatura no Stripe (active, canceled, past_due...).
+
     stripeStatus: varchar({ length: 40 }).notNull().default(""),
-    // Assinatura marcada para encerrar no fim do periodo pago.
+
     cancelAtPeriodEnd: boolean().notNull().default(false),
-    // Fim do periodo pago corrente (data de renovacao/encerramento).
+
     planRenewsAt: timestamp({ withTimezone: true }),
     ...timestamps,
   },
   (t) => [
-    uniqueIndex("accounts_owner_email_key").on(t.ownerEmail),
+
+    index("accounts_owner_email_key").on(t.ownerEmail),
     uniqueIndex("accounts_public_token_key").on(t.publicToken),
   ],
 );
@@ -52,18 +53,18 @@ export const jobs = pgTable("jobs", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
   title: varchar({ length: 200 }).notNull(),
-  // Nome da empresa denormalizado para exibicao/listas publicas. O workspace
-  // (conta) E a empresa: este campo recebe o nome do workspace no cadastro.
+
+
   company: varchar({ length: 160 }).notNull().default(""),
-  // Descricao da vaga (ate 5000 caracteres, limitado na API).
+
   description: text().notNull().default(""),
   type: varchar({ length: 40 }).notNull().default("Remoto"),
   level: varchar({ length: 40 }).notNull().default("Pleno"),
-  // Quantidade de posicoes abertas nesta vaga (informado ao criar).
+
   openings: integer().notNull().default(1),
-  // Contador automatico de candidaturas (nao editavel no modal).
+
   applicants: integer().notNull().default(0),
-  // Faixa salarial em centavos (0 = nao informado).
+
   salaryFrom: integer().notNull().default(0),
   salaryTo: integer().notNull().default(0),
   status: varchar({ length: 40 }).notNull().default("Aberta"),
@@ -75,22 +76,22 @@ export const jobs = pgTable("jobs", {
 export const candidates = pgTable("candidates", {
   id: serial().primaryKey(),
   accountId: integer().references(() => accounts.id),
-  // Vaga pretendida vinculada por ID (fonte da verdade); role guarda so o
-  // titulo denormalizado para exibicao/listas.
+
+
   jobId: integer().references(() => jobs.id, { onDelete: "set null" }),
   name: varchar({ length: 160 }).notNull(),
   role: varchar({ length: 160 }).notNull().default(""),
   email: varchar({ length: 200 }).notNull().default(""),
   stage: varchar({ length: 40 }).notNull().default("Triagem"),
   linkedin: varchar({ length: 300 }).notNull().default(""),
-  // Telefone informado na candidatura publica (E.164; vazio nos cadastros
-  // manuais, que nao coletam telefone).
+
+
   phone: varchar({ length: 40 }).notNull().default(""),
-  // Curriculo anexado na candidatura publica (data URL base64, ate ~2 MB).
+
   cvName: varchar({ length: 200 }).notNull().default(""),
   cvBase64: text().notNull().default(""),
-  // Compatibilidade curriculo x vaga (0 a 100) calculada por IA na
-  // candidatura; null quando nao analisado.
+
+
   matchScore: integer(),
   ...timestamps,
 }, (t) => [
@@ -104,8 +105,8 @@ export const pipelineCards = pgTable("pipeline_cards", {
   candidateId: integer().references(() => candidates.id, {
     onDelete: "set null",
   }),
-  // Vaga vinculada por ID (fonte da verdade); job/company guardam so os
-  // nomes denormalizados para exibicao (company = nome do workspace).
+
+
   jobId: integer().references(() => jobs.id, { onDelete: "set null" }),
   name: varchar({ length: 160 }).notNull(),
   job: varchar({ length: 200 }).notNull().default(""),
@@ -127,13 +128,13 @@ export const teamMembers = pgTable(
     name: varchar({ length: 160 }).notNull(),
     email: varchar({ length: 200 }).notNull(),
     role: varchar({ length: 120 }).notNull().default(""),
-    // Convite: nasce "pending" e vira "accepted" quando a pessoa aceita.
+
     status: varchar({ length: 20 }).notNull().default("pending"),
-    // Token do link de aceite enviado por e-mail (limpo apos o aceite).
+
     inviteToken: varchar({ length: 40 }),
     ...timestamps,
   },
-  // Unico por workspace: a mesma pessoa pode colaborar em varias contas.
+
   (t) => [
     uniqueIndex("team_members_account_email_key").on(t.accountId, t.email),
     uniqueIndex("team_members_invite_token_key").on(t.inviteToken),
@@ -145,7 +146,7 @@ export const userProfiles = pgTable(
   {
     id: serial().primaryKey(),
     email: varchar({ length: 200 }).notNull(),
-    // Workspace em que a pessoa esta trabalhando (null = resolucao padrao).
+
     activeAccountId: integer().references(() => accounts.id, {
       onDelete: "set null",
     }),
@@ -159,9 +160,9 @@ export const userProfiles = pgTable(
   (t) => [uniqueIndex("user_profiles_email_key").on(t.email)],
 );
 
-// Cobranca por USUARIO (nao por workspace): o plano do dono vale para todos
-// os workspaces dele. Free = 1 workspace com 1 empresa/vaga/candidato;
-// Plus = tudo ilimitado, assinatura mensal no Stripe.
+
+
+
 export const userBilling = pgTable(
   "user_billing",
   {
@@ -170,27 +171,27 @@ export const userBilling = pgTable(
     plan: varchar({ length: 20 }).notNull().default("free"),
     stripeCustomerId: varchar({ length: 80 }).notNull().default(""),
     stripeSubscriptionId: varchar({ length: 80 }).notNull().default(""),
-    // Status da assinatura no Stripe (active, canceled, past_due...).
+
     stripeStatus: varchar({ length: 40 }).notNull().default(""),
-    // Assinatura marcada para encerrar no fim do periodo pago.
+
     cancelAtPeriodEnd: boolean().notNull().default(false),
-    // Fim do periodo pago corrente (data de renovacao/encerramento).
+
     planRenewsAt: timestamp({ withTimezone: true }),
     ...timestamps,
   },
   (t) => [uniqueIndex("user_billing_email_key").on(t.email)],
 );
 
-// Log de auditoria: uma linha por workspace excluido. A exclusao apaga tudo
-// em definitivo, entao este registro e o unico historico que sobra.
+
+
 export const deletedAccounts = pgTable("deleted_accounts", {
   id: serial().primaryKey(),
-  // Id que a conta tinha em accounts (sem FK: a linha original ja foi apagada).
+
   accountId: integer().notNull(),
   ownerEmail: varchar({ length: 200 }).notNull(),
-  // Quando a conta original foi criada.
+
   accountCreatedAt: timestamp({ withTimezone: true }).notNull(),
-  // O que foi apagado junto com a conta.
+
   companiesCount: integer().notNull().default(0),
   jobsCount: integer().notNull().default(0),
   candidatesCount: integer().notNull().default(0),

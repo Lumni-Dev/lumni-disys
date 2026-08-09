@@ -6,7 +6,7 @@ import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
 import { IconClose } from "./icons";
 
-// True apenas no cliente (portal nao existe no SSR), sem setState em effect.
+
 const emptySubscribe = () => () => {};
 function useMounted(): boolean {
   return useSyncExternalStore(
@@ -22,6 +22,7 @@ export function Modal({
   title,
   subtitle,
   size = "md",
+  scope,
   children,
 }: {
   open: boolean;
@@ -29,6 +30,9 @@ export function Modal({
   title: string;
   subtitle?: string;
   size?: "md" | "lg";
+
+
+  scope?: string;
   children: ReactNode;
 }) {
   const { admin } = useI18n();
@@ -50,7 +54,12 @@ export function Modal({
   if (!open || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-2.5 sm:items-center">
+    <div
+      className={cx(
+        "fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-2.5 sm:items-center",
+        scope,
+      )}
+    >
       <div
         className="fixed inset-0 bg-black/80 backdrop-blur-md"
         onClick={onClose}
@@ -61,11 +70,11 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         className={cx(
-          "relative z-10 my-2.5 w-full rounded-lg border border-white/[0.08] bg-surface shadow-2xl shadow-black/50",
+          "relative z-10 my-2.5 w-full rounded-lg border border-hairline bg-surface shadow-xl shadow-black/20",
           size === "lg" ? "max-w-2xl" : "max-w-lg",
         )}
       >
-        <div className="flex items-start justify-between gap-2.5 border-b border-white/[0.05] p-2.5">
+        <div className="flex items-start justify-between gap-2.5 border-b border-hairline p-2.5">
           <div>
             <h2 className="text-sm font-semibold text-foreground">{title}</h2>
             {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
@@ -89,10 +98,10 @@ export function ModalFooter({
   submitLabel,
   secondaryAction,
 }: {
-  // Fechar o modal já cancela; mantido opcional por compatibilidade.
+
   onCancel?: () => void;
   submitLabel?: string;
-  // Acao secundaria opcional (ex.: excluir), alinhada a esquerda do rodape.
+
   secondaryAction?: ReactNode;
 }) {
   const { admin } = useI18n();
@@ -100,14 +109,14 @@ export function ModalFooter({
   return (
     <div
       className={cx(
-        "flex items-center gap-2.5 border-t border-white/[0.05] p-2.5",
+        "flex items-center gap-2.5 border-t border-hairline p-2.5",
         secondaryAction ? "justify-between" : "justify-end",
       )}
     >
       {secondaryAction}
       <button
         type="submit"
-        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
       >
         {label}
       </button>

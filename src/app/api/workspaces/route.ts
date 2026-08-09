@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, eq, inArray } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db, schema } from "@/db";
 import { accountForEmail, createWorkspace } from "@/lib/account";
 import { workspaceLimitError } from "@/lib/plan";
 
-// Workspaces do usuario: todos os que ele possui + os em que colabora.
-// Usado pelo seletor do sidebar (lista vazia = onboarding de criacao).
 export async function GET() {
   const session = await auth();
   const email = session?.user?.email;
@@ -44,7 +42,6 @@ export async function GET() {
     )
     .orderBy(asc(schema.teamMembers.id));
 
-  // Os proprios primeiro; convites depois (sem duplicar).
   const ownedIds = new Set(owned.map((w) => w.id));
   const raw = [
     ...owned.map((w) => ({ ...w, owner: true })),
@@ -53,7 +50,6 @@ export async function GET() {
       .map((m) => ({ ...m, owner: false })),
   ];
 
-  // Nome do dono (perfil), para rotular workspaces de convite sem nome.
   const ownerEmails = [...new Set(raw.map((w) => w.ownerEmail))];
   const profiles = ownerEmails.length
     ? await db
@@ -66,6 +62,16 @@ export async function GET() {
     : [];
   const nameByEmail = new Map(profiles.map((p) => [p.email, p.name]));
 
+  const allIds = raw.map((w) => w.id);
+  const jobRows = allIds.length
+    ? await db
+        .select({ accountId: schema.jobs.accountId, n: count() })
+        .from(schema.jobs)
+        .where(inArray(schema.jobs.accountId, allIds))
+        .groupBy(schema.jobs.accountId)
+    : [];
+  const jobCountBy = new Map(jobRows.map((r) => [r.accountId, r.n]));
+
   return NextResponse.json(
     raw.map((w) => ({
       id: w.id,
@@ -74,12 +80,11 @@ export async function GET() {
       ownerEmail: w.ownerEmail,
       ownerName: nameByEmail.get(w.ownerEmail) ?? "",
       active: w.id === current?.id,
+      jobCount: jobCountBy.get(w.id) ?? 0,
     })),
   );
 }
 
-// Cria um workspace com o nome dado (sugestao da UI: o nome da empresa) e ja
-// o torna o ativo. Plano Free permite 1 workspace; Plus e ilimitado.
 export async function POST(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
@@ -98,7 +103,6 @@ export async function POST(req: Request) {
   return NextResponse.json({ ok: true, id: created.id }, { status: 201 });
 }
 
-// Troca o workspace ativo (valida que o usuario tem acesso a ele).
 export async function PUT(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
@@ -143,9 +147,6 @@ export async function PUT(req: Request) {
   return NextResponse.json({ ok: true });
 }
 
-// Sai do workspace ativo (apenas colaborador; o dono exclui a conta na tela
-// de conta). Remove o vinculo, as permissoes caem em cascata e a resolucao
-// volta para os workspaces proprios.
 export async function DELETE() {
   const session = await auth();
   const email = session?.user?.email;

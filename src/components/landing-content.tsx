@@ -66,7 +66,7 @@ export function LandingContent({ authed }: { authed: boolean }) {
   const ctaLabel = authed ? dict.hero.ctaAuthed : dict.hero.ctaGuest;
 
   return (
-    <div className="landing-root relative min-h-screen overflow-hidden bg-background text-foreground">
+    <div className="force-dark landing-root relative min-h-screen overflow-hidden bg-background text-foreground">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.35]"

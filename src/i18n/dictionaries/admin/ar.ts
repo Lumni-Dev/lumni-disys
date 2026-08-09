@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const ar: Admin = {
   nav: {
     dashboard: "لوحة التحكم",
-    companies: "الشركات",
     jobs: "الوظائف",
     candidates: "المرشحون",
     pipeline: "مسار التوظيف",
@@ -19,15 +18,27 @@ const ar: Admin = {
     myWorkspace: "مساحة عملي",
     readonly: "للقراءة فقط",
     plan: "الخطة",
+    lightMode: "الوضع الفاتح",
+    darkMode: "الوضع الداكن",
   },
   workspace: {
-    newWorkspace: "مساحة عمل جديدة",
     createTitle: "إنشاء مساحة عمل",
     createSubtitle: "أنشئ مساحة عمل لبدء نشر وظائفك",
     nameLabel: "اسم مساحة العمل",
     namePlaceholder: "مثال: شركتي",
     hint: "نصيحة: استخدم اسم شركتك.",
     create: "إنشاء مساحة عمل",
+    editTitle: "إعادة تسمية مساحة العمل",
+    editSubtitle: "غيّر اسم مساحة العمل",
+    title: "مساحات العمل",
+    subtitle: "أدر مساحات العمل الخاصة بك",
+    searchPlaceholder: "ابحث في مساحات العمل...",
+    active: "نشطة",
+    activate: "فتح",
+    jobsCount: (n) => `${n} وظيفة`,
+    empty: "لا توجد مساحات عمل بعد",
+    deleteBlocked: (n) => `لا يمكن الحذف: ${n} وظيفة مرتبطة.`,
+    deleteMessage: "هل تريد حذف مساحة العمل هذه؟ لا يمكن التراجع.",
   },
   plan: {
     title: "الخطة",
@@ -62,8 +73,6 @@ const ar: Admin = {
     limitTitle: "حد خطة Free",
     limitWorkspaces:
       "تسمح خطة Free بمساحة عمل واحدة. اشترك في Plus لمساحات عمل غير محدودة.",
-    limitCompanies:
-      "تسمح خطة Free بتسجيل شركة واحدة. اشترك في Plus للتسجيل بلا حدود.",
     limitJobs:
       "تسمح خطة Free بتسجيل وظيفة واحدة. اشترك في Plus للتسجيل بلا حدود.",
     limitCandidates:
@@ -76,8 +85,6 @@ const ar: Admin = {
   },
   deleteBlocked: {
     title: "لا يمكن الحذف",
-    companyHasJobs: (n) =>
-      `تحتوي هذه الشركة على ${n} وظيفة. احذف الوظائف أو ألغِ ربطها قبل حذف الشركة.`,
     jobHasCandidates: (n) =>
       `تحتوي هذه الوظيفة على ${n} مرشح. احذف المرشحين قبل حذف الوظيفة.`,
   },
@@ -143,13 +150,14 @@ const ar: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "الشركات النشطة",
       openJobs: "الوظائف المفتوحة",
       candidates: "المرشحون",
       activePipeline: "مسارات التوظيف النشطة",
+      team: "أعضاء الفريق",
     },
     deltaTalent: "في مجمع المواهب",
     deltaInProgress: "قيد التنفيذ",
+    deltaTeam: "في الفريق",
     funnelTitle: "قمع التوظيف",
     funnelSubtitle: "المرشحون حسب المرحلة",
     totalInProcess: "الإجمالي قيد المعالجة",
@@ -159,22 +167,6 @@ const ar: Admin = {
     movedTo: (stage) => `انتقل إلى ${stage}`,
     noActivity: "لا يوجد نشاط حديث بعد.",
     noMovements: "0 تحديث",
-  },
-  companies: {
-    searchPlaceholder: "البحث في الشركات...",
-    add: "شركة جديدة",
-    allSectors: "جميع القطاعات",
-    allStatuses: "جميع الحالات",
-    listTitle: "الشركات المسجّلة",
-    empty: "لم يتم العثور على شركات.",
-    fileName: "الشركات",
-    cols: {
-      name: "الشركة",
-      sector: "القطاع",
-      location: "الموقع",
-      openings: "الشواغر",
-      status: "الحالة",
-    },
   },
   jobs: {
     searchPlaceholder: "البحث في الوظائف...",
@@ -293,25 +285,6 @@ const ar: Admin = {
     permissionsByPage: "الصلاحيات حسب الصفحة",
     page: "الصفحة",
     selectOnePermission: "حدد صلاحية واحدة على الأقل.",
-    company: {
-      editTitle: "تعديل الشركة",
-      newTitle: "شركة جديدة",
-      editSubtitle: "تحديث بيانات الشركة",
-      newSubtitle: "تسجيل شركة شريكة",
-      name: "اسم الشركة",
-      sector: "القطاع",
-      country: "الدولة",
-      cnpj: "CNPJ",
-      cnpjLookup: "جارٍ البحث عن بيانات CNPJ...",
-      state: "الولاية",
-      city: "المدينة",
-      taxId: "التسجيل الضريبي",
-      stateProvince: "الولاية / المقاطعة",
-      status: "الحالة",
-      selectCity: "اختر المدينة",
-      selectStateFirst: "اختر الولاية أولاً",
-      taxIdPlaceholder: "الرقم الضريبي / ضريبة القيمة المضافة / EIN…",
-    },
     job: {
       companyHint: "إذا لم تجد شركتك في القائمة،",
       companyHintLink: "أضِفها من صفحة الشركات",
@@ -410,7 +383,6 @@ const ar: Admin = {
     emailPlaceholder: "you@email.com",
     invalidLink: "رابط الوظائف هذا غير صالح. اطلب من الشركة الرابط الكامل.",
     jobNotFound: "هذه الوظيفة لم تعد متاحة.",
-    viewAll: "عرض جميع الوظائف",
     goHome: "الذهاب إلى الرئيسية",
   },
   login: {

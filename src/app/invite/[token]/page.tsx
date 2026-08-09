@@ -10,7 +10,7 @@ export default async function InvitePage({
   const { token } = await params;
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
+    <div className="force-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.35]"

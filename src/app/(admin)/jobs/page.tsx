@@ -6,12 +6,11 @@ import { Card, CardHeader, CardBody, CardFooter } from "@/components/ui/card";
 import { Badge, type Tone } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pagination } from "@/components/ui/pagination";
-import { AddButton, Button } from "@/components/ui/button";
+import { AddButton, IconButton } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
-import { Tooltip } from "@/components/ui/tooltip";
 import {
   IconUsers,
   IconShare,
@@ -20,7 +19,6 @@ import {
   IconPencil,
 } from "@/components/ui/icons";
 import { useAccess } from "@/lib/access";
-import { ShareJobs } from "@/components/share-jobs";
 import { JobModal } from "@/components/entity-modals";
 import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { Modal } from "@/components/ui/modal";
@@ -60,12 +58,12 @@ export default function JobsPage() {
   const [fStatus, setFStatus] = useState("");
   const access = useAccess();
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  // Quantidade de candidatos que impede a exclusao da vaga (null = fechado).
+
   const [blockedCands, setBlockedCands] = useState<number | null>(null);
-  // Limite de vagas do plano Free atingido (API devolveu 402).
+
   const [limitHit, setLimitHit] = useState(false);
 
-  // Copia o link publico direto desta vaga (token da conta + id).
+
   function shareJob(id: number) {
     if (!access?.token) return;
     const url = `${window.location.origin}/careers/${access.token}/${id}`;
@@ -114,7 +112,7 @@ export default function JobsPage() {
         const created = await api.post<Job>("/api/jobs", v);
         setList((prev) => [...prev, created]);
       } catch (err) {
-        // Teto do plano Free: fecha o form e abre o aviso de upgrade.
+
         if (err instanceof ApiError && err.status === 402) {
           setLimitHit(true);
           return;
@@ -132,7 +130,7 @@ export default function JobsPage() {
       await api.del(`/api/jobs/${id}`);
       setList((prev) => prev.filter((v) => v.id !== id));
     } catch (err) {
-      // Exclusao bloqueada por dependencias (candidatos): avisa em modal.
+
       if (err instanceof ApiError && err.status === 409) {
         const data = err.data as { count?: number } | null;
         setBlockedCands(data?.count ?? 0);
@@ -156,7 +154,6 @@ export default function JobsPage() {
     <PageShell
       action={
         <>
-          <ShareJobs />
           <ExportButton onClick={sel.start} />
           <AddButton onClick={() => setAddOpen(true)}>{admin.jobs.add}</AddButton>
         </>
@@ -242,7 +239,7 @@ export default function JobsPage() {
         {visible.map((v) => (
           <Card
             key={v.id}
-            className={cx(sel.active && sel.ids.has(v.id) && "border-white")}
+            className={cx(sel.active && sel.ids.has(v.id) && "border-accent")}
           >
             <button
               type="button"
@@ -286,34 +283,27 @@ export default function JobsPage() {
                 {admin.jobs.candidatesLabel}
               </span>
               <div className="flex items-center gap-1.5">
-                <Tooltip
+                <IconButton
                   label={
                     copiedId === v.id
                       ? admin.shareJobs.copied
                       : admin.jobs.shareJob
                   }
-                >
-                  <Button
-                    variant="outline"
-                    aria-label={admin.jobs.shareJob}
-                    icon={
-                      copiedId === v.id ? (
-                        <IconCheck className="h-4 w-4 text-accent" />
-                      ) : (
-                        <IconShare className="h-4 w-4" />
-                      )
-                    }
-                    onClick={() => shareJob(v.id)}
-                  />
-                </Tooltip>
-                <Tooltip label={admin.common.edit}>
-                  <Button
-                    variant="outline"
-                    aria-label={admin.common.edit}
-                    icon={<IconPencil className="h-4 w-4" />}
-                    onClick={() => setEditing(v)}
-                  />
-                </Tooltip>
+                  aria-label={admin.jobs.shareJob}
+                  icon={
+                    copiedId === v.id ? (
+                      <IconCheck className="h-4 w-4 text-accent" />
+                    ) : (
+                      <IconShare className="h-4 w-4" />
+                    )
+                  }
+                  onClick={() => shareJob(v.id)}
+                />
+                <IconButton
+                  label={admin.common.edit}
+                  icon={<IconPencil className="h-4 w-4" />}
+                  onClick={() => setEditing(v)}
+                />
                 <ConfirmAction
                   label={admin.common.remove}
                   icon={<IconTrash className="h-4 w-4" />}
@@ -378,7 +368,7 @@ export default function JobsPage() {
           <button
             type="button"
             onClick={() => setBlockedCands(null)}
-            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:bg-white active:scale-[0.98]"
+            className="rounded-lg bg-foreground px-2.5 py-1.5 text-sm font-medium text-background transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
           >
             {admin.common.close}
           </button>

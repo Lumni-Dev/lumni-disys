@@ -7,9 +7,9 @@ type Variant = "primary" | "outline" | "ghost";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] hover:brightness-110 active:scale-[0.98]",
+    "bg-accent text-accent-foreground hover:brightness-110 active:scale-[0.98]",
   outline:
-    "border border-border bg-surface-2/40 text-muted shadow-sm hover:border-accent/40 hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
+    "border border-border bg-surface-2/40 text-muted hover:border-accent/40 hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
   ghost: "text-muted hover:bg-surface-2 hover:text-foreground active:scale-[0.98]",
 };
 
@@ -23,7 +23,7 @@ export function Button({
   variant?: Variant;
   icon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
-  // Sem texto = botão quadrado só com ícone; com texto = altura padrão + padding.
+
   const iconOnly = icon != null && children == null;
   return (
     <button
@@ -55,6 +55,25 @@ export function AddButton({
         aria-label={children}
         icon={<IconPlus className="h-4 w-4" />}
       />
+    </Tooltip>
+  );
+}
+
+
+
+export function IconButton({
+  label,
+  icon,
+  variant = "outline",
+  ...props
+}: {
+  label: string;
+  icon: ReactNode;
+  variant?: Variant;
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <Tooltip label={label}>
+      <Button variant={variant} aria-label={label} icon={icon} {...props} />
     </Tooltip>
   );
 }

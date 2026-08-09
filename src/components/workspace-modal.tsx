@@ -1,31 +1,39 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { api, ApiError } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 
-// Modal de criacao de workspace (onboarding e botao "+" do menu). O nome
-// sugerido e o da empresa. Ao criar, recarrega no dashboard do novo
-// workspace. Se o plano Free ja atingiu o limite, abre o aviso de upgrade.
 export function WorkspaceModal({
   open,
   onClose,
   dismissable = true,
+  workspace = null,
+  onSaved,
 }: {
   open: boolean;
   onClose: () => void;
-  /** Onboarding (primeiro workspace) nao permite fechar sem criar. */
+
   dismissable?: boolean;
+
+  workspace?: { id: number; name: string } | null;
+
+  onSaved?: () => void;
 }) {
   const { admin } = useI18n();
-  const [name, setName] = useState("");
+  const editing = !!workspace;
+  const [name, setName] = useState(workspace?.name ?? "");
   const [busy, setBusy] = useState(false);
   const [invalid, setInvalid] = useState(0);
   const [error, setError] = useState(false);
   const [limitHit, setLimitHit] = useState(false);
+
+  useEffect(() => {
+    if (open) setName(workspace?.name ?? "");
+  }, [open, workspace?.id, workspace?.name]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -37,8 +45,21 @@ export function WorkspaceModal({
     setBusy(true);
     setError(false);
     try {
-      await api.post("/api/workspaces", { name: name.trim() });
-      window.location.assign("/dashboard");
+      if (editing) {
+        await api.patch(`/api/workspaces/${workspace!.id}`, {
+          name: name.trim(),
+        });
+        onSaved?.();
+        onClose();
+      } else {
+        await api.post("/api/workspaces", { name: name.trim() });
+        if (onSaved) {
+          onSaved();
+          onClose();
+        } else {
+          window.location.assign("/dashboard");
+        }
+      }
     } catch (err) {
       if (err instanceof ApiError && err.status === 402) {
         setLimitHit(true);
@@ -54,8 +75,10 @@ export function WorkspaceModal({
       <Modal
         open={open && !limitHit}
         onClose={dismissable ? onClose : () => {}}
-        title={admin.workspace.createTitle}
-        subtitle={admin.workspace.createSubtitle}
+        title={editing ? admin.workspace.editTitle : admin.workspace.createTitle}
+        subtitle={
+          editing ? admin.workspace.editSubtitle : admin.workspace.createSubtitle
+        }
       >
         <form onSubmit={submit} noValidate>
           <div className="p-2.5">
@@ -68,14 +91,20 @@ export function WorkspaceModal({
                 autoFocus
               />
             </Field>
-            <p className="mt-1.5 text-xs text-muted">{admin.workspace.hint}</p>
+            {!editing && (
+              <p className="mt-1.5 text-xs text-muted">{admin.workspace.hint}</p>
+            )}
             {error && (
               <p className="mt-1.5 text-xs text-red-400">
                 {admin.common.saveError}
               </p>
             )}
           </div>
-          <ModalFooter submitLabel={admin.workspace.create} />
+          <ModalFooter
+            submitLabel={
+              editing ? admin.common.save : admin.workspace.create
+            }
+          />
         </form>
       </Modal>
 

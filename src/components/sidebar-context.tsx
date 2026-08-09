@@ -32,7 +32,7 @@ function persistCollapsed(value: boolean): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, value ? "1" : "0");
   } catch {
-    // localStorage indisponivel.
+
   }
   listeners.forEach((l) => l());
 }
@@ -56,7 +56,7 @@ export function useSidebar() {
 }
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  // Preferencia de recolhido persiste no localStorage; mobileOpen e transitorio.
+
   const collapsed = useSyncExternalStore(
     subscribe,
     getSnapshot,

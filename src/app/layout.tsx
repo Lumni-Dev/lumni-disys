@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -34,8 +34,18 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
     >
+      <head>
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{document.documentElement.setAttribute('data-theme',localStorage.getItem('disys-theme')==='dark'?'dark':'light')}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-full">
         <AppGuards />
         <LanguageProvider>{children}</LanguageProvider>

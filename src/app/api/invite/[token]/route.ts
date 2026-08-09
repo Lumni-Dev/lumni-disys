@@ -5,8 +5,6 @@ import { db, schema } from "@/db";
 
 type Params = { params: Promise<{ token: string }> };
 
-// Busca o convite pendente pelo token, validando a sessao. Retorna o convite
-// junto com quem e o dono do workspace (para exibir na tela de aceite).
 async function findInvite(token: string) {
   const [invite] = await db
     .select()
@@ -47,7 +45,6 @@ export async function GET(_req: Request, { params }: Params) {
   });
 }
 
-// Aceita ou recusa o convite. Aceitar tambem torna o workspace o ativo.
 export async function POST(req: Request, { params }: Params) {
   const session = await auth();
   const email = session?.user?.email;
@@ -65,7 +62,7 @@ export async function POST(req: Request, { params }: Params) {
   const action = body.action === "accept" ? "accept" : "decline";
 
   if (action === "decline") {
-    // Permissoes caem em cascata com o vinculo.
+
     await db
       .delete(schema.teamMembers)
       .where(eq(schema.teamMembers.id, invite.id));
@@ -77,7 +74,6 @@ export async function POST(req: Request, { params }: Params) {
     .set({ status: "accepted", inviteToken: null })
     .where(eq(schema.teamMembers.id, invite.id));
 
-  // Ja abre direto no workspace aceito.
   await db
     .insert(schema.userProfiles)
     .values({ email, activeAccountId: invite.accountId })

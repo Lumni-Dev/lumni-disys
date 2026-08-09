@@ -15,7 +15,7 @@ export function FilterBar({
 }) {
   const { admin } = useI18n();
   return (
-    <div className="elevated flex flex-wrap items-center gap-2.5 rounded-lg border border-white/[0.06] bg-surface p-2.5">
+    <div className="elevated flex flex-wrap items-center gap-2.5 rounded-lg border border-hairline bg-surface p-2.5">
       <span className="text-xs font-medium text-muted">
         {admin.common.filters}
       </span>

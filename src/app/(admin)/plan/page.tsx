@@ -35,8 +35,6 @@ type PlanInfo = {
   renewsAt: string | null;
 };
 
-// Limites por tier, espelhando o servidor (PLAN_LIMITS), para montar os
-// cartoes independentemente do plano atual do usuario. null = ilimitado.
 const TIER_LIMITS: Record<Plan, Limits> = {
   free: { workspaces: 1, jobs: 5, candidates: 5, processes: 5, members: 1 },
   plus: { workspaces: 5, jobs: 25, candidates: 25, processes: 25, members: 5 },
@@ -50,7 +48,7 @@ const TIER_LIMITS: Record<Plan, Limits> = {
 };
 
 const TIERS: Plan[] = ["free", "plus", "max"];
-// Ordem para comparar upgrade/downgrade.
+
 const RANK: Record<Plan, number> = { free: 0, plus: 1, max: 2 };
 
 export default function PlanPage() {
@@ -71,8 +69,7 @@ export default function PlanPage() {
   }
 
   useEffect(() => {
-    // Retorno do checkout: mostra o aviso e sincroniza o plano pela sessao
-    // (fallback para quando o webhook nao alcanca o ambiente).
+
     const params = new URLSearchParams(window.location.search);
     const checkout = params.get("checkout");
     const sessionId = params.get("session_id");
@@ -98,7 +95,7 @@ export default function PlanPage() {
         return;
       }
     } catch {
-      // erro: reabilita os botoes.
+
     }
     setBusy(null);
   }
@@ -109,7 +106,7 @@ export default function PlanPage() {
       await api.post("/api/plan", { action });
       load("/api/plan");
     } catch {
-      // mantem estado atual.
+
     } finally {
       setBusy(null);
       setConfirmCancel(false);
@@ -122,7 +119,6 @@ export default function PlanPage() {
       currency: "BRL",
     }).format(cents / 100);
 
-  // Datas sempre no fuso de Sao Paulo (padrao do sistema).
   function fmtDate(iso: string | null): string {
     if (!iso) return "";
     return new Date(iso).toLocaleDateString(undefined, {
@@ -145,7 +141,6 @@ export default function PlanPage() {
         ? admin.plan.maxDesc
         : admin.plan.plusDesc;
 
-  // KPIs de uso (workspace ativo; workspaces = total de empresas do usuario).
   const KPIS: {
     key: keyof PlanInfo["usage"];
     label: string;
@@ -158,7 +153,6 @@ export default function PlanPage() {
     { key: "members", label: admin.nav.team, perCompany: true },
   ];
 
-  // Linhas de limite exibidas em cada cartao de plano.
   const featureRows = (tier: Plan) => {
     const l = TIER_LIMITS[tier];
     const val = (n: number | null) => (n == null ? admin.plan.unlimited : n);
@@ -190,8 +184,8 @@ export default function PlanPage() {
           className={cx(
             "rounded-lg border p-2.5 text-sm",
             notice === "success"
-              ? "border-white/20 bg-white/10 text-foreground"
-              : "border-white/10 bg-surface-2 text-muted",
+              ? "border-hairline-strong bg-overlay text-foreground"
+              : "border-hairline bg-surface-2 text-muted",
           )}
         >
           {notice === "success"
@@ -200,7 +194,6 @@ export default function PlanPage() {
         </div>
       )}
 
-      {/* Uso do plano: grid de 4 colunas (2 em telas pequenas). */}
       <Card>
         <CardHeader
           title={admin.plan.usageTitle}
@@ -215,7 +208,7 @@ export default function PlanPage() {
             return (
               <div
                 key={k.key}
-                className="rounded-lg border border-white/[0.06] bg-surface-2/40 p-2.5"
+                className="rounded-lg border border-hairline bg-surface-2/40 p-2.5"
               >
                 <p className="truncate text-xs text-muted">
                   {k.label}
@@ -234,9 +227,9 @@ export default function PlanPage() {
                   </span>
                 </p>
                 {limit != null && (
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-lg bg-surface-2">
                     <div
-                      className="h-full rounded-full bg-accent transition-all"
+                      className="h-full rounded-lg bg-accent transition-all"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -247,7 +240,6 @@ export default function PlanPage() {
         </CardBody>
       </Card>
 
-      {/* Planos: Free, Plus, Max. */}
       <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-3">
         {TIERS.map((tier) => {
           const isCurrent = current === tier;
@@ -258,7 +250,7 @@ export default function PlanPage() {
               key={tier}
               className={cx(
                 isCurrent && "ring-1 ring-accent/40",
-                !isCurrent && highlight && "ring-1 ring-white/10",
+                !isCurrent && highlight && "ring-1 ring-hairline",
               )}
             >
               <CardHeader
@@ -298,7 +290,6 @@ export default function PlanPage() {
                   ))}
                 </ul>
 
-                {/* Acao do cartao */}
                 {info && !isCurrent && tier !== "free" && (
                   <Button
                     className="mt-3"

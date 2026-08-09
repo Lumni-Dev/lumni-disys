@@ -5,9 +5,6 @@ import { db, schema } from "@/db";
 
 export type Plan = "free" | "plus" | "max";
 
-// Limites por plano. O plano pertence ao USUARIO (dono) e vale para os
-// workspaces dele. `workspaces` e um teto TOTAL (empresas do usuario); os
-// demais sao POR WORKSPACE (por empresa). null = ilimitado.
 export type PlanLimits = {
   workspaces: number | null;
   jobs: number | null;
@@ -28,7 +25,6 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
   },
 };
 
-// Recursos contados POR WORKSPACE (accountId).
 export type LimitedResource = "jobs" | "candidates" | "processes" | "members";
 
 const tables = {
@@ -38,7 +34,6 @@ const tables = {
   members: schema.teamMembers,
 } as const;
 
-/** Linha de cobranca do usuario, criada sob demanda (plano free). */
 export async function billingForEmail(email: string) {
   const [existing] = await db
     .select()
@@ -60,7 +55,6 @@ function normalizePlan(value: string | undefined): Plan {
   return value === "plus" || value === "max" ? value : "free";
 }
 
-/** Plano do usuario (por e-mail). */
 export async function planForEmail(email: string): Promise<Plan> {
   const [row] = await db
     .select({ plan: schema.userBilling.plan })
@@ -69,7 +63,6 @@ export async function planForEmail(email: string): Promise<Plan> {
   return normalizePlan(row?.plan);
 }
 
-/** Plano efetivo de um workspace = plano do dono dele. */
 export async function planForAccount(accountId: number): Promise<Plan> {
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
@@ -79,7 +72,6 @@ export async function planForAccount(accountId: number): Promise<Plan> {
   return planForEmail(acc.ownerEmail);
 }
 
-/** Quantidade cadastrada de um recurso limitado no workspace. */
 export async function resourceCount(
   accountId: number,
   resource: LimitedResource,
@@ -88,7 +80,6 @@ export async function resourceCount(
   return db.$count(table, eq(table.accountId, accountId));
 }
 
-/** Quantos workspaces o e-mail possui (como dono). */
 export async function workspaceCount(email: string): Promise<number> {
   return db.$count(
     schema.accounts,
@@ -96,11 +87,6 @@ export async function workspaceCount(email: string): Promise<number> {
   );
 }
 
-/**
- * Bloqueio de criacao pelo plano: cada recurso tem teto POR WORKSPACE segundo
- * o plano do dono; atingido, devolve a resposta 402 pronta (o cliente abre o
- * modal de upgrade). Limite null = ilimitado (Max) -> null (sem bloqueio).
- */
 export async function planLimitError(
   accountId: number,
   resource: LimitedResource,
@@ -116,7 +102,6 @@ export async function planLimitError(
   );
 }
 
-/** Bloqueio de criacao de workspace: teto TOTAL de empresas do usuario. */
 export async function workspaceLimitError(
   email: string,
 ): Promise<NextResponse | null> {
@@ -131,21 +116,15 @@ export async function workspaceLimitError(
   );
 }
 
-/**
- * Espelha uma assinatura do Stripe na cobranca do usuario: status ativo vira
- * Plus; cancelada ou encerrada volta para Free. Usada pelo webhook e pelo
- * sync apos o retorno do checkout (fallback quando o webhook nao alcanca o
- * ambiente, ex.: desenvolvimento local).
- */
 export async function applySubscription(
   email: string,
   sub: Stripe.Subscription,
 ): Promise<void> {
   await billingForEmail(email);
   const active = ["active", "trialing", "past_due"].includes(sub.status);
-  // O tier (plus/max) vem da metadata da assinatura, gravada no checkout.
+
   const tier: Plan = sub.metadata?.tier === "max" ? "max" : "plus";
-  // Na API atual do Stripe o periodo corrente fica nos itens da assinatura.
+
   const periodEnd = sub.items?.data?.[0]?.current_period_end;
   await db
     .update(schema.userBilling)
@@ -161,7 +140,6 @@ export async function applySubscription(
     .where(eq(schema.userBilling.email, email));
 }
 
-/** Usuario dono de uma assinatura do Stripe (para eventos de webhook). */
 export async function emailForSubscription(
   sub: Stripe.Subscription,
 ): Promise<string | null> {

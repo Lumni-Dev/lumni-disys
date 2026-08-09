@@ -6,7 +6,6 @@ import { authorize } from "@/lib/authz";
 import { resolveJob } from "@/lib/job";
 import { scoreCvMatch } from "@/lib/match";
 
-// A analise de compatibilidade por IA pode levar alguns segundos.
 export const maxDuration = 60;
 
 type Params = { params: Promise<{ id: string }> };
@@ -36,7 +35,6 @@ export async function PUT(req: Request, { params }: Params) {
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Curriculo obrigatorio: usa o novo quando enviado, senao mantem o atual.
   const newCv =
     typeof body.cvData === "string" &&
     body.cvData.startsWith("data:") &&
@@ -53,12 +51,10 @@ export async function PUT(req: Request, { params }: Params) {
     ? String(body.cvName ?? "").slice(0, 200)
     : existing.cvName;
 
-  // Vaga pretendida vinculada por ID (obrigatoria e da propria conta).
   const job = await resolveJob(account.id, body.jobId);
   if (!job)
     return NextResponse.json({ error: "Vaga invalida" }, { status: 400 });
 
-  // Reanalisa quando o arquivo ou a vaga vinculada mudam.
   let matchScore = existing.matchScore;
   if (newCv || job.id !== existing.jobId) {
     matchScore = await scoreCvMatch({
@@ -76,8 +72,7 @@ export async function PUT(req: Request, { params }: Params) {
       name: String(body.name ?? "").slice(0, 160),
       role: job.title,
       email: String(body.email ?? "").slice(0, 200),
-      // A etapa e gerenciada em Processos; a edicao do candidato preserva a
-      // etapa atual do banco (evita reverter uma mudanca feita no pipeline).
+
       stage: existing.stage,
       linkedin: String(body.linkedin ?? "").slice(0, 300),
       cvName,
@@ -88,8 +83,6 @@ export async function PUT(req: Request, { params }: Params) {
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Conectado: mantem o(s) card(s) do candidato coerentes com o nome e a vaga
-  // atuais (por ID), para o pipeline nao mostrar nome/vaga/empresa antigos.
   await db
     .update(schema.pipelineCards)
     .set({
@@ -114,7 +107,6 @@ export async function DELETE(_req: Request, { params }: Params) {
 
   const id = Number((await params).id);
 
-  // Conectado: remove o card do candidato no pipeline (senao ficaria orfao).
   await db
     .delete(schema.pipelineCards)
     .where(

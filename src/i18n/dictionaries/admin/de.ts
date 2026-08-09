@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const de: Admin = {
   nav: {
     dashboard: "Dashboard",
-    companies: "Unternehmen",
     jobs: "Stellen",
     candidates: "Kandidaten",
     pipeline: "Pipeline",
@@ -19,9 +18,10 @@ const de: Admin = {
     myWorkspace: "Mein Workspace",
     readonly: "Nur Lesen",
     plan: "Tarif",
+    lightMode: "Heller Modus",
+    darkMode: "Dunkler Modus",
   },
   workspace: {
-    newWorkspace: "Neuer Workspace",
     createTitle: "Workspace erstellen",
     createSubtitle:
       "Erstelle einen Workspace, um deine Stellen zu veröffentlichen",
@@ -29,6 +29,19 @@ const de: Admin = {
     namePlaceholder: "z. B. Meine Firma",
     hint: "Tipp: Verwende deinen Firmennamen.",
     create: "Workspace erstellen",
+    editTitle: "Workspace umbenennen",
+    editSubtitle: "Ändern Sie den Namen Ihres Workspace",
+    title: "Meine Workspaces",
+    subtitle: "Verwalten Sie Ihre Workspaces",
+    searchPlaceholder: "Workspaces suchen...",
+    active: "Aktiv",
+    activate: "Öffnen",
+    jobsCount: (n) => `${n} ${n === 1 ? "Stelle" : "Stellen"}`,
+    empty: "Noch keine Workspaces",
+    deleteBlocked: (n) =>
+      `Löschen nicht möglich: ${n} ${n === 1 ? "verknüpfte Stelle" : "verknüpfte Stellen"}.`,
+    deleteMessage:
+      "Möchten Sie diesen Workspace wirklich löschen? Diese Aktion ist unwiderruflich.",
   },
   plan: {
     title: "Tarif",
@@ -64,8 +77,6 @@ const de: Admin = {
     limitTitle: "Limit des Free-Tarifs",
     limitWorkspaces:
       "Der Free-Tarif erlaubt 1 Workspace. Abonniere Plus für unbegrenzte Workspaces.",
-    limitCompanies:
-      "Der Free-Tarif erlaubt 1 Unternehmen. Abonniere Plus für unbegrenzte Einträge.",
     limitJobs:
       "Der Free-Tarif erlaubt 1 Stelle. Abonniere Plus für unbegrenzte Einträge.",
     limitCandidates:
@@ -78,8 +89,6 @@ const de: Admin = {
   },
   deleteBlocked: {
     title: "Löschen nicht möglich",
-    companyHasJobs: (n) =>
-      `Dieses Unternehmen hat ${n} Stelle${n === 1 ? "" : "n"}. Löschen oder trennen Sie die Stellen, bevor Sie das Unternehmen löschen.`,
     jobHasCandidates: (n) =>
       `Diese Stelle hat ${n} Kandidat${n === 1 ? "" : "en"}. Löschen Sie die Kandidaten, bevor Sie die Stelle löschen.`,
   },
@@ -145,13 +154,14 @@ const de: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "Aktive Unternehmen",
       openJobs: "Offene Stellen",
       candidates: "Kandidaten",
       activePipeline: "Aktive Pipelines",
+      team: "Mitarbeiter",
     },
     deltaTalent: "im Talentpool",
     deltaInProgress: "in Bearbeitung",
+    deltaTeam: "im Team",
     funnelTitle: "Recruiting-Funnel",
     funnelSubtitle: "Kandidaten nach Phase",
     totalInProcess: "Gesamt im Prozess",
@@ -161,22 +171,6 @@ const de: Admin = {
     movedTo: (stage) => `verschoben nach ${stage}`,
     noActivity: "Noch keine aktuellen Aktivitäten.",
     noMovements: "0 Aktualisierungen",
-  },
-  companies: {
-    searchPlaceholder: "Unternehmen suchen...",
-    add: "Neues Unternehmen",
-    allSectors: "Alle Branchen",
-    allStatuses: "Alle Status",
-    listTitle: "Registrierte Unternehmen",
-    empty: "Keine Unternehmen gefunden.",
-    fileName: "unternehmen",
-    cols: {
-      name: "Unternehmen",
-      sector: "Branche",
-      location: "Standort",
-      openings: "Stellen",
-      status: "Status",
-    },
   },
   jobs: {
     searchPlaceholder: "Stellen suchen...",
@@ -295,25 +289,6 @@ const de: Admin = {
     permissionsByPage: "Berechtigungen nach Seite",
     page: "Seite",
     selectOnePermission: "Wählen Sie mindestens eine Berechtigung aus.",
-    company: {
-      editTitle: "Unternehmen bearbeiten",
-      newTitle: "Neues Unternehmen",
-      editSubtitle: "Unternehmensdaten aktualisieren",
-      newSubtitle: "Ein Partnerunternehmen registrieren",
-      name: "Unternehmensname",
-      sector: "Branche",
-      country: "Land",
-      cnpj: "CNPJ",
-      cnpjLookup: "CNPJ-Daten werden abgerufen...",
-      state: "Bundesland",
-      city: "Stadt",
-      taxId: "Steuerregistrierung",
-      stateProvince: "Bundesland / Provinz",
-      status: "Status",
-      selectCity: "Stadt auswählen",
-      selectStateFirst: "Zuerst das Bundesland wählen",
-      taxIdPlaceholder: "Steuernummer / USt-IdNr. / EIN…",
-    },
     job: {
       companyHint: "Wenn Sie Ihr Unternehmen nicht in der Liste finden,",
       companyHintLink: "erstellen Sie es auf der Unternehmensseite",
@@ -413,7 +388,6 @@ const de: Admin = {
     invalidLink:
       "Dieser Stellen-Link ist ungültig. Fragen Sie das Unternehmen nach dem vollständigen Link.",
     jobNotFound: "Diese Stelle ist nicht mehr verfügbar.",
-    viewAll: "Alle Stellen ansehen",
     goHome: "Zur Startseite",
   },
   login: {

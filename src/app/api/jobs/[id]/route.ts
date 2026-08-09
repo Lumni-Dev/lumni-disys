@@ -14,7 +14,7 @@ export async function PUT(req: Request, { params }: Params) {
   const id = Number((await params).id);
   const body = await req.json();
 
-  // O workspace E a empresa: a vaga mantem o nome do workspace.
+
   const [acc] = await db
     .select({ name: schema.accounts.name })
     .from(schema.accounts)
@@ -32,15 +32,15 @@ export async function PUT(req: Request, { params }: Params) {
       openings: Number(body.openings) || 1,
       salaryFrom: Number(body.salaryFrom) || 0,
       salaryTo: Number(body.salaryTo) || 0,
-      // applicants e contador automatico: a edicao nao mexe nele.
+
       status: body.status ?? "Aberta",
     })
     .where(and(eq(schema.jobs.id, id), eq(schema.jobs.accountId, account.id)))
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Propaga titulo/empresa aos denormalizados vinculados por ID (cargo do
-  // candidato e job/company dos cards do pipeline).
+
+
   await db
     .update(schema.candidates)
     .set({ role: row.title })
@@ -70,7 +70,7 @@ export async function DELETE(_req: Request, { params }: Params) {
 
   const id = Number((await params).id);
 
-  // Integridade: nao exclui vaga que ainda tem candidatos vinculados (por ID).
+
   const [dep] = await db
     .select({ n: count() })
     .from(schema.candidates)
@@ -90,8 +90,8 @@ export async function DELETE(_req: Request, { params }: Params) {
       { status: 409 },
     );
 
-  // Conectado: remove do pipeline os cards dessa vaga (por jobId) e tira os
-  // candidatos desses cards do processo (etapa "-").
+
+
   const cards = await db
     .select({ candidateId: schema.pipelineCards.candidateId })
     .from(schema.pipelineCards)

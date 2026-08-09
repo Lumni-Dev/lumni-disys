@@ -34,8 +34,8 @@ async function main() {
     })),
   );
 
-  // Etapa de cada card por nome, para alinhar a etapa do candidato vinculado e
-  // manter funil/atividades do dashboard coerentes com o pipeline desde o seed.
+
+
   const cardStageByName = new Map(
     initialColumns.flatMap((col) =>
       col.cards.map((card) => [card.name, col.stage] as const),

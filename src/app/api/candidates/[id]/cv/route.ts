@@ -5,7 +5,6 @@ import { authorize } from "@/lib/authz";
 
 type Params = { params: Promise<{ id: string }> };
 
-// Baixa o curriculo anexado na candidatura publica (escopado por conta).
 export async function GET(_req: Request, { params }: Params) {
   const { account, response } = await authorize("candidates", "view");
   if (!account) return response;

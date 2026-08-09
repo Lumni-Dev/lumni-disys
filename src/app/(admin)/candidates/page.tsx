@@ -8,10 +8,9 @@ import { Avatar } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, Thead, Tbody, Th, Tr, Td } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { AddButton, Button } from "@/components/ui/button";
+import { AddButton, IconButton } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
-import { Tooltip } from "@/components/ui/tooltip";
 import { IconDownload, IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
@@ -33,7 +32,7 @@ const stageTone: Record<string, Tone> = {
   "Teste técnico": "amber",
   "Entrevista final": "red",
   Proposta: "green",
-  // Fora do processo (card removido em Processos).
+
   "-": "neutral",
 };
 
@@ -56,7 +55,7 @@ export default function CandidatesPage() {
   const [editing, setEditing] = useState<Candidate | null>(null);
   const [fStage, setFStage] = useState("");
   const [fRole, setFRole] = useState("");
-  // Limite de candidatos do plano Free atingido (API devolveu 402).
+
   const [limitHit, setLimitHit] = useState(false);
 
   useEffect(() => {
@@ -73,8 +72,6 @@ export default function CandidatesPage() {
   const roles = [...new Set(list.map((c) => c.role))].sort();
   const hasFilters = !!(fStage || fRole);
 
-  // Empresa mostrada abaixo do cargo: a da vaga vinculada ao candidato (por
-  // jobId) — exata mesmo quando dois cargos tem o mesmo titulo.
   const companyByJobId = new Map<number, string>();
   for (const j of jobs) {
     if (j.company) companyByJobId.set(j.id, j.company);
@@ -103,7 +100,7 @@ export default function CandidatesPage() {
         const created = await api.post<Candidate>("/api/candidates", c);
         setList((prev) => [...prev, created]);
       } catch (err) {
-        // Teto do plano Free: fecha o form e abre o aviso de upgrade.
+
         if (err instanceof ApiError && err.status === 402) {
           setLimitHit(true);
           return;
@@ -272,25 +269,19 @@ export default function CandidatesPage() {
                 <Td>
                   <div className="flex items-center gap-1.5">
                     {c.hasCv && (
-                      <Tooltip label={admin.candidates.downloadCv}>
-                        <Button
-                          variant="outline"
-                          aria-label={admin.candidates.downloadCv}
-                          icon={<IconDownload className="h-4 w-4" />}
-                          onClick={() =>
-                            window.open(`/api/candidates/${c.id}/cv`, "_blank")
-                          }
-                        />
-                      </Tooltip>
-                    )}
-                    <Tooltip label={admin.common.edit}>
-                      <Button
-                        variant="outline"
-                        aria-label={admin.common.edit}
-                        icon={<IconPencil className="h-4 w-4" />}
-                        onClick={() => setEditing(c)}
+                      <IconButton
+                        label={admin.candidates.downloadCv}
+                        icon={<IconDownload className="h-4 w-4" />}
+                        onClick={() =>
+                          window.open(`/api/candidates/${c.id}/cv`, "_blank")
+                        }
                       />
-                    </Tooltip>
+                    )}
+                    <IconButton
+                      label={admin.common.edit}
+                      icon={<IconPencil className="h-4 w-4" />}
+                      onClick={() => setEditing(c)}
+                    />
                     <ConfirmAction
                       label={admin.common.remove}
                       icon={<IconTrash className="h-4 w-4" />}

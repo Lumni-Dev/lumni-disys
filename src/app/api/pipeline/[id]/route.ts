@@ -12,15 +12,12 @@ export async function PUT(req: Request, { params }: Params) {
   const id = Number((await params).id);
   const body = await req.json();
 
-  // So etapa e posicao sao editaveis; nome/vaga/empresa derivam do candidato
-  // (vinculo por ID) e nao mudam pelo card.
   const set: Record<string, unknown> = {};
   if (body.stage !== undefined) set.stage = body.stage;
   if (body.position !== undefined) {
     set.position = Number(body.position);
   } else if (body.stage !== undefined) {
-    // Mudou de etapa sem posicao explicita (ex.: edicao pelo modal): manda o
-    // card para o fim da nova coluna, evitando colisao de posicao.
+
     const [tail] = await db
       .select({ n: count() })
       .from(schema.pipelineCards)
@@ -45,8 +42,6 @@ export async function PUT(req: Request, { params }: Params) {
     .returning();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Propaga a mudanca de etapa para o candidato vinculado, mantendo o funil e
-  // as atividades recentes do dashboard em sincronia com o pipeline.
   if (body.stage !== undefined && row.candidateId) {
     await db
       .update(schema.candidates)
@@ -94,7 +89,6 @@ export async function DELETE(_req: Request, { params }: Params) {
       ),
     );
 
-  // Saiu do processo: o candidato deixa de ter etapa ("-" nos Candidatos).
   if (card?.candidateId) {
     await db
       .update(schema.candidates)

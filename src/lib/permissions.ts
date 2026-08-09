@@ -5,7 +5,7 @@ export type Member = {
   name: string;
   email: string;
   role: string;
-  /** "pending" enquanto o convite nao foi aceito; "accepted" depois. */
+
   status?: string;
   permissions: Permissions;
 };
@@ -45,10 +45,6 @@ export function permissionsFrom(map: Record<string, Action[]>): Permissions {
 const MODULE_KEYS = new Set(MODULES.map((m) => m.key));
 const ACTION_KEYS = new Set<string>(ACTIONS.map((a) => a.key));
 
-/**
- * Converte a matriz de permissoes do body em linhas para o banco, aceitando
- * SOMENTE modulos/acoes conhecidos (descarta chaves arbitrarias/desconhecidas).
- */
 export function validPermissionRows(
   memberId: number,
   permissions: Record<string, Record<string, boolean>> = {},

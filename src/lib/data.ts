@@ -60,14 +60,14 @@ function modifiedDate(i: number) {
 export type Job = {
   id: number;
   title: string;
-  /** Nome da empresa = nome do workspace (denormalizado para exibicao). */
+
   company: string;
   description: string;
   type: string;
   level: string;
   openings: number;
   applicants: number;
-  /** Faixa salarial em centavos (0 = nao informado). */
+
   salaryFrom?: number;
   salaryTo?: number;
   status: "Aberta" | "Em análise" | "Fechada";
@@ -88,21 +88,21 @@ export const jobs: Job[] = range(30).map((i) => ({
 
 export type Candidate = {
   id: number;
-  /** Vaga pretendida vinculada por ID (fonte da verdade do vinculo). */
+
   jobId?: number | null;
   name: string;
   role: string;
   email: string;
-  /** Telefone (E.164) informado na candidatura publica. */
+
   phone?: string;
   stage: (typeof stages)[number];
   modifiedAt: string;
-  /** Hora (HH:mm, fuso de Sao Paulo) da ultima modificacao. */
+
   modifiedAtTime?: string;
   linkedin?: string;
   hasCv?: boolean;
   cvName?: string;
-  /** Payload transitorio de upload do modal (data URL); nao vem da API. */
+
   cvData?: string;
   matchScore?: number | null;
 };
@@ -127,7 +127,7 @@ export const candidates: Candidate[] = range(30).map((i) => {
 
 export type PipelineCard = {
   id: number;
-  /** Candidato e vaga vinculados por ID (fonte da verdade). */
+
   candidateId?: number | null;
   jobId?: number | null;
   name: string;

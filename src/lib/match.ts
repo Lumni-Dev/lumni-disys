@@ -1,7 +1,3 @@
-// Compatibilidade curriculo x vaga via OpenAI (melhor esforco: qualquer
-// falha vira null e a candidatura segue normal). Suporta as mesmas extensoes
-// aceitas no upload (.pdf, .doc, .docx): o PDF vai direto ao modelo pela
-// Responses API; DOC/DOCX tem o texto extraido no servidor e enviado como texto.
 import mammoth from "mammoth";
 import WordExtractor from "word-extractor";
 
@@ -18,8 +14,6 @@ function parseDataUrl(url: string): { mime: string; buffer: Buffer } | null {
   return { mime: m[1], buffer: Buffer.from(m[2], "base64") };
 }
 
-// Detecta o tipo pelo mime e, como reforco, pela extensao do nome do arquivo
-// (alguns navegadores enviam um mime generico, sobretudo para .doc).
 function detectKind(mime: string, name: string): Kind | null {
   const n = name.toLowerCase();
   if (mime === "application/pdf" || n.endsWith(".pdf")) return "pdf";
@@ -28,7 +22,6 @@ function detectKind(mime: string, name: string): Kind | null {
   return null;
 }
 
-// Extrai o texto de arquivos Word (.docx via mammoth, .doc via word-extractor).
 async function extractWordText(
   kind: "docx" | "doc",
   buffer: Buffer,
@@ -67,7 +60,6 @@ export async function scoreCvMatch(opts: {
     `Descricao: ${opts.jobDescription || "(sem descricao)"}\n\n` +
     "Responda APENAS um numero inteiro de 0 a 100, sem nenhum outro texto.";
 
-  // PDF vai como arquivo; DOC/DOCX vao como texto extraido.
   let content: Record<string, unknown>[];
   if (kind === "pdf") {
     content = [

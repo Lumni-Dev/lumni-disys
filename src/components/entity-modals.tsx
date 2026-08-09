@@ -15,8 +15,8 @@ import { api } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 import type { Job, Candidate, PipelineCard } from "@/lib/data";
 
-// Sugestoes dos campos de vinculo: titulos de vagas e candidatos da conta,
-// carregados quando o modal abre.
+
+
 function useJobs(open: boolean): Job[] {
   const [jobs, setJobs] = useState<Job[]>([]);
   useEffect(() => {
@@ -51,7 +51,7 @@ const STAGES = [
   "Proposta",
 ];
 
-// Mantem o valor canonico PT (usado na logica/API) e traduz apenas o rotulo.
+
 function localizedOptions(
   values: string[],
   labels: Record<string, string>,
@@ -79,7 +79,7 @@ function FormModal({
   const { admin } = useI18n();
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
-  // Fecha so quando o save conclui; se falhar, mantem aberto e avisa.
+
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (busy) return;
@@ -177,16 +177,16 @@ export function JobModal({
         await onSave({
           id: job?.id ?? 0,
           title: title.trim(),
-          // A empresa e o proprio workspace: o servidor preenche o nome.
+
           company: job?.company ?? "",
           description: description.trim(),
           level,
           type,
           openings: Number(openings) || 0,
-          // Faixa salarial gravada em centavos.
+
           salaryFrom: Math.round(from * 100),
           salaryTo: Math.round(to * 100),
-          // O total de candidatos e um contador automatico, nao editavel.
+
           applicants: job?.applicants ?? 0,
           status: status as Job["status"],
         });
@@ -290,7 +290,7 @@ export function CandidateModal({
     candidate?.jobId ? String(candidate.jobId) : "",
   );
   const [linkedin, setLinkedin] = useState(candidate?.linkedin ?? "");
-  // Curriculo obrigatorio: na edicao o arquivo atual vale, e da para trocar.
+
   const [cvName, setCvName] = useState(candidate?.cvName ?? "");
   const [cvData, setCvData] = useState("");
   const [cvTooBig, setCvTooBig] = useState(false);
@@ -299,7 +299,7 @@ export function CandidateModal({
   const { run, invalid } = useValidation();
   const { admin } = useI18n();
   const t = admin.modals.candidate;
-  // Vaga pretendida vinculada por ID: seleciona uma vaga cadastrada.
+
   const jobs = useJobs(open);
 
   function onCvFile(file: File | undefined) {
@@ -338,17 +338,17 @@ export function CandidateModal({
           id: candidate?.id ?? 0,
           name: name.trim(),
           email: email.trim(),
-          // Vinculo por ID; o titulo vai junto so como rotulo (o servidor o
-          // rederiva a partir do jobId).
+
+
           jobId: Number(jobId) || null,
           role:
             jobs.find((j) => String(j.id) === jobId)?.title ??
             candidate?.role ??
             "",
-          // A etapa e gerenciada na pagina de Processos; aqui preserva a atual
-          // (ou "Triagem" no cadastro).
+
+
           stage: (candidate?.stage ?? "Triagem") as Candidate["stage"],
-          // A data real vem do servidor (updatedAt); este valor e ignorado.
+
           modifiedAt: candidate?.modifiedAt ?? "",
           linkedin: linkedin.trim(),
           cvName,
@@ -404,7 +404,7 @@ export function CandidateModal({
           type="button"
           onClick={() => cvRef.current?.click()}
           style={invalid("cv") ? { borderColor: "var(--accent)" } : undefined}
-          className="flex w-full items-center justify-between rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-white/40 hover:text-foreground"
+          className="flex w-full items-center justify-between rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-hairline-strong hover:text-foreground"
         >
           <span className="truncate">{cvName || admin.careers.cvAttach}</span>
           <span className="text-foreground">{admin.careers.cvSelect}</span>
@@ -452,8 +452,8 @@ export function ProcessModal({
   const jobs = useJobs(open);
 
   const editing = Boolean(card);
-  // Candidato escolhido (novo) ou o do card (edicao). A vaga e a empresa sao
-  // derivadas da vaga pretendida do candidato (por ID) — somente exibicao.
+
+
   const selected = candidates.find((c) => String(c.id) === candidateId);
   const derivedJob = selected?.jobId
     ? jobs.find((j) => j.id === selected.jobId)
@@ -514,8 +514,8 @@ export function ProcessModal({
             onChange={(v) => {
               setCandidateId(v);
               const c = candidates.find((x) => String(x.id) === v);
-              // Default: etapa atual do candidato, se for uma etapa valida
-              // (candidato fora do processo tem "-", entao cai em Triagem).
+
+
               if (c && isBlank(stage))
                 setStage(stages.includes(c.stage) ? c.stage : "Triagem");
             }}

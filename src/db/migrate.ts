@@ -6,7 +6,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
 
 async function main() {
-  // Cobre a conexao direta (supabase.co) e o pooler (pooler.supabase.com).
+
   const useSsl = (process.env.DATABASE_URL ?? "").includes("supabase");
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,

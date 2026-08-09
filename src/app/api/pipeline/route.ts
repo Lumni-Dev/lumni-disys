@@ -44,15 +44,12 @@ export async function POST(req: Request) {
   const { account, response } = await authorize("pipeline", "create");
   if (!account) return response;
 
-  // Limite de processos por empresa (workspace) conforme o plano.
   const limited = await planLimitError(account.id, "processes");
   if (limited) return limited;
 
   const body = await req.json();
   const stage = body.stage ?? STAGES[0];
 
-  // Candidato vinculado por ID (obrigatorio e da propria conta). A vaga e a
-  // empresa do card sao derivadas da vaga pretendida do candidato (por ID).
   const candId = Number(body.candidateId);
   const [candidate] = Number.isInteger(candId)
     ? await db
@@ -72,7 +69,6 @@ export async function POST(req: Request) {
   if (!candidate)
     return NextResponse.json({ error: "Candidato invalido" }, { status: 400 });
 
-  // Um candidato tem no maximo um card no processo (evita duplicados).
   const [existingCard] = await db
     .select({ id: schema.pipelineCards.id })
     .from(schema.pipelineCards)
@@ -116,7 +112,6 @@ export async function POST(req: Request) {
     })
     .returning();
 
-  // Sincroniza a etapa do candidato com a etapa inicial do card.
   await db
     .update(schema.candidates)
     .set({ stage })

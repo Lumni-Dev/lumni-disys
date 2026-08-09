@@ -11,11 +11,10 @@ export type Theme = {
   key: ThemeKey;
   label: string;
   color: string;
-  // Cor do texto/ícone sobre o acento (preto no branco, branco nas cores).
+
   fg: string;
 };
 
-// Cor de acento do sistema (botões primários, item ativo). Branco = padrão atual.
 export const THEMES: Theme[] = [
   { key: "white", label: "Branco", color: "#f2f2f2", fg: "#000000" },
   { key: "red", label: "Vermelho", color: "#ef4444", fg: "#ffffff" },

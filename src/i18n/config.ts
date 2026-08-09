@@ -15,7 +15,6 @@ export const LOCALES = [
 
 export type LocaleCode = (typeof LOCALES)[number]["code"];
 
-/** Chave usada no localStorage para lembrar o idioma escolhido. */
 export const STORAGE_KEY = "disys.lang";
 
 export function isLocale(value: unknown): value is LocaleCode {

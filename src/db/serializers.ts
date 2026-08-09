@@ -1,6 +1,6 @@
 import { emptyPermissions, type Member } from "@/lib/permissions";
 
-// Datas/horas sempre no fuso de Sao Paulo (os timestamps do banco sao UTC).
+
 const SAO_PAULO = "America/Sao_Paulo";
 
 export function formatDate(value: Date | string) {
@@ -12,7 +12,7 @@ export function formatDate(value: Date | string) {
   }).format(new Date(value));
 }
 
-/** Hora (HH:mm) no fuso de Sao Paulo, para exibir ao lado da data. */
+
 export function formatTime(value: Date | string) {
   return new Intl.DateTimeFormat("pt-BR", {
     timeZone: SAO_PAULO,
@@ -45,8 +45,8 @@ export function serializeJob(r: JobRow, applicants: number = r.applicants) {
     type: r.type,
     level: r.level,
     openings: r.openings,
-    // Candidatos = numero real de candidatos da vaga (calculado nas rotas);
-    // o valor da coluna e apenas o padrao quando nao informado.
+
+
     applicants,
     salaryFrom: r.salaryFrom,
     salaryTo: r.salaryTo,
@@ -66,8 +66,8 @@ type CandidateRow = {
   linkedin: string;
   cvName?: string;
   updatedAt: Date | string;
-  // A listagem envia so o flag (hasCv); rotas com .returning() trazem o
-  // conteudo e o flag e derivado aqui. O base64 nunca vai na resposta.
+
+
   cvBase64?: string;
   hasCv?: boolean;
   matchScore?: number | null;

@@ -1,8 +1,5 @@
 import nodemailer from "nodemailer";
 
-// Envio de e-mail transacional via SMTP (credenciais nas variaveis de
-// ambiente; nada de segredo no codigo).
-
 function transporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -16,7 +13,6 @@ function transporter() {
   });
 }
 
-/** Convite de workspace. Retorna false se o SMTP nao estiver configurado. */
 export async function sendInviteEmail(opts: {
   to: string;
   inviterName: string;
@@ -28,7 +24,7 @@ export async function sendInviteEmail(opts: {
   const { to, inviterName, url } = opts;
   const html = `
   <div style="margin:0;padding:32px 16px;background:#0a0a0b;font-family:Arial,Helvetica,sans-serif;">
-    <div style="max-width:480px;margin:0 auto;background:#101012;border:1px solid #26262a;border-radius:8px;overflow:hidden;">
+    <div style="max-width:480px;margin:0 auto;background:#101012;border:1px solid #26262a;border-radius:6px;overflow:hidden;">
       <div style="padding:24px;text-align:center;border-bottom:1px solid #1d1d20;">
         <span style="font-size:22px;letter-spacing:0.3em;color:#ffffff;">DISYS</span>
       </div>
@@ -45,7 +41,7 @@ export async function sendInviteEmail(opts: {
           Para aceitar ou recusar, entre com este e-mail e abra o convite:
         </p>
         <p style="margin:0 0 24px;text-align:center;">
-          <a href="${url}" style="display:inline-block;background:#ffffff;color:#0a0a0b;text-decoration:none;font-weight:bold;padding:10px 24px;border-radius:8px;">
+          <a href="${url}" style="display:inline-block;background:#ffffff;color:#0a0a0b;text-decoration:none;font-weight:bold;padding:10px 24px;border-radius:6px;">
             Ver convite
           </a>
         </p>

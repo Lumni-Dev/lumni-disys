@@ -4,13 +4,8 @@ import * as schema from "./schema";
 
 const globalForDb = globalThis as unknown as { pool?: Pool };
 
-// Cobre a conexao direta (db.<ref>.supabase.co) e o pooler
-// (aws-0-<regiao>.pooler.supabase.com); ambos exigem SSL.
 const useSsl = (process.env.DATABASE_URL ?? "").includes("supabase");
 
-// Pool enxuto: em serverless cada instance quente mantem seu proprio pool,
-// entao um max baixo evita saturar o pooler do Postgres sob concorrencia, e
-// conexoes ociosas sao liberadas rapido.
 const pool =
   globalForDb.pool ??
   new Pool({

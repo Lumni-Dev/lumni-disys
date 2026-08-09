@@ -8,8 +8,6 @@ import { validPermissionRows } from "@/lib/permissions";
 
 type Params = { params: Promise<{ id: string }> };
 
-// Contexto de dono: so o dono do workspace altera permissoes de membros, e
-// ninguem pode editar/excluir o proprio registro ou o do dono (auto-escalada).
 async function ownerContext(accountId: number) {
   const session = await auth();
   const email = session?.user?.email ?? "";
@@ -63,7 +61,6 @@ export async function PUT(req: Request, { params }: Params) {
   if (!member)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Permissoes: SOMENTE o dono altera. Para nao-dono, mantem as atuais.
   let rows: { memberId: number; module: string; action: string }[];
   if (isOwner) {
     await db

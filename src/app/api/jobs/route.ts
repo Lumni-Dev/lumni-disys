@@ -6,7 +6,7 @@ import { authorize } from "@/lib/authz";
 import { planLimitError } from "@/lib/plan";
 import { applicantsByJob } from "@/lib/job";
 
-// Nome do workspace (a empresa), para preencher o campo denormalizado da vaga.
+
 async function workspaceName(accountId: number): Promise<string> {
   const [acc] = await db
     .select({ name: schema.accounts.name })
@@ -25,7 +25,7 @@ export async function GET() {
     .where(eq(schema.jobs.accountId, account.id))
     .orderBy(asc(schema.jobs.id));
 
-  // Candidatos = numero real de candidatos por vaga (vinculo por jobId).
+
   const applicants = await applicantsByJob(account.id);
   return NextResponse.json(
     rows.map((r) => serializeJob(r, applicants.get(r.id) ?? 0)),
@@ -36,13 +36,13 @@ export async function POST(req: Request) {
   const { account, response } = await authorize("jobs", "create");
   if (!account) return response;
 
-  // Plano Free: ate 1 vaga; o Plus e ilimitado.
+
   const limited = await planLimitError(account.id, "jobs");
   if (limited) return limited;
 
   const body = await req.json();
 
-  // O workspace E a empresa: a vaga herda o nome do workspace.
+
   const company = await workspaceName(account.id);
 
   const [row] = await db
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
       openings: Number(body.openings) || 1,
       salaryFrom: Number(body.salaryFrom) || 0,
       salaryTo: Number(body.salaryTo) || 0,
-      // applicants nasce em 0 e so cresce com candidaturas reais.
+
       status: body.status ?? "Aberta",
     })
     .returning();

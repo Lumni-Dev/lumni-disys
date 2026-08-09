@@ -5,8 +5,6 @@ import { db, schema } from "@/db";
 import { applySubscription, billingForEmail } from "@/lib/plan";
 import { stripe, productId, priceCents, type PaidTier } from "@/lib/stripe";
 
-// Inicia a assinatura de um tier pago (plus/max) para o USUARIO logado: cria
-// a sessao de checkout do Stripe e devolve a URL de pagamento.
 export async function POST(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
@@ -28,9 +26,6 @@ export async function POST(req: Request) {
     recurring: { interval: "month" as const },
   };
 
-  // Ja assinante de um tier pago: troca o tier ATUALIZANDO a assinatura
-  // existente (com proporcao), em vez de criar uma segunda. Evita cobranca
-  // duplicada. Nao passa pelo checkout: aplica e volta para /plan.
   if (billing.stripeSubscriptionId) {
     try {
       const current = await stripe().subscriptions.retrieve(
@@ -51,13 +46,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ url: `${origin}/plan?checkout=success` });
       }
     } catch {
-      // Assinatura sumiu/invalida no modo atual: cai para o checkout novo.
+
     }
   }
 
-  // Reusa o cliente do Stripe do usuario, se ja existir (evita duplicar).
-  // O ID salvo pode ser do outro modo (test x live, ex.: apos alternar o
-  // STRIPE_MODE): valida no modo atual e descarta se nao existir la.
   let customerId = billing.stripeCustomerId;
   if (customerId) {
     try {
@@ -82,11 +74,9 @@ export async function POST(req: Request) {
   const checkout = await stripe().checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
-    // Preco inline: o valor vem do env ({PLUS,MAX}_PRICE_CENTS), entao da para
-    // mudar a mensalidade sem criar preco novo no dashboard do Stripe.
+
     line_items: [{ price_data: priceData, quantity: 1 }],
-    // O session_id permite sincronizar o plano no retorno mesmo sem webhook
-    // (ex.: desenvolvimento local).
+
     success_url: `${origin}/plan?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/plan?checkout=canceled`,
     metadata: { email, tier },

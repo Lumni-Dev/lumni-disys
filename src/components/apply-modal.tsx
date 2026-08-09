@@ -38,7 +38,7 @@ export function ApplyModal({
 
   const MAX_CV_BYTES = 2 * 1024 * 1024;
 
-  // Le o arquivo de verdade (base64) para enviar junto com a candidatura.
+
   function onCvFile(file: File | undefined) {
     setCvTooBig(false);
     if (!file) return;
@@ -63,7 +63,7 @@ export function ApplyModal({
       email: !isEmail(email),
       phone: !isPhone(phone),
       linkedin: !isUrl(linkedin),
-      // Mensagem e opcional (nao e armazenada): nao bloqueia o envio.
+
       cv: !cvData,
     };
     setErrs(errors);
@@ -121,6 +121,7 @@ export function ApplyModal({
     <Modal
       open={!!job}
       onClose={close}
+      scope="force-dark"
       title={sent ? t.sentTitle : t.apply}
       subtitle={job ? `${job.title} · ${job.company}` : ""}
     >

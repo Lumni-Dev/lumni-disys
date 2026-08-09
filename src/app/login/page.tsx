@@ -12,8 +12,8 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
-      {/* Fundo decorativo, espelhado da home. */}
+    <div className="force-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
+
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.35]"

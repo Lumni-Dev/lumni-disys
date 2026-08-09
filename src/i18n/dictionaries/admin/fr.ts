@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const fr: Admin = {
   nav: {
     dashboard: "Tableau de bord",
-    companies: "Entreprises",
     jobs: "Offres",
     candidates: "Candidats",
     pipeline: "Pipeline",
@@ -19,15 +18,29 @@ const fr: Admin = {
     myWorkspace: "Mon espace de travail",
     readonly: "Lecture seule",
     plan: "Forfait",
+    lightMode: "Mode clair",
+    darkMode: "Mode sombre",
   },
   workspace: {
-    newWorkspace: "Nouvel espace",
     createTitle: "Créer un espace",
     createSubtitle: "Créez un espace pour commencer à publier vos offres",
     nameLabel: "Nom de l'espace",
     namePlaceholder: "Ex. : Mon Entreprise",
     hint: "Conseil : utilisez le nom de votre entreprise.",
     create: "Créer l'espace",
+    editTitle: "Renommer l'espace",
+    editSubtitle: "Modifiez le nom de votre espace",
+    title: "Mes espaces",
+    subtitle: "Gérez vos espaces",
+    searchPlaceholder: "Rechercher des espaces...",
+    active: "Actif",
+    activate: "Ouvrir",
+    jobsCount: (n) => `${n} ${n === 1 ? "offre" : "offres"}`,
+    empty: "Aucun espace pour le moment",
+    deleteBlocked: (n) =>
+      `Suppression impossible : ${n} ${n === 1 ? "offre liée" : "offres liées"}.`,
+    deleteMessage:
+      "Voulez-vous vraiment supprimer cet espace ? Cette action est irréversible.",
   },
   plan: {
     title: "Forfait",
@@ -64,8 +77,6 @@ const fr: Admin = {
     limitTitle: "Limite du forfait Free",
     limitWorkspaces:
       "Le forfait Free permet 1 espace. Abonnez-vous à Plus pour des espaces illimités.",
-    limitCompanies:
-      "Le forfait Free permet d'enregistrer 1 entreprise. Abonnez-vous à Plus pour un accès illimité.",
     limitJobs:
       "Le forfait Free permet d'enregistrer 1 offre. Abonnez-vous à Plus pour un accès illimité.",
     limitCandidates:
@@ -78,8 +89,6 @@ const fr: Admin = {
   },
   deleteBlocked: {
     title: "Suppression impossible",
-    companyHasJobs: (n) =>
-      `Cette entreprise a ${n} poste${n === 1 ? "" : "s"}. Supprimez ou dissociez les postes avant de supprimer l'entreprise.`,
     jobHasCandidates: (n) =>
       `Ce poste a ${n} candidat${n === 1 ? "" : "s"}. Supprimez les candidats avant de supprimer le poste.`,
   },
@@ -145,13 +154,14 @@ const fr: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "Entreprises actives",
       openJobs: "Offres ouvertes",
       candidates: "Candidats",
       activePipeline: "Pipelines actifs",
+      team: "Collaborateurs",
     },
     deltaTalent: "dans le vivier de talents",
     deltaInProgress: "en cours",
+    deltaTeam: "dans l'équipe",
     funnelTitle: "Entonnoir de recrutement",
     funnelSubtitle: "Candidats par étape",
     totalInProcess: "Total en cours",
@@ -161,22 +171,6 @@ const fr: Admin = {
     movedTo: (stage) => `déplacé vers ${stage}`,
     noActivity: "Aucune activité récente pour le moment.",
     noMovements: "0 mise à jour",
-  },
-  companies: {
-    searchPlaceholder: "Rechercher des entreprises...",
-    add: "Nouvelle entreprise",
-    allSectors: "Tous les secteurs",
-    allStatuses: "Tous les statuts",
-    listTitle: "Entreprises enregistrées",
-    empty: "Aucune entreprise trouvée.",
-    fileName: "entreprises",
-    cols: {
-      name: "Entreprise",
-      sector: "Secteur",
-      location: "Localisation",
-      openings: "Postes",
-      status: "Statut",
-    },
   },
   jobs: {
     searchPlaceholder: "Rechercher des offres...",
@@ -295,25 +289,6 @@ const fr: Admin = {
     permissionsByPage: "Permissions par page",
     page: "Page",
     selectOnePermission: "Sélectionnez au moins une permission.",
-    company: {
-      editTitle: "Modifier l'entreprise",
-      newTitle: "Nouvelle entreprise",
-      editSubtitle: "Mettez à jour les informations de l'entreprise",
-      newSubtitle: "Enregistrez une entreprise partenaire",
-      name: "Nom de l'entreprise",
-      sector: "Secteur",
-      country: "Pays",
-      cnpj: "CNPJ",
-      cnpjLookup: "Recherche des données du CNPJ...",
-      state: "État",
-      city: "Ville",
-      taxId: "Immatriculation fiscale",
-      stateProvince: "État / Province",
-      status: "Statut",
-      selectCity: "Sélectionnez la ville",
-      selectStateFirst: "Choisissez d'abord l'état",
-      taxIdPlaceholder: "N° fiscal / TVA / EIN…",
-    },
     job: {
       companyHint: "Si vous n'avez pas trouvé votre entreprise dans la liste,",
       companyHintLink: "ajoutez-la sur la page des entreprises",
@@ -412,7 +387,6 @@ const fr: Admin = {
     invalidLink:
       "Ce lien d'offres n'est pas valide. Demandez à l'entreprise son lien complet.",
     jobNotFound: "Cette offre n'est plus disponible.",
-    viewAll: "Voir toutes les offres",
     goHome: "Aller à l'accueil",
   },
   login: {

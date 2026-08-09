@@ -1,16 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  /* Paleta "ink" padrão da Lumni (lumni-landing): preto / branco / cinza. */
+:root,
+:root[data-theme="light"] {
+  --background: #f7f7f7;
+  --surface: #ffffff;
+  --surface-2: #f0f0f0;
+
+  --foreground: #171717;
+  --muted: #737373;
+
+  --border: rgba(0, 0, 0, 0.1);
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.16);
+  --overlay: rgba(0, 0, 0, 0.04);
+  --overlay-strong: rgba(0, 0, 0, 0.07);
+  --overlay-faint: rgba(0, 0, 0, 0.02);
+
+  --accent: #171717;
+  --accent-foreground: #ffffff;
+
+  --elevated-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="dark"],
+.force-dark {
   --background: #000000;
   --surface: #101012;
   --surface-2: #1a1a1d;
-  --border: #1d1d20;
   --foreground: #f2f2f2;
   --muted: #8a8a8a;
-  /* Acento temático escolhido pelo usuário (padrão branco = visual monocromático). */
+  --border: rgba(255, 255, 255, 0.08);
+  --hairline: rgba(255, 255, 255, 0.07);
+  --hairline-strong: rgba(255, 255, 255, 0.15);
+  --overlay: rgba(255, 255, 255, 0.06);
+  --overlay-strong: rgba(255, 255, 255, 0.12);
+  --overlay-faint: rgba(255, 255, 255, 0.015);
+
   --accent: #f2f2f2;
   --accent-foreground: #000000;
+  --elevated-shadow: 0 10px 28px -16px rgba(0, 0, 0, 0.85);
 }
 
 @theme inline {
@@ -22,18 +50,24 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-overlay: var(--overlay);
+  --color-overlay-strong: var(--overlay-strong);
+  --color-overlay-faint: var(--overlay-faint);
   --animate-shake: shake 0.4s ease-in-out;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-logo: var(--font-orbitron);
 
-  --radius-xs: 8px;
-  --radius-sm: 8px;
-  --radius-md: 8px;
-  --radius-lg: 8px;
-  --radius-xl: 8px;
-  --radius-2xl: 8px;
-  --radius-3xl: 8px;
+  --radius-xs: 6px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-2xl: 6px;
+  --radius-3xl: 6px;
 
   --spacing-base: 10px;
 }
@@ -67,16 +101,13 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Scroll suave nos links internos da landing (#modulos, #recursos, #acesso),
-   escopado a ela via .landing-root e respeitando prefers-reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.landing-root) {
     scroll-behavior: smooth;
   }
 }
 
-/* Fundo ambiente do app inteiro: brilhos suaves para nao ficar preto chapado. */
-body::before {
+:root[data-theme="dark"] body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -88,9 +119,8 @@ body::before {
     radial-gradient(42% 40% at 0% 18%, rgba(255, 255, 255, 0.025), transparent 70%);
 }
 
-/* Elevacao reutilizavel: sombra suave, sem brilho (gloss). */
 .elevated {
-  box-shadow: 0 10px 28px -16px rgba(0, 0, 0, 0.85);
+  box-shadow: var(--elevated-shadow);
 }
 
 * {
@@ -114,7 +144,7 @@ select:not(:disabled) {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #3a3a3f transparent;
+  scrollbar-color: var(--hairline-strong) transparent;
 }
 ::-webkit-scrollbar {
   width: 6px;
@@ -124,8 +154,8 @@ select:not(:disabled) {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3a3a3f;
-  border-radius: 8px;
+  background: var(--hairline-strong);
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
@@ -139,8 +169,8 @@ select:not(:disabled) {
   height: 6px;
 }
 .scroll-thin::-webkit-scrollbar-thumb {
-  background: #3a3a3f;
-  border-radius: 8px;
+  background: var(--hairline-strong);
+  border-radius: 6px;
 }
 .scroll-thin::-webkit-scrollbar-thumb:hover {
   background: var(--muted);

@@ -1,13 +1,11 @@
 import { cx } from "@/lib/utils";
 
-/** Bloco de carregamento com shimmer (animate-pulse). */
 export function Skeleton({ className }: { className?: string }) {
   return (
-    <div className={cx("animate-pulse rounded-lg bg-white/10", className)} />
+    <div className={cx("animate-pulse rounded-lg bg-overlay-strong", className)} />
   );
 }
 
-/** Linhas fantasmas para tabelas. Usar dentro de <Tbody>. */
 export function SkeletonRows({ rows = 6, cols }: { rows?: number; cols: number }) {
   const widths = ["w-3/4", "w-1/2", "w-2/3", "w-1/3", "w-1/2"];
   return (

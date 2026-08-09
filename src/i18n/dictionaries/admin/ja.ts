@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const ja: Admin = {
   nav: {
     dashboard: "ダッシュボード",
-    companies: "企業",
     jobs: "求人",
     candidates: "候補者",
     pipeline: "パイプライン",
@@ -19,15 +18,27 @@ const ja: Admin = {
     myWorkspace: "マイワークスペース",
     readonly: "閲覧のみ",
     plan: "プラン",
+    lightMode: "ライトモード",
+    darkMode: "ダークモード",
   },
   workspace: {
-    newWorkspace: "新しいワークスペース",
     createTitle: "ワークスペースを作成",
     createSubtitle: "ワークスペースを作成して求人の掲載を始めましょう",
     nameLabel: "ワークスペース名",
     namePlaceholder: "例: 自社名",
     hint: "ヒント: 会社名を使うのがおすすめです。",
     create: "ワークスペースを作成",
+    editTitle: "ワークスペースの名前を変更",
+    editSubtitle: "ワークスペース名を変更します",
+    title: "マイワークスペース",
+    subtitle: "ワークスペースを管理",
+    searchPlaceholder: "ワークスペースを検索...",
+    active: "使用中",
+    activate: "開く",
+    jobsCount: (n) => `${n} 件の求人`,
+    empty: "ワークスペースがありません",
+    deleteBlocked: (n) => `削除できません: ${n} 件の求人が紐づいています。`,
+    deleteMessage: "このワークスペースを削除しますか？この操作は元に戻せません。",
   },
   plan: {
     title: "プラン",
@@ -58,8 +69,6 @@ const ja: Admin = {
     limitTitle: "Free プランの上限",
     limitWorkspaces:
       "Free プランで作成できるワークスペースは 1 つです。Plus に登録すると無制限になります。",
-    limitCompanies:
-      "Free プランで登録できる企業は 1 件です。Plus に登録すると無制限になります。",
     limitJobs:
       "Free プランで登録できる求人は 1 件です。Plus に登録すると無制限になります。",
     limitCandidates:
@@ -72,8 +81,6 @@ const ja: Admin = {
   },
   deleteBlocked: {
     title: "削除できません",
-    companyHasJobs: (n) =>
-      `この会社には求人が${n}件あります。会社を削除する前に、求人を削除するか関連付けを解除してください。`,
     jobHasCandidates: (n) =>
       `この求人には候補者が${n}名います。求人を削除する前に、候補者を削除してください。`,
   },
@@ -139,13 +146,14 @@ const ja: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "有効な企業",
       openJobs: "募集中の求人",
       candidates: "候補者",
       activePipeline: "進行中のパイプライン",
+      team: "メンバー",
     },
     deltaTalent: "人材プール内",
     deltaInProgress: "進行中",
+    deltaTeam: "チーム内",
     funnelTitle: "採用ファネル",
     funnelSubtitle: "ステージ別の候補者",
     totalInProcess: "選考中の合計",
@@ -155,22 +163,6 @@ const ja: Admin = {
     movedTo: (stage) => `${stage}へ移動しました`,
     noActivity: "最近のアクティビティはまだありません。",
     noMovements: "0件の更新",
-  },
-  companies: {
-    searchPlaceholder: "企業を検索...",
-    add: "新規企業",
-    allSectors: "すべての業種",
-    allStatuses: "すべてのステータス",
-    listTitle: "登録済みの企業",
-    empty: "企業が見つかりません。",
-    fileName: "companies",
-    cols: {
-      name: "企業",
-      sector: "業種",
-      location: "所在地",
-      openings: "募集数",
-      status: "ステータス",
-    },
   },
   jobs: {
     searchPlaceholder: "求人を検索...",
@@ -289,25 +281,6 @@ const ja: Admin = {
     permissionsByPage: "ページ別の権限",
     page: "ページ",
     selectOnePermission: "少なくとも1つの権限を選択してください。",
-    company: {
-      editTitle: "企業を編集",
-      newTitle: "新規企業",
-      editSubtitle: "企業情報を更新",
-      newSubtitle: "提携企業を登録",
-      name: "企業名",
-      sector: "業種",
-      country: "国",
-      cnpj: "CNPJ",
-      cnpjLookup: "CNPJ情報を取得中...",
-      state: "州",
-      city: "市区町村",
-      taxId: "税務登録番号",
-      stateProvince: "州 / 県",
-      status: "ステータス",
-      selectCity: "市区町村を選択",
-      selectStateFirst: "先に州を選択してください",
-      taxIdPlaceholder: "Tax ID / VAT / EIN…",
-    },
     job: {
       companyHint: "会社が一覧に見つからない場合は、",
       companyHintLink: "会社ページで登録してください",
@@ -404,7 +377,6 @@ const ja: Admin = {
     invalidLink:
       "この求人リンクは無効です。企業に完全なリンクをお問い合わせください。",
     jobNotFound: "この求人は現在募集していません。",
-    viewAll: "すべての求人を見る",
     goHome: "ホームへ",
   },
   login: {

@@ -10,10 +10,6 @@ import {
 } from "@/lib/plan";
 import { stripe, priceCents } from "@/lib/stripe";
 
-// Situacao do plano do USUARIO: plano atual, uso dos recursos limitados
-// (workspaces proprios + recursos do workspace ativo) e dados da assinatura.
-// Com ?session_id=..., sincroniza o retorno do checkout direto no Stripe
-// (fallback para quando o webhook nao alcanca o ambiente).
 export async function GET(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
@@ -30,14 +26,14 @@ export async function GET(req: Request) {
         typeof checkout.subscription === "string"
           ? checkout.subscription
           : checkout.subscription?.id;
-      // So aplica se o checkout for mesmo deste usuario.
+
       if (subId && checkout.metadata?.email === email) {
         const sub = await stripe().subscriptions.retrieve(subId);
         await applySubscription(email, sub);
         billing = await billingForEmail(email);
       }
     } catch {
-      // Sessao invalida/expirada: segue com os dados atuais do banco.
+
     }
   }
 
@@ -55,10 +51,10 @@ export async function GET(req: Request) {
 
   return NextResponse.json({
     plan,
-    // Uso do workspace ativo (por empresa) + total de workspaces do usuario.
+
     usage: { workspaces, jobs, candidates, processes, members },
     limits: PLAN_LIMITS[plan],
-    // Mensalidades vigentes em centavos (env), para exibir nos cartoes.
+
     prices: { plus: priceCents("plus"), max: priceCents("max") },
     status: billing.stripeStatus,
     cancelAtPeriodEnd: billing.cancelAtPeriodEnd,
@@ -66,8 +62,6 @@ export async function GET(req: Request) {
   });
 }
 
-// Gerencia a assinatura ativa do usuario: agenda o cancelamento para o fim
-// do periodo pago ou o reativa.
 export async function POST(req: Request) {
   const session = await auth();
   const email = session?.user?.email;

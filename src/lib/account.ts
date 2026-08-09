@@ -1,6 +1,5 @@
 import { randomBytes } from "crypto";
 import { and, asc, eq } from "drizzle-orm";
-import { auth } from "@/auth";
 import { db, schema } from "@/db";
 
 export type Account = { id: number; publicToken: string };
@@ -9,7 +8,6 @@ function newToken(): string {
   return randomBytes(9).toString("hex");
 }
 
-/** O e-mail tem acesso a esta conta? (dono ou colaborador dela) */
 async function hasAccess(email: string, accountId: number): Promise<boolean> {
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
@@ -30,14 +28,8 @@ async function hasAccess(email: string, accountId: number): Promise<boolean> {
   return Boolean(member);
 }
 
-/**
- * Workspace ativo do e-mail, nesta ordem: o escolhido pelo usuario (se o
- * vinculo ainda vale) > o primeiro workspace proprio > o primeiro convite
- * aceito > null (o usuario ainda precisa criar um workspace no onboarding —
- * nada e criado automaticamente).
- */
 export async function accountForEmail(email: string): Promise<Account | null> {
-  // 1) Workspace ativo escolhido pelo usuario, se ainda tiver acesso.
+
   const [profile] = await db
     .select({ activeAccountId: schema.userProfiles.activeAccountId })
     .from(schema.userProfiles)
@@ -52,7 +44,6 @@ export async function accountForEmail(email: string): Promise<Account | null> {
     }
   }
 
-  // 2) Primeiro workspace proprio.
   const [owned] = await db
     .select()
     .from(schema.accounts)
@@ -61,7 +52,6 @@ export async function accountForEmail(email: string): Promise<Account | null> {
     .limit(1);
   if (owned) return { id: owned.id, publicToken: owned.publicToken };
 
-  // 3) Primeiro convite ACEITO (quem so foi convidado cai aqui).
   const [member] = await db
     .select()
     .from(schema.teamMembers)
@@ -84,10 +74,6 @@ export async function accountForEmail(email: string): Promise<Account | null> {
   return null;
 }
 
-/**
- * Cria um workspace para o e-mail com o nome dado e ja o torna o ativo.
- * O limite de workspaces por plano e validado pela rota (workspaceLimitError).
- */
 export async function createWorkspace(
   email: string,
   name: string,
@@ -106,15 +92,6 @@ export async function createWorkspace(
   return { id: created.id, publicToken: created.publicToken };
 }
 
-/** Conta ativa do usuario logado, ou null (sem sessao ou sem workspace). */
-export async function currentAccount(): Promise<Account | null> {
-  const session = await auth();
-  const email = session?.user?.email;
-  if (!email) return null;
-  return accountForEmail(email);
-}
-
-/** Conta pelo token publico (usado na pagina publica de vagas). */
 export async function accountByToken(token: string): Promise<Account | null> {
   const [acc] = await db
     .select()

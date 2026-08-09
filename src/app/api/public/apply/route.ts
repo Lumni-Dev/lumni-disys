@@ -5,10 +5,8 @@ import { accountByToken } from "@/lib/account";
 import { planLimitError } from "@/lib/plan";
 import { scoreCvMatch } from "@/lib/match";
 
-// A analise de compatibilidade por IA pode levar alguns segundos.
 export const maxDuration = 60;
 
-// Candidatura publica: cria o candidato na conta dona do link (token).
 export async function POST(req: Request) {
   const body = await req.json();
 
@@ -25,8 +23,6 @@ export async function POST(req: Request) {
   const role = String(body.jobTitle ?? "").slice(0, 160);
   const jobId = Number(body.jobId);
 
-  // Mesma pessoa na mesma vaga (vinculo por jobId): nao duplica o candidato
-  // nem infla a contagem, mesmo que dois cargos tenham o mesmo titulo.
   if (Number.isFinite(jobId)) {
     const [dup] = await db
       .select({ id: schema.candidates.id })
@@ -41,12 +37,9 @@ export async function POST(req: Request) {
     if (dup) return NextResponse.json({ ok: true }, { status: 200 });
   }
 
-  // Conta no plano Free com o teto de candidatos atingido nao recebe novas
-  // candidaturas publicas (mesma regra do cadastro interno).
   const limited = await planLimitError(account.id, "candidates");
   if (limited) return limited;
 
-  // Curriculo: data URL base64, com teto de tamanho no servidor (~2 MB).
   const cvData =
     typeof body.cvData === "string" &&
     body.cvData.startsWith("data:") &&
@@ -54,7 +47,6 @@ export async function POST(req: Request) {
       ? body.cvData
       : "";
 
-  // Dados da vaga: empresa para o card e titulo/descricao para a analise.
   let job: {
     title: string;
     company: string;
@@ -74,7 +66,6 @@ export async function POST(req: Request) {
     job = row ?? null;
   }
 
-  // Compatibilidade curriculo x vaga por IA (0 a 100; null se falhar).
   const cvName = cvData ? String(body.cvName ?? "").slice(0, 200) : "";
   const matchScore =
     cvData && job
@@ -103,12 +94,8 @@ export async function POST(req: Request) {
     })
     .returning({ id: schema.candidates.id });
 
-  // O numero de candidatos da vaga e derivado da tabela de candidatos
-  // (vinculo por jobId), entao nao ha mais contador a incrementar aqui.
   const jobCompany = job?.company ?? "";
 
-  // A candidatura ja entra no kanban de processos, no fim da Triagem,
-  // vinculada ao candidato (mover o card depois atualiza a etapa dele).
   const inStage = await db
     .select({ id: schema.pipelineCards.id })
     .from(schema.pipelineCards)

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { cx, initials, ACTIVE } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
+import { useColorScheme } from "@/lib/color-scheme";
 import { useAccess, useWorkspaces } from "@/lib/access";
 import { api } from "@/lib/api-client";
 import { Avatar } from "@/components/ui/avatar";
@@ -21,9 +22,10 @@ import {
   IconChevronLeft,
   IconClose,
   IconCreditCard,
-  IconPlus,
+  IconBuilding,
+  IconSun,
+  IconMoon,
 } from "@/components/ui/icons";
-import { WorkspaceModal } from "@/components/workspace-modal";
 import type { Admin } from "@/i18n/types";
 
 const nav: {
@@ -44,15 +46,15 @@ export function Sidebar() {
   const { data: session } = useSession();
   const { photo } = useProfile();
   const access = useAccess();
-  // Colaborador so ve no menu os modulos com permissao de ver; enquanto o
-  // acesso carrega, mostra tudo (caso comum: dono, que ve tudo mesmo).
+
+
   const items = access ? nav.filter((n) => access.modules.includes(n.key)) : nav;
   const workspaces = useWorkspaces();
-  const [wsModalOpen, setWsModalOpen] = useState(false);
   const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } =
     useSidebar();
+  const { scheme, toggle: toggleScheme } = useColorScheme();
 
-  // Troca de workspace: salva o ativo e recarrega no dashboard.
+
   function switchWorkspace(v: string) {
     void api
       .put("/api/workspaces", { id: Number(v) })
@@ -62,9 +64,9 @@ export function Sidebar() {
   const accountActive = pathname.startsWith("/account");
   const planActive = pathname.startsWith("/plan");
 
-  // Plano do workspace ativo, para o badge Free/Plus do menu. A pagina do
-  // plano dispara "plan-updated" quando o plano muda (ex.: apos o checkout),
-  // para o badge nao ficar defasado ate o proximo reload.
+
+
+
   const [plan, setPlan] = useState<"free" | "plus" | "max" | null>(null);
   useEffect(() => {
     api
@@ -94,9 +96,9 @@ export function Sidebar() {
 
       <aside
         className={cx(
-          // h-dvh (nao h-screen): no iOS o 100vh fica atras da barra do
-          // Safari e esconderia o rodape do menu (perfil).
-          "fixed inset-y-0 left-0 z-50 flex h-dvh w-56 shrink-0 flex-col border-r border-white/[0.05] bg-surface/70 shadow-[8px_0_24px_-16px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200",
+
+
+          "fixed inset-y-0 left-0 z-50 flex h-dvh w-56 shrink-0 flex-col border-r border-hairline bg-surface transition-all duration-200",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:sticky lg:top-0 lg:translate-x-0",
           collapsed ? "lg:w-16" : "lg:w-56",
@@ -104,7 +106,7 @@ export function Sidebar() {
       >
         <div
           className={cx(
-            "flex shrink-0 items-center gap-2.5 border-b border-white/[0.05] p-2.5",
+            "flex shrink-0 items-center gap-2.5 border-b border-hairline p-2.5",
             collapsed && "lg:justify-center",
           )}
         >
@@ -114,7 +116,7 @@ export function Sidebar() {
             </span>
           )}
           <div className={cx("min-w-0 leading-tight", hide)}>
-            <p className="truncate text-base font-normal tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
+            <p className="truncate text-base font-semibold tracking-[0.28em] text-foreground [font-family:var(--font-orbitron)]">
               DISYS
             </p>
             <p className="truncate text-xs text-muted">
@@ -133,7 +135,7 @@ export function Sidebar() {
         {workspaces && workspaces.length > 0 && (
           <div
             className={cx(
-              "flex shrink-0 flex-col gap-2 border-b border-white/[0.05] p-2.5",
+              "flex shrink-0 flex-col gap-2 border-b border-hairline p-2.5",
               collapsed && "lg:hidden",
             )}
           >
@@ -149,14 +151,19 @@ export function Sidebar() {
                     : w.ownerName || w.ownerEmail),
               }))}
             />
-            <button
-              type="button"
-              onClick={() => setWsModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+            <Link
+              href="/workspaces"
+              onClick={close}
+              className={cx(
+                "flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors",
+                pathname.startsWith("/workspaces")
+                  ? "bg-surface-2 text-foreground"
+                  : "text-muted hover:bg-surface-2 hover:text-foreground",
+              )}
             >
-              <IconPlus className="h-3.5 w-3.5 shrink-0" />
-              {admin.workspace.newWorkspace}
-            </button>
+              <IconBuilding className="h-3.5 w-3.5 shrink-0" />
+              {admin.workspace.title}
+            </Link>
           </div>
         )}
 
@@ -190,23 +197,54 @@ export function Sidebar() {
           })}
         </nav>
 
-        <button
-          onClick={toggleCollapsed}
+        <div
           className={cx(
-            "hidden shrink-0 items-center gap-2.5 border-t border-white/[0.05] px-2.5 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:flex",
-            collapsed && "lg:justify-center",
+            "shrink-0 border-t border-hairline p-2.5",
+            collapsed
+              ? "flex flex-col items-center gap-1.5"
+              : "flex items-center gap-1.5",
           )}
         >
-          <IconChevronLeft
+          <button
+            onClick={toggleCollapsed}
             className={cx(
-              "h-5 w-5 shrink-0 transition-transform",
-              collapsed && "rotate-180",
+              "hidden shrink-0 items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:flex",
+              collapsed
+                ? "lg:h-10 lg:w-10 lg:justify-center lg:p-0"
+                : "flex-1",
             )}
-          />
-          <span className={hide}>{admin.sidebar.collapse}</span>
-        </button>
+          >
+            <IconChevronLeft
+              className={cx(
+                "h-5 w-5 shrink-0 transition-transform",
+                collapsed && "rotate-180",
+              )}
+            />
+            <span className={hide}>{admin.sidebar.collapse}</span>
+          </button>
+          <button
+            onClick={toggleScheme}
+            aria-label={
+              scheme === "dark"
+                ? admin.sidebar.lightMode
+                : admin.sidebar.darkMode
+            }
+            title={
+              scheme === "dark"
+                ? admin.sidebar.lightMode
+                : admin.sidebar.darkMode
+            }
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-foreground lg:h-8 lg:w-8"
+          >
+            {scheme === "dark" ? (
+              <IconSun className="h-4 w-4" />
+            ) : (
+              <IconMoon className="h-4 w-4" />
+            )}
+          </button>
+        </div>
 
-        <div className="shrink-0 border-t border-white/[0.05] p-2.5">
+        <div className="shrink-0 border-t border-hairline p-2.5">
           <Link
             href="/plan"
             onClick={close}
@@ -229,7 +267,7 @@ export function Sidebar() {
                 className={cx(
                   "rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                   plan === "free"
-                    ? "bg-surface-2 text-muted ring-1 ring-white/10"
+                    ? "bg-surface-2 text-muted ring-1 ring-hairline"
                     : "bg-accent text-accent-foreground",
                   hide,
                 )}
@@ -240,7 +278,7 @@ export function Sidebar() {
           </Link>
         </div>
 
-        <div className="shrink-0 border-t border-white/[0.05] p-2.5">
+        <div className="shrink-0 border-t border-hairline p-2.5">
           <Link
             href="/account"
             onClick={close}
@@ -249,12 +287,12 @@ export function Sidebar() {
               "flex items-center gap-2.5 rounded-lg p-2 transition-colors",
               collapsed && "lg:mx-auto lg:h-10 lg:w-10 lg:justify-center lg:p-0",
               accountActive
-                ? "bg-surface-2 ring-1 ring-white/15"
+                ? "bg-surface-2 ring-1 ring-hairline-strong"
                 : "hover:bg-surface-2",
             )}
           >
             {userImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
+
               <img
                 src={userImage}
                 alt=""
@@ -272,8 +310,6 @@ export function Sidebar() {
           </Link>
         </div>
       </aside>
-
-      <WorkspaceModal open={wsModalOpen} onClose={() => setWsModalOpen(false)} />
     </>
   );
 }

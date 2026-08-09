@@ -8,7 +8,7 @@ export interface FeatureCopy {
   desc: string;
 }
 
-/** Textos da landing page publica do disys. */
+
 export interface Landing {
   languageLabel: string;
   nav: {
@@ -54,11 +54,10 @@ export interface Landing {
   };
 }
 
-/** Textos do painel administrativo (area logada) do disys. */
+
 export interface Admin {
   nav: {
     dashboard: string;
-    companies: string;
     jobs: string;
     candidates: string;
     pipeline: string;
@@ -71,36 +70,57 @@ export interface Admin {
     openMenu: string;
     closeMenu: string;
     userFallback: string;
-    /** Rotulo do proprio workspace no seletor de workspaces. */
+
     myWorkspace: string;
-    /** Selinho de acesso somente leitura (visao de super-admin). */
+
     readonly: string;
-    /** Item "Plano" no rodape do menu (com badge Free/Plus). */
+
     plan: string;
+
+    lightMode: string;
+
+    darkMode: string;
   };
-  /** Criacao e troca de workspace (onboarding, botao "+" e seletor). */
+
   workspace: {
-    newWorkspace: string;
     createTitle: string;
     createSubtitle: string;
     nameLabel: string;
     namePlaceholder: string;
-    /** Dica sob o campo: sugere usar o nome da empresa. */
+
     hint: string;
     create: string;
+
+    editTitle: string;
+    editSubtitle: string;
+
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+
+    active: string;
+    activate: string;
+
+    jobsCount: (n: number) => string;
+
+    empty: string;
+
+    deleteBlocked: (n: number) => string;
+
+    deleteMessage: string;
   };
-  /** Pagina do plano/assinatura (Free x Plus) e avisos de limite. */
+
   plan: {
     title: string;
     subtitle: string;
-    /** Badge que marca o cartao do plano vigente. */
+
     current: string;
     freeDesc: string;
     plusDesc: string;
     maxDesc: string;
-    /** Sufixo curto nos limites por empresa (ex.: "/empresa"). */
+
     perCompanyShort: string;
-    /** Rotulo "Empresas" para o card de uso e limites de workspace. */
+
     companies: string;
     perMonth: string;
     featuresFree: [string, string, string];
@@ -108,35 +128,33 @@ export interface Admin {
     usageTitle: string;
     usageSubtitle: string;
     unlimited: string;
-    /** Verbo do botao de assinar (ex.: "Assinar"); recebe o nome do tier. */
+
     upgrade: string;
-    /** Botao para trocar para um tier inferior (downgrade). */
+
     switchPlan: string;
     redirecting: string;
     renewsAt(date: string): string;
-    /** Assinatura cancelada: até quando o acesso Plus permanece. */
+
     endsAt(date: string): string;
     cancel: string;
     cancelDesc: string;
     resume: string;
     checkoutSuccess: string;
     checkoutCanceled: string;
-    /** Aviso para colaboradores: so o dono gerencia a assinatura. */
+
     ownerOnly: string;
-    /** Modal de limite atingido nas telas de cadastro. */
+
     limitTitle: string;
     limitWorkspaces: string;
-    limitCompanies: string;
     limitProcesses: string;
     limitMembers: string;
     limitJobs: string;
     limitCandidates: string;
     limitCta: string;
   };
-  /** Aviso de exclusao bloqueada por dependencias (empresa com vagas, etc.). */
+
   deleteBlocked: {
     title: string;
-    companyHasJobs(n: number): string;
     jobHasCandidates(n: number): string;
   };
   common: {
@@ -147,7 +165,7 @@ export interface Admin {
     cancel: string;
     saving: string;
     saved: string;
-    /** Aviso generico quando um save falha (rede/validacao/servidor). */
+
     saveError: string;
     confirm: string;
     loading: string;
@@ -167,25 +185,26 @@ export interface Admin {
     totalCount(n: number): string;
     selectedCount(n: number): string;
   };
-  /** Rotulos de exibicao das etapas do pipeline, indexados pelo valor canonico PT. */
+
   stages: Record<string, string>;
-  /** Rotulos de exibicao dos status, indexados pelo valor canonico PT. */
+
   status: Record<string, string>;
-  /** Rotulos de exibicao dos niveis de vaga, indexados pelo valor canonico PT. */
+
   levels: Record<string, string>;
-  /** Rotulos de exibicao das modalidades de vaga, indexados pelo valor canonico PT. */
+
   jobTypes: Record<string, string>;
-  /** Rotulos das acoes de permissao (view/create/edit/delete). */
+
   permissionActions: Record<string, string>;
   dashboard: {
     cards: {
-      activeCompanies: string;
       openJobs: string;
       candidates: string;
       activePipeline: string;
+      team: string;
     };
     deltaTalent: string;
     deltaInProgress: string;
+    deltaTeam: string;
     funnelTitle: string;
     funnelSubtitle: string;
     totalInProcess: string;
@@ -196,22 +215,6 @@ export interface Admin {
     noActivity: string;
     noMovements: string;
   };
-  companies: {
-    searchPlaceholder: string;
-    add: string;
-    allSectors: string;
-    allStatuses: string;
-    listTitle: string;
-    empty: string;
-    fileName: string;
-    cols: {
-      name: string;
-      sector: string;
-      location: string;
-      openings: string;
-      status: string;
-    };
-  };
   jobs: {
     searchPlaceholder: string;
     add: string;
@@ -219,9 +222,9 @@ export interface Admin {
     allTypes: string;
     allStatuses: string;
     candidatesLabel: string;
-    /** Tooltip do botao de copiar o link publico de uma vaga. */
+
     shareJob: string;
-    /** Ex.: "2 vagas" (badge no cartao da vaga e na pagina publica). */
+
     openingsCount(n: number): string;
     empty: string;
     fileName: string;
@@ -240,7 +243,7 @@ export interface Admin {
   candidates: {
     searchPlaceholder: string;
     add: string;
-    /** Tooltip do botao de baixar o curriculo anexado. */
+
     downloadCv: string;
     allStages: string;
     allRoles: string;
@@ -253,7 +256,7 @@ export interface Admin {
       email: string;
       role: string;
       stage: string;
-      /** Compatibilidade curriculo x vaga calculada por IA (0 a 100). */
+
       match: string;
       modifiedAt: string;
     };
@@ -277,7 +280,7 @@ export interface Admin {
     listTitle: string;
     withAccess(n: number): string;
     noAccess: string;
-    /** Badge de convite ainda nao aceito. */
+
     pending: string;
     permissions(n: number): string;
     empty: string;
@@ -331,26 +334,6 @@ export interface Admin {
     permissionsByPage: string;
     page: string;
     selectOnePermission: string;
-    company: {
-      editTitle: string;
-      newTitle: string;
-      editSubtitle: string;
-      newSubtitle: string;
-      name: string;
-      sector: string;
-      country: string;
-      cnpj: string;
-      /** Texto exibido enquanto os dados do CNPJ sao consultados. */
-      cnpjLookup: string;
-      state: string;
-      city: string;
-      taxId: string;
-      stateProvince: string;
-      status: string;
-      selectCity: string;
-      selectStateFirst: string;
-      taxIdPlaceholder: string;
-    };
     job: {
       editTitle: string;
       newTitle: string;
@@ -358,7 +341,7 @@ export interface Admin {
       newSubtitle: string;
       title: string;
       company: string;
-      /** Descricao da vaga (opcional, ate 5000 caracteres). */
+
       description: string;
       level: string;
       type: string;
@@ -368,7 +351,7 @@ export interface Admin {
       salaryFrom: string;
       salaryTo: string;
       salaryOrderError: string;
-      /** Aviso abaixo da busca de empresa: nao achou? cadastre-a. */
+
       companyHint: string;
       companyHintLink: string;
     };
@@ -380,7 +363,7 @@ export interface Admin {
       fullName: string;
       email: string;
       desiredRole: string;
-      /** Aviso abaixo da busca de vaga: nao achou? cadastre-a. */
+
       jobHint: string;
       jobHintLink: string;
       linkedin: string;
@@ -395,7 +378,7 @@ export interface Admin {
       job: string;
       company: string;
       stage: string;
-      /** Botao de remover o candidato do processo (exclui o card). */
+
       remove: string;
     };
     member: {
@@ -420,7 +403,7 @@ export interface Admin {
     copied: string;
     openPublic: string;
   };
-  /** Pagina publica de vagas (careers) e o modal de candidatura. */
+
   careers: {
     tagline: string;
     title: string;
@@ -448,12 +431,11 @@ export interface Admin {
     namePlaceholder: string;
     emailPlaceholder: string;
     invalidLink: string;
-    /** Pagina publica de uma vaga especifica. */
+
     jobNotFound: string;
-    viewAll: string;
     goHome: string;
   };
-  /** Pagina de login. */
+
   login: {
     subtitle: string;
     google: string;
@@ -462,7 +444,7 @@ export interface Admin {
     terms: string;
     error: string;
   };
-  /** Pagina de aceite do convite de workspace. */
+
   invite: {
     title: string;
     signInToView: string;

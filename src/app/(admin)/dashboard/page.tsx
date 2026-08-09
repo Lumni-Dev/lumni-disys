@@ -18,16 +18,18 @@ type DashboardData = {
     jobs: { open: number; total: number };
     candidates: { total: number };
     pipeline: { total: number };
+    team: { total: number };
   };
   funnel: { stage: string; count: number }[];
   trends: {
     jobs: Trend;
     candidates: Trend;
     pipeline: Trend;
+    team: Trend;
   };
 };
 
-const CARD_HREFS = ["/jobs", "/candidates", "/pipeline"];
+const CARD_HREFS = ["/jobs", "/candidates", "/pipeline", "/team"];
 
 const ACTIVITY_PAGE_SIZE = 20;
 
@@ -42,6 +44,7 @@ export default function Home() {
     { label: admin.dashboard.cards.openJobs, href: CARD_HREFS[0] },
     { label: admin.dashboard.cards.candidates, href: CARD_HREFS[1] },
     { label: admin.dashboard.cards.activePipeline, href: CARD_HREFS[2] },
+    { label: admin.dashboard.cards.team, href: CARD_HREFS[3] },
   ];
 
   useEffect(() => {
@@ -76,6 +79,12 @@ export default function Home() {
           delta: admin.dashboard.deltaInProgress,
           data: data.trends.pipeline,
         },
+        {
+          ...cardMeta[3],
+          value: String(data.stats.team.total),
+          delta: admin.dashboard.deltaTeam,
+          data: data.trends.team,
+        },
       ]
     : [];
 
@@ -83,7 +92,7 @@ export default function Home() {
   const maxCount = Math.max(1, ...funnel.map((f) => f.count));
   const totalInProcess = funnel.reduce((a, f) => a + f.count, 0);
 
-  // Mais recentes primeiro (modifiedAt vem como dd/mm/aaaa).
+
   const dateValue = (d: string) => {
     const [dd, mm, yy] = d.split("/").map(Number);
     return new Date(yy || 0, (mm || 1) - 1, dd || 1).getTime();
@@ -96,7 +105,7 @@ export default function Home() {
       who: c.name,
       what: admin.dashboard.movedTo(admin.stages[c.stage] ?? c.stage),
       role: c.role,
-      // Data e hora (hh:mm) no fuso de Sao Paulo, separados por " - ".
+
       time: c.modifiedAtTime
         ? `${c.modifiedAt} - ${c.modifiedAtTime}`
         : c.modifiedAt,
@@ -109,10 +118,10 @@ export default function Home() {
     <>
       <Topbar showSearch={false} />
       <div className="flex flex-col gap-2.5 p-2.5">
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
           {data
             ? cards.map((s) => <StatCard key={s.label} {...s} />)
-            : Array.from({ length: 3 }).map((_, i) => (
+            : Array.from({ length: 4 }).map((_, i) => (
                 <Card key={i}>
                   <div className="flex flex-col gap-2.5 p-2.5">
                     <Skeleton className="h-3 w-1/2" />
@@ -167,7 +176,7 @@ export default function Home() {
             subtitle={admin.dashboard.activitySubtitle}
           />
           {!candLoaded ? (
-            <ul className="grid grid-cols-1 divide-y divide-white/[0.07] sm:grid-cols-2">
+            <ul className="grid grid-cols-1 divide-y divide-hairline sm:grid-cols-2">
               {Array.from({ length: 6 }).map((_, i) => (
                 <li key={i} className="flex flex-col gap-1.5 p-2.5">
                   <Skeleton className="h-4 w-1/2" />
@@ -177,7 +186,7 @@ export default function Home() {
               ))}
             </ul>
           ) : (
-            <ul className="grid grid-cols-1 divide-y divide-white/[0.07] sm:grid-cols-2">
+            <ul className="grid grid-cols-1 divide-y divide-hairline sm:grid-cols-2">
               {visible.map((a, i) => (
                 <li key={start + i} className="p-2.5">
                   <p className="text-sm text-foreground">

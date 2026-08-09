@@ -4,7 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { cx } from "@/lib/utils";
 
 export const controlClass =
-  "w-full rounded-lg border border-border bg-surface-2/70 px-2.5 py-1.5 text-sm text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] outline-none transition-colors placeholder:text-muted focus:border-white/40 focus:bg-surface-2 focus:ring-2 focus:ring-white/10";
+  "w-full rounded-lg border border-border bg-surface-2/70 px-2.5 py-1.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-hairline-strong";
 
 export function Field({
   label,
@@ -28,15 +28,13 @@ export function Field({
   );
 }
 
-// `invalid` é um contador: muda a cada tentativa de submit inválida para
-// re-disparar o shake; > 0 pinta a borda com a cor do tema.
 function useShake<T extends HTMLElement>(invalid: number) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (invalid && el) {
       el.classList.remove("animate-shake");
-      void el.offsetWidth; // reflow para reiniciar a animação
+      void el.offsetWidth;
       el.classList.add("animate-shake");
     }
   }, [invalid]);
@@ -57,9 +55,7 @@ export function Input({
   ...props
 }: { invalid?: number } & React.InputHTMLAttributes<HTMLInputElement>) {
   const ref = useShake<HTMLInputElement>(invalid);
-  // Padroniza o texto em UPPERCASE (gravado assim no banco). Nao vale para
-  // e-mail/URL/numeros: uppercase quebraria o match de login/convite e a
-  // semantica desses campos.
+
   const upper = type === undefined || type === "text" || type === "search";
   const handleChange: React.ChangeEventHandler<HTMLInputElement> | undefined =
     upper && onChange
@@ -74,7 +70,7 @@ export function Input({
       type={type}
       {...props}
       onChange={handleChange}
-      // truncate: texto longo vira reticencias (uma linha, sem quebrar).
+
       className={cx(
         controlClass,
         "truncate",
@@ -114,7 +110,7 @@ export function Textarea({
         )}
         style={invalidStyle(invalid, style)}
       />
-      {/* Contador fora do campo: nao sobrepoe o texto nem a rolagem. */}
+
       {maxLength != null && (
         <span className="self-end text-[11px] tabular-nums leading-none text-muted/70">
           {len}/{maxLength}

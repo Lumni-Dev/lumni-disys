@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useProfile } from "@/components/profile-context";
 import { api } from "@/lib/api-client";
@@ -34,12 +40,12 @@ export default function AccountPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [savingTheme, setSavingTheme] = useState(false);
   const [themeSaved, setThemeSaved] = useState(false);
-  // So o dono do workspace ve a zona de perigo (excluir a conta inteira);
-  // colaborador ve a opcao de sair do workspace ativo.
+
+
   const access = useAccess();
   const isOwner = !!access?.owner;
   const isMember = !!access && !access.owner;
-  // Convidado sem workspace proprio pode criar o seu.
+
   const workspaces = useWorkspaces();
   const hasOwn = workspaces ? workspaces.some((w) => w.owner) : true;
   const [wsModalOpen, setWsModalOpen] = useState(false);
@@ -66,7 +72,7 @@ export default function AccountPage() {
   const invalid = (k: string) => (errs[k] ? attempt : 0);
   const fullName = nameEdit ?? name;
 
-  // Carrega os dados salvos do perfil (nome/telefone/cargo).
+
   useEffect(() => {
     api
       .get<{ name: string; phone: string; role: string }>("/api/profile")
@@ -111,8 +117,8 @@ export default function AccountPage() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      // Redimensiona no navegador (max 256px, JPEG) para nao guardar
-      // megabytes de base64 no banco.
+
+
       const img = document.createElement("img");
       img.onload = async () => {
         const max = 256;
@@ -130,6 +136,81 @@ export default function AccountPage() {
       img.src = String(reader.result ?? "");
     };
     reader.readAsDataURL(file);
+  }
+
+
+  const tiles: {
+    key: string;
+    icon?: ReactNode;
+    title: string;
+    desc?: string;
+    action?: ReactNode;
+  }[] = [
+    {
+      key: "language",
+      title: admin.account.languageTitle,
+      desc: admin.account.languageSubtitle,
+      action: <LanguageSwitcher variant="card" />,
+    },
+    {
+      key: "connected",
+      icon: (
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2">
+          {session?.provider === "linkedin" ? (
+            <IconLinkedin className="h-5 w-5" />
+          ) : (
+            <IconGoogle className="h-5 w-5" />
+          )}
+        </div>
+      ),
+      title: admin.account.connectedAccount,
+      desc: email,
+    },
+    {
+      key: "signout",
+      title: admin.account.signOutTitle,
+      desc: admin.account.signOutDesc,
+      action: (
+        <Tooltip label={admin.account.signOutTitle}>
+          <Button
+            variant="outline"
+            aria-label={admin.account.signOutTitle}
+            icon={<IconLogout className="h-4 w-4" />}
+            onClick={() => signOut({ redirectTo: "/login" })}
+          />
+        </Tooltip>
+      ),
+    },
+  ];
+  if (!hasOwn) {
+    tiles.push({
+      key: "create",
+      title: admin.account.createWorkspace,
+      desc: admin.account.noOwnWorkspace,
+      action: (
+        <Button onClick={() => setWsModalOpen(true)}>
+          {admin.account.createWorkspace}
+        </Button>
+      ),
+    });
+  }
+  if (isMember) {
+    tiles.push({
+      key: "leave",
+      title: admin.account.leaveTitle,
+      desc: admin.account.leaveDesc,
+      action: (
+        <ConfirmAction
+          label={admin.account.leaveTitle}
+          onConfirm={() => {
+            void api
+              .del("/api/workspaces")
+              .then(() => window.location.assign("/dashboard"))
+              .catch(() => {});
+          }}
+        />
+      ),
+    });
   }
 
   return (
@@ -213,9 +294,7 @@ export default function AccountPage() {
         </form>
       </Card>
 
-      {/* Mosaico: cards menores lado a lado no desktop, cada um com a altura
-          do proprio conteudo (items-start evita esticar ate a linha). */}
-      <div className="grid grid-cols-1 items-start gap-2.5 lg:grid-cols-2">
+
       <Card>
         <CardHeader
           title={admin.account.themeTitle}
@@ -232,8 +311,8 @@ export default function AccountPage() {
                 className={cx(
                   "h-9 w-9 rounded-lg ring-2 ring-offset-2 ring-offset-surface transition",
                   theme === t.key
-                    ? "ring-white"
-                    : "ring-transparent hover:ring-white/30",
+                    ? "ring-foreground"
+                    : "ring-transparent hover:ring-hairline-strong",
                 )}
                 style={{ backgroundColor: t.color }}
               />
@@ -256,102 +335,38 @@ export default function AccountPage() {
         </CardFooter>
       </Card>
 
-      <Card>
-        <CardHeader
-          title={admin.account.languageTitle}
-          subtitle={admin.account.languageSubtitle}
-        />
-        <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-          <span className="text-sm text-muted">
-            {admin.account.languageLabel}
-          </span>
-          <LanguageSwitcher variant="card" />
-        </CardBody>
-      </Card>
 
-      <Card>
-        <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-2">
-              {session?.provider === "linkedin" ? (
-                <IconLinkedin className="h-5 w-5" />
-              ) : (
-                <IconGoogle className="h-5 w-5" />
-              )}
-            </div>
-            <div className="min-w-0 leading-tight">
-              <p className="text-sm font-medium text-foreground">
-                {admin.account.connectedAccount}
-              </p>
-              <p className="truncate text-xs text-muted">{email}</p>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
-
-      {!hasOwn && (
-        <Card>
-          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-            <div className="leading-tight">
-              <p className="text-sm font-medium text-foreground">
-                {admin.account.createWorkspace}
-              </p>
-              <p className="text-xs text-muted">
-                {admin.account.noOwnWorkspace}
-              </p>
-            </div>
-            <Button onClick={() => setWsModalOpen(true)}>
-              {admin.account.createWorkspace}
-            </Button>
-          </CardBody>
-        </Card>
-      )}
-
-      {isMember && (
-        <Card>
-          <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-            <div className="leading-tight">
-              <p className="text-sm font-medium text-foreground">
-                {admin.account.leaveTitle}
-              </p>
-              <p className="text-xs text-muted">{admin.account.leaveDesc}</p>
-            </div>
-            <ConfirmAction
-              label={admin.account.leaveTitle}
-              onConfirm={() => {
-                void api
-                  .del("/api/workspaces")
-                  .then(() => window.location.assign("/dashboard"))
-                  .catch(() => {});
-              }}
-            />
-          </CardBody>
-        </Card>
-      )}
-
-      <Card>
-        <CardBody className="flex flex-wrap items-center justify-between gap-2.5">
-          <div className="leading-tight">
-            <p className="text-sm font-medium text-foreground">
-              {admin.account.signOutTitle}
-            </p>
-            <p className="text-xs text-muted">
-              {admin.account.signOutDesc}
-            </p>
-          </div>
-          <Tooltip label={admin.account.signOutTitle}>
-            <Button
-              variant="outline"
-              aria-label={admin.account.signOutTitle}
-              icon={<IconLogout className="h-4 w-4" />}
-              onClick={() => signOut({ redirectTo: "/login" })}
-            />
-          </Tooltip>
-        </CardBody>
-      </Card>
+      <div className="grid grid-cols-1 items-stretch gap-2.5 sm:grid-cols-2">
+        {tiles.map((t, i) => (
+          <Card
+            key={t.key}
+            className={cx(
+              "flex h-full flex-col",
+              tiles.length % 2 === 1 &&
+                i === tiles.length - 1 &&
+                "sm:col-span-2",
+            )}
+          >
+            <CardBody className="flex h-full flex-1 items-center justify-between gap-2.5">
+              <div className="flex min-w-0 items-center gap-2.5">
+                {t.icon}
+                <div className="min-w-0 leading-tight">
+                  <p className="text-sm font-medium text-foreground">
+                    {t.title}
+                  </p>
+                  {t.desc && (
+                    <p className="truncate text-xs text-muted">{t.desc}</p>
+                  )}
+                </div>
+              </div>
+              {t.action && <div className="shrink-0">{t.action}</div>}
+            </CardBody>
+          </Card>
+        ))}
+      </div>
 
       {isOwner && (
-        <Card className="border-white/30 lg:col-span-2">
+        <Card className="border-hairline-strong">
           <CardHeader
             title={admin.account.dangerTitle}
             subtitle={admin.account.dangerSubtitle}
@@ -379,7 +394,6 @@ export default function AccountPage() {
           </CardBody>
         </Card>
       )}
-      </div>
 
       <WorkspaceModal
         open={wsModalOpen}

@@ -155,6 +155,13 @@
       "when": 1786201763540,
       "tag": "0021_polite_star_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1786261232744,
+      "tag": "0022_naive_shinobi_shaw",
+      "breakpoints": true
     }
   ]
 }

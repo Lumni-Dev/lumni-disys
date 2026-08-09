@@ -10,7 +10,6 @@ import { type Job } from "@/lib/data";
 import { api } from "@/lib/api-client";
 import { useI18n } from "@/i18n/context";
 
-// Pagina publica de UMA vaga: link direto para o candidato se candidatar.
 export default function JobPage() {
   const { admin } = useI18n();
   const t = admin.careers;
@@ -31,7 +30,7 @@ export default function JobPage() {
   }, [token, jobId]);
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
+    <div className="force-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-2.5">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -76,10 +75,10 @@ export default function JobPage() {
                 {t.jobNotFound}
               </p>
               <Link
-                href={`/careers/${token}`}
+                href="/"
                 className="flex w-full items-center justify-center rounded-lg border border-border bg-surface-2 px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10"
               >
-                {t.viewAll}
+                {t.goHome}
               </Link>
             </>
           ) : (
@@ -110,12 +109,6 @@ export default function JobPage() {
               >
                 {t.apply}
               </button>
-              <Link
-                href={`/careers/${token}`}
-                className="flex w-full items-center justify-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted transition-colors hover:bg-white/5 hover:text-foreground"
-              >
-                {t.viewAll}
-              </Link>
             </>
           )}
         </div>

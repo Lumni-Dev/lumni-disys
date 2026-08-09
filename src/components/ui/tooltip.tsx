@@ -24,7 +24,7 @@ export function Tooltip({
     setCoords({ x: r.left + r.width / 2, y: r.bottom + 6 });
   }
 
-  // Mantém o tooltip dentro da viewport (evita corte/estouro na horizontal).
+
   useLayoutEffect(() => {
     if (!coords || !tipRef.current) return;
     const t = tipRef.current.getBoundingClientRect();
@@ -56,7 +56,7 @@ export function Tooltip({
               top: coords.y,
               transform: "translateX(-50%)",
             }}
-            className="pointer-events-none z-[100] whitespace-nowrap rounded-lg border border-white/[0.08] bg-surface px-2 py-1 text-xs text-foreground shadow-xl shadow-black/50"
+            className="pointer-events-none z-[100] whitespace-nowrap rounded-lg border border-hairline bg-surface px-2 py-1 text-xs text-foreground shadow-lg shadow-black/20"
           >
             {label}
           </span>,

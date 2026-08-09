@@ -7,10 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, Thead, Tbody, Th, Tr, Td } from "@/components/ui/table";
-import { AddButton, Button } from "@/components/ui/button";
+import { AddButton, IconButton } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import { ExportButton } from "@/components/ui/export-button";
-import { Tooltip } from "@/components/ui/tooltip";
 import { IconPencil, IconTrash } from "@/components/ui/icons";
 import { SelectionBar } from "@/components/ui/selection-bar";
 import { FilterBar, FilterSelect } from "@/components/ui/filter-bar";
@@ -60,7 +59,7 @@ export default function TeamPage() {
 
   const sel = useSelection(filtered, (c) => c.email);
 
-  // Nomes das paginas com acesso, traduzidos (a chave do modulo bate com nav).
+
   function accessNames(permissions: Member["permissions"]): string[] {
     return MODULES.filter((m) =>
       ACTIONS.some((a) => permissions[m.key]?.[a.key]),
@@ -79,7 +78,7 @@ export default function TeamPage() {
         const created = await api.post<MemberRow>("/api/team", c);
         setList((prev) => [...prev, created]);
       } catch (err) {
-        // Teto de colaboradores do plano: abre o aviso de upgrade.
+
         if (err instanceof ApiError && err.status === 402) {
           setLimitHit(true);
           return;
@@ -224,14 +223,11 @@ export default function TeamPage() {
                   </Td>
                   <Td>
                     <div className="flex items-center gap-1.5">
-                      <Tooltip label={admin.common.edit}>
-                        <Button
-                          variant="outline"
-                          aria-label={admin.common.edit}
-                          icon={<IconPencil className="h-4 w-4" />}
-                          onClick={() => setEditing(c)}
-                        />
-                      </Tooltip>
+                      <IconButton
+                        label={admin.common.edit}
+                        icon={<IconPencil className="h-4 w-4" />}
+                        onClick={() => setEditing(c)}
+                      />
                       <ConfirmAction
                         label={admin.common.remove}
                         icon={<IconTrash className="h-4 w-4" />}

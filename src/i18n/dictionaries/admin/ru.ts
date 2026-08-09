@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const ru: Admin = {
   nav: {
     dashboard: "Панель",
-    companies: "Компании",
     jobs: "Вакансии",
     candidates: "Кандидаты",
     pipeline: "Воронка",
@@ -19,9 +18,10 @@ const ru: Admin = {
     myWorkspace: "Моё рабочее пространство",
     readonly: "Только чтение",
     plan: "Тариф",
+    lightMode: "Светлая тема",
+    darkMode: "Тёмная тема",
   },
   workspace: {
-    newWorkspace: "Новое пространство",
     createTitle: "Создать пространство",
     createSubtitle:
       "Создайте пространство, чтобы начать публиковать вакансии",
@@ -29,6 +29,18 @@ const ru: Admin = {
     namePlaceholder: "Напр.: Моя компания",
     hint: "Совет: используйте название вашей компании.",
     create: "Создать пространство",
+    editTitle: "Переименовать пространство",
+    editSubtitle: "Измените название пространства",
+    title: "Мои пространства",
+    subtitle: "Управляйте пространствами",
+    searchPlaceholder: "Поиск пространств...",
+    active: "Активно",
+    activate: "Открыть",
+    jobsCount: (n) => `${n} вакансий`,
+    empty: "Пока нет пространств",
+    deleteBlocked: (n) => `Нельзя удалить: связано вакансий — ${n}.`,
+    deleteMessage:
+      "Удалить это пространство? Действие необратимо.",
   },
   plan: {
     title: "Тариф",
@@ -65,8 +77,6 @@ const ru: Admin = {
     limitTitle: "Лимит тарифа Free",
     limitWorkspaces:
       "Тариф Free разрешает 1 пространство. Подпишитесь на Plus для безлимита.",
-    limitCompanies:
-      "Тариф Free позволяет добавить 1 компанию. Подпишитесь на Plus для безлимита.",
     limitJobs:
       "Тариф Free позволяет добавить 1 вакансию. Подпишитесь на Plus для безлимита.",
     limitCandidates:
@@ -79,8 +89,6 @@ const ru: Admin = {
   },
   deleteBlocked: {
     title: "Невозможно удалить",
-    companyHasJobs: (n) =>
-      `У этой компании вакансий: ${n}. Удалите или отвяжите вакансии перед удалением компании.`,
     jobHasCandidates: (n) =>
       `У этой вакансии кандидатов: ${n}. Удалите кандидатов перед удалением вакансии.`,
   },
@@ -146,13 +154,14 @@ const ru: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "Активные компании",
       openJobs: "Открытые вакансии",
       candidates: "Кандидаты",
       activePipeline: "Активные воронки",
+      team: "Сотрудники",
     },
     deltaTalent: "в кадровом резерве",
     deltaInProgress: "в процессе",
+    deltaTeam: "в команде",
     funnelTitle: "Воронка подбора",
     funnelSubtitle: "Кандидаты по этапам",
     totalInProcess: "Всего в процессе",
@@ -162,22 +171,6 @@ const ru: Admin = {
     movedTo: (stage) => `переведен на этап ${stage}`,
     noActivity: "Пока нет недавней активности.",
     noMovements: "0 обновлений",
-  },
-  companies: {
-    searchPlaceholder: "Поиск компаний...",
-    add: "Новая компания",
-    allSectors: "Все отрасли",
-    allStatuses: "Все статусы",
-    listTitle: "Зарегистрированные компании",
-    empty: "Компании не найдены.",
-    fileName: "companies",
-    cols: {
-      name: "Компания",
-      sector: "Отрасль",
-      location: "Расположение",
-      openings: "Вакансии",
-      status: "Статус",
-    },
   },
   jobs: {
     searchPlaceholder: "Поиск вакансий...",
@@ -306,25 +299,6 @@ const ru: Admin = {
     permissionsByPage: "Разрешения по страницам",
     page: "Страница",
     selectOnePermission: "Выберите хотя бы одно разрешение.",
-    company: {
-      editTitle: "Изменить компанию",
-      newTitle: "Новая компания",
-      editSubtitle: "Обновите данные компании",
-      newSubtitle: "Зарегистрируйте компанию-партнера",
-      name: "Название компании",
-      sector: "Отрасль",
-      country: "Страна",
-      cnpj: "CNPJ",
-      cnpjLookup: "Поиск данных по CNPJ...",
-      state: "Регион",
-      city: "Город",
-      taxId: "Налоговый регистрационный номер",
-      stateProvince: "Регион / Область",
-      status: "Статус",
-      selectCity: "Выберите город",
-      selectStateFirst: "Сначала выберите регион",
-      taxIdPlaceholder: "Tax ID / VAT / EIN...",
-    },
     job: {
       companyHint: "Если вы не нашли свою компанию в списке,",
       companyHintLink: "добавьте её на странице компаний",
@@ -422,7 +396,6 @@ const ru: Admin = {
     invalidLink:
       "Эта ссылка на вакансии недействительна. Запросите у компании полную ссылку.",
     jobNotFound: "Эта вакансия больше недоступна.",
-    viewAll: "Все вакансии",
     goHome: "На главную",
   },
   login: {

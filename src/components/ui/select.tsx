@@ -14,7 +14,7 @@ import { useI18n } from "@/i18n/context";
 import { controlClass } from "./form";
 import { IconChevronDown, IconCheck } from "./icons";
 
-// True apenas no cliente (portal nao existe no SSR), sem setState em effect.
+
 const emptySubscribe = () => () => {};
 function useMounted(): boolean {
   return useSyncExternalStore(
@@ -170,7 +170,7 @@ export function Select({
         className={cx(
           controlClass,
           "flex cursor-pointer items-center justify-between gap-2.5 text-left disabled:cursor-not-allowed disabled:opacity-40",
-          open && "border-white/50 ring-1 ring-white/30",
+          open && "border-hairline-strong ring-1 ring-overlay-strong",
           !!invalid && "ring-1 ring-accent",
           className,
         )}
@@ -194,7 +194,7 @@ export function Select({
           <div
             ref={panelRef}
             style={{ ...panelStyle, maxHeight }}
-            className="scroll-thin z-[60] overflow-y-auto rounded-lg border border-white/[0.08] bg-surface p-1 shadow-2xl shadow-black/50"
+            className="scroll-thin z-[60] overflow-y-auto rounded-lg border border-hairline bg-surface p-1 shadow-lg shadow-black/20"
           >
             {opts.map((o, i) => {
               const isSelected = o.value === value;

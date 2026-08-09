@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  // Update parcial: só altera os campos enviados, sem zerar os demais.
+
   const set: {
     avatarBase64?: string;
     theme?: string;
@@ -42,7 +42,7 @@ export async function PUT(req: Request) {
     role?: string;
   } = {};
   if (typeof body.photo === "string") {
-    // O cliente redimensiona antes de enviar; o teto aqui e so protecao.
+
     if (body.photo.length > 400_000)
       return NextResponse.json(
         { error: "Imagem muito grande" },
@@ -55,7 +55,6 @@ export async function PUT(req: Request) {
   if (typeof body.phone === "string") set.phone = body.phone;
   if (typeof body.role === "string") set.role = body.role;
 
-  // Body sem nenhum campo conhecido: nada a gravar (evita SET vazio no upsert).
   if (Object.keys(set).length === 0) {
     const [current] = await db
       .select()

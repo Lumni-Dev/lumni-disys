@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useI18n } from "@/i18n/context";
 import { cx } from "@/lib/utils";
 
-const MENU_WIDTH = 176; // w-44
+const MENU_WIDTH = 176;
 
 function IconGlobe({ className = "h-4 w-4" }: { className?: string }) {
   return (
@@ -55,8 +55,6 @@ export function LanguageSwitcher({
   const btnRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
 
-  // Posiciona o menu (portal, position fixed) ancorado ao botao, para
-  // escapar de containers com overflow-hidden (ex.: o Card do perfil).
   useEffect(() => {
     if (!open) return;
 
@@ -109,7 +107,7 @@ export function LanguageSwitcher({
         aria-expanded={open}
         aria-label={dict.languageLabel}
         className={cx(
-          "inline-flex items-center gap-1.5 rounded-lg border border-border text-sm text-foreground transition-colors hover:border-white/40 hover:bg-white/5",
+          "inline-flex items-center gap-1.5 rounded-lg border border-border text-sm text-foreground transition-colors hover:border-hairline-strong hover:bg-overlay",
           variant === "card" ? "px-3 py-2" : "bg-surface/60 px-2.5 py-1.5 backdrop-blur",
         )}
       >
@@ -125,7 +123,11 @@ export function LanguageSwitcher({
               role="listbox"
               aria-label={dict.languageLabel}
               style={{ top: pos.top, left: pos.left, width: MENU_WIDTH }}
-              className="fixed z-[100] max-h-72 overflow-auto rounded-lg border border-border bg-surface p-1 shadow-2xl"
+              className={cx(
+                "fixed z-[100] max-h-72 overflow-auto rounded-lg border border-border bg-surface p-1 shadow-2xl",
+
+                variant === "header" && "force-dark",
+              )}
             >
               {locales.map((l) => (
                 <li key={l.code}>
@@ -141,8 +143,8 @@ export function LanguageSwitcher({
                     className={cx(
                       "flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors",
                       l.code === locale
-                        ? "bg-white/10 text-foreground"
-                        : "text-muted hover:bg-white/5 hover:text-foreground",
+                        ? "bg-overlay-strong text-foreground"
+                        : "text-muted hover:bg-overlay hover:text-foreground",
                     )}
                   >
                     <span>{l.label}</span>

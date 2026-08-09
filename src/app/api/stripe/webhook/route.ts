@@ -3,8 +3,6 @@ import type Stripe from "stripe";
 import { stripe, webhookSecret } from "@/lib/stripe";
 import { applySubscription, emailForSubscription } from "@/lib/plan";
 
-// Webhook do Stripe: mantem o plano do usuario espelhando a assinatura.
-// Rota publica (sem sessao) protegida pela assinatura do evento.
 export async function POST(req: Request) {
   const signature = req.headers.get("stripe-signature") ?? "";
   const payload = await req.text();
@@ -21,7 +19,7 @@ export async function POST(req: Request) {
   }
 
   switch (event.type) {
-    // Pagamento inicial concluido: ativa o Plus para o usuario do checkout.
+
     case "checkout.session.completed": {
       const session = event.data.object;
       const email = session.metadata?.email;
@@ -35,8 +33,7 @@ export async function POST(req: Request) {
       }
       break;
     }
-    // Mudancas na assinatura (renovacao, cancelamento agendado, falha de
-    // pagamento, encerramento): reflete o estado atual na cobranca.
+
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const sub = event.data.object;

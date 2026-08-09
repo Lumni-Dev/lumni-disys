@@ -19,14 +19,11 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { getAdmin } from "@/i18n/dictionaries/admin";
 import type { Admin, Landing } from "@/i18n/types";
 
-// Store externo simples para o idioma: fonte da verdade e o localStorage,
-// com useSyncExternalStore lendo dele (sem mismatch de hidratacao e sem
-// setState dentro de effect).
 const listeners = new Set<() => void>();
 
 function subscribe(callback: () => void): () => void {
   listeners.add(callback);
-  // Sincroniza entre abas.
+
   window.addEventListener("storage", callback);
   return () => {
     listeners.delete(callback);
@@ -34,11 +31,8 @@ function subscribe(callback: () => void): () => void {
   };
 }
 
-// Quando nao ha escolha salva, o fallback e o ingles.
 const FALLBACK_LOCALE: LocaleCode = "en";
 
-// Detecta o idioma pelo navegador (pt-BR -> pt, en-US -> en, ...), se for um
-// dos suportados; senao null.
 function detectBrowserLocale(): LocaleCode | null {
   if (typeof navigator === "undefined") return null;
   const langs =
@@ -54,7 +48,6 @@ function detectBrowserLocale(): LocaleCode | null {
   return null;
 }
 
-// Ordem: escolha manual (localStorage) > idioma do navegador > ingles.
 function getSnapshot(): LocaleCode {
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (isLocale(stored)) return stored;
@@ -69,9 +62,9 @@ function persistLocale(code: LocaleCode): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, code);
   } catch {
-    // localStorage indisponivel (modo privado/etc.).
+
   }
-  // O evento "storage" nao dispara na aba que escreveu: notifica na mao.
+
   listeners.forEach((l) => l());
 }
 

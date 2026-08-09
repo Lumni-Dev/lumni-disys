@@ -9,34 +9,19 @@ type BaseProps = Omit<
   "value" | "onChange" | "type" | "style"
 > & {
   invalid?: number;
-  // Uso controlado opcional: o pai guarda o valor já formatado.
+
   value?: string;
   onChange?: (value: string) => void;
 };
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
-export function formatCnpj(value: string) {
-  const d = onlyDigits(value).slice(0, 14);
-  if (d.length <= 2) return d;
-  if (d.length <= 5) return `${d.slice(0, 2)}.${d.slice(2)}`;
-  if (d.length <= 8) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5)}`;
-  if (d.length <= 12)
-    return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8)}`;
-  return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(
-    8,
-    12,
-  )}-${d.slice(12)}`;
-}
-
 export function formatPhone(value: string) {
-  // Formato internacional: o usuário digita o número completo com o código do
-  // país; a máscara só garante o "+" na frente (padrão E.164, até 15 dígitos).
+
   const d = onlyDigits(value).slice(0, 15);
   return d ? `+${d}` : "";
 }
 
-// Converte o valor formatado ("R$ 1.234,56") em número (1234.56).
 export function moneyToNumber(value: string): number {
   const d = onlyDigits(value);
   return d ? parseInt(d, 10) / 100 : 0;
@@ -90,10 +75,6 @@ function MaskedInput({
       style={invalid ? { borderColor: "var(--accent)" } : undefined}
     />
   );
-}
-
-export function CnpjInput(props: BaseProps) {
-  return <MaskedInput format={formatCnpj} inputMode="numeric" {...props} />;
 }
 
 export function PhoneInput(props: BaseProps) {

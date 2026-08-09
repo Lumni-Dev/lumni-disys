@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const en: Admin = {
   nav: {
     dashboard: "Dashboard",
-    companies: "Companies",
     jobs: "Jobs",
     candidates: "Candidates",
     pipeline: "Pipeline",
@@ -19,15 +18,29 @@ const en: Admin = {
     myWorkspace: "My workspace",
     readonly: "Read only",
     plan: "Plan",
+    lightMode: "Light mode",
+    darkMode: "Dark mode",
   },
   workspace: {
-    newWorkspace: "New workspace",
     createTitle: "Create workspace",
     createSubtitle: "Create a workspace to start posting your jobs",
     nameLabel: "Workspace name",
     namePlaceholder: "e.g. My Company",
     hint: "Tip: use your company name.",
     create: "Create workspace",
+    editTitle: "Rename workspace",
+    editSubtitle: "Change your workspace name",
+    title: "My workspaces",
+    subtitle: "Manage your workspaces",
+    searchPlaceholder: "Search workspaces...",
+    active: "Active",
+    activate: "Open",
+    jobsCount: (n) => `${n} ${n === 1 ? "job" : "jobs"}`,
+    empty: "No workspaces yet",
+    deleteBlocked: (n) =>
+      `Can't delete: ${n} linked ${n === 1 ? "job" : "jobs"}.`,
+    deleteMessage:
+      "Are you sure you want to delete this workspace? This action is irreversible.",
   },
   plan: {
     title: "Plan",
@@ -62,8 +75,6 @@ const en: Admin = {
     limitTitle: "Free plan limit",
     limitWorkspaces:
       "The Free plan allows 1 workspace. Subscribe to Plus for unlimited workspaces.",
-    limitCompanies:
-      "The Free plan allows 1 company. Subscribe to Plus for unlimited entries.",
     limitJobs:
       "The Free plan allows 1 job. Subscribe to Plus for unlimited entries.",
     limitCandidates:
@@ -76,8 +87,6 @@ const en: Admin = {
   },
   deleteBlocked: {
     title: "Can't delete",
-    companyHasJobs: (n) =>
-      `This company has ${n} job${n === 1 ? "" : "s"}. Delete or unlink the jobs before deleting the company.`,
     jobHasCandidates: (n) =>
       `This job has ${n} candidate${n === 1 ? "" : "s"}. Delete the candidates before deleting the job.`,
   },
@@ -143,13 +152,14 @@ const en: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "Active companies",
       openJobs: "Open jobs",
       candidates: "Candidates",
       activePipeline: "Active pipelines",
+      team: "Team members",
     },
     deltaTalent: "in the talent pool",
     deltaInProgress: "in progress",
+    deltaTeam: "on the team",
     funnelTitle: "Recruitment funnel",
     funnelSubtitle: "Candidates by stage",
     totalInProcess: "Total in process",
@@ -159,22 +169,6 @@ const en: Admin = {
     movedTo: (stage) => `moved to ${stage}`,
     noActivity: "No recent activity yet.",
     noMovements: "0 updates",
-  },
-  companies: {
-    searchPlaceholder: "Search companies...",
-    add: "New company",
-    allSectors: "All sectors",
-    allStatuses: "All statuses",
-    listTitle: "Registered companies",
-    empty: "No companies found.",
-    fileName: "companies",
-    cols: {
-      name: "Company",
-      sector: "Sector",
-      location: "Location",
-      openings: "Openings",
-      status: "Status",
-    },
   },
   jobs: {
     searchPlaceholder: "Search jobs...",
@@ -293,25 +287,6 @@ const en: Admin = {
     permissionsByPage: "Permissions by page",
     page: "Page",
     selectOnePermission: "Select at least one permission.",
-    company: {
-      editTitle: "Edit company",
-      newTitle: "New company",
-      editSubtitle: "Update the company details",
-      newSubtitle: "Register a partner company",
-      name: "Company name",
-      sector: "Sector",
-      country: "Country",
-      cnpj: "CNPJ",
-      cnpjLookup: "Looking up CNPJ data...",
-      state: "State",
-      city: "City",
-      taxId: "Tax registration",
-      stateProvince: "State / Province",
-      status: "Status",
-      selectCity: "Select the city",
-      selectStateFirst: "Choose the state first",
-      taxIdPlaceholder: "Tax ID / VAT / EIN…",
-    },
     job: {
       companyHint: "If you didn't find your company in the list,",
       companyHintLink: "add it on the companies page",
@@ -409,7 +384,6 @@ const en: Admin = {
     invalidLink:
       "This jobs link is not valid. Ask the company for their full jobs link.",
     jobNotFound: "This job is no longer available.",
-    viewAll: "View all jobs",
     goHome: "Go to home",
   },
   login: {

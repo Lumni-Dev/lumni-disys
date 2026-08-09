@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const account = await accountForEmail(email);
-  // Sem workspace: o cliente mostra o onboarding de criacao.
+
   if (!account)
     return NextResponse.json({
       token: "",
@@ -27,8 +27,8 @@ export async function GET() {
     .where(eq(schema.accounts.id, account.id));
   const owner = acc?.ownerEmail === email;
 
-  // Modulos que o usuario pode VER: dono ve tudo; colaborador, so os que
-  // tiverem a permissao "view" (usado para montar o menu lateral).
+
+
   let modules: string[];
   if (owner) {
     modules = MODULES.map((m) => m.key);
@@ -61,15 +61,15 @@ export async function GET() {
 
   return NextResponse.json({
     token: account.publicToken,
-    // Colaboradores usam a conta do dono; so o dono pode excluir o workspace.
+
     owner,
     modules,
   });
 }
 
-// Exclui o workspace ATIVO do dono: todos os dados da conta, os acessos dos
-// colaboradores e a propria conta. O perfil do usuario permanece (ele pode
-// ter outros workspaces). Irreversivel.
+
+
+
 export async function DELETE() {
   const session = await auth();
   const email = session?.user?.email;
@@ -91,12 +91,12 @@ export async function DELETE() {
     );
 
   await db.transaction(async (tx) => {
-    // Auditoria: registra a exclusao antes de apagar, ja que nada mais sobra.
+
     await tx.insert(schema.deletedAccounts).values({
       accountId: acc.id,
       ownerEmail: acc.ownerEmail,
       accountCreatedAt: acc.createdAt,
-      // O workspace passou a ser a empresa; nao ha mais tabela de empresas.
+
       companiesCount: 0,
       jobsCount: await tx.$count(schema.jobs, eq(schema.jobs.accountId, acc.id)),
       candidatesCount: await tx.$count(
@@ -115,12 +115,12 @@ export async function DELETE() {
       .delete(schema.candidates)
       .where(eq(schema.candidates.accountId, acc.id));
     await tx.delete(schema.jobs).where(eq(schema.jobs.accountId, acc.id));
-    // As permissoes caem em cascata (FK member_permissions -> team_members).
+
     await tx
       .delete(schema.teamMembers)
       .where(eq(schema.teamMembers.accountId, acc.id));
-    // O perfil do usuario permanece (ele pode ter outros workspaces); o
-    // activeAccountId cai para null via FK (onDelete: set null).
+
+
     await tx.delete(schema.accounts).where(eq(schema.accounts.id, acc.id));
   });
 

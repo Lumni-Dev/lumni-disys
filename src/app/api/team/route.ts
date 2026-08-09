@@ -46,14 +46,14 @@ export async function POST(req: Request) {
   const { account, response } = await authorize("team", "create");
   if (!account) return response;
 
-  // Limite de colaboradores por empresa (workspace) conforme o plano.
+
   const limited = await planLimitError(account.id, "members");
   if (limited) return limited;
 
   const body = await req.json();
   const email = String(body.email ?? "").slice(0, 200);
 
-  // Mesmo e-mail duas vezes no mesmo workspace: erro claro em vez de 500.
+
   const [dup] = await db
     .select({ id: schema.teamMembers.id })
     .from(schema.teamMembers)
@@ -69,8 +69,8 @@ export async function POST(req: Request) {
       { status: 409 },
     );
 
-  // Convite pendente: a pessoa so entra no workspace depois de aceitar
-  // pelo link enviado por e-mail.
+
+
   const inviteToken = randomBytes(16).toString("hex");
   const [member] = await db
     .insert(schema.teamMembers)
@@ -84,8 +84,8 @@ export async function POST(req: Request) {
     })
     .returning();
 
-  // Permissoes: SOMENTE o dono do workspace concede (evita escalada por
-  // proxy). Nao-dono convida sem permissoes; o dono ajusta depois.
+
+
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
     .from(schema.accounts)
@@ -95,8 +95,8 @@ export async function POST(req: Request) {
   const rows = isOwner ? validPermissionRows(member.id, body.permissions) : [];
   if (rows.length) await db.insert(schema.memberPermissions).values(rows);
 
-  // Envio best-effort: se o SMTP falhar, o convite continua criado e o
-  // dono pode remover e convidar de novo.
+
+
   try {
     const session = await auth();
     const inviterName =
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
       });
     }
   } catch {
-    // E-mail e melhor esforco; nao bloqueia o convite.
+
   }
 
   return NextResponse.json(serializeMember(member, rows), { status: 201 });

@@ -132,7 +132,7 @@ export function MemberModal({
       });
       onClose();
     } catch {
-      // Ex.: 409 "e-mail ja convidado" — mantem o modal aberto e avisa.
+
       setSaveError(true);
     }
   }

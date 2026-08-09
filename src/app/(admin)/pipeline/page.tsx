@@ -101,14 +101,14 @@ export default function PipelinePage() {
 
   async function save(card: PipelineCard, stage: string) {
     if (card.id === 0) {
-      // Novo card: vincula por candidateId; vaga/empresa derivam do candidato.
+
       try {
         await api.post("/api/pipeline", {
           candidateId: card.candidateId,
           stage,
         });
       } catch (err) {
-        // Teto de processos do plano: abre o aviso de upgrade.
+
         if (err instanceof ApiError && err.status === 402) {
           setLimitHit(true);
           return;
@@ -116,15 +116,15 @@ export default function PipelinePage() {
         throw err;
       }
     } else {
-      // Edicao: so a etapa muda (o resto e derivado por ID).
+
       await api.put(`/api/pipeline/${card.id}`, { stage });
     }
     const cols = await api.get<Column[]>("/api/pipeline");
     setColumns(cols);
   }
 
-  // Remove o candidato do processo (exclui o card; o candidato permanece).
-  // Fecha o modal na hora; a exclusao e o recarregamento seguem em segundo plano.
+
+
   async function removeCard(id: number) {
     setEditing(null);
     await api.del(`/api/pipeline/${id}`);
@@ -199,7 +199,7 @@ export default function PipelinePage() {
               <CardHeader
                 title={admin.stages[col.stage] ?? col.stage}
                 action={
-                  <span className="rounded-lg border border-white/[0.06] bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted shadow-[0_1px_2px_rgba(0,0,0,0.25)]">
+                  <span className="rounded-lg border border-hairline bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted">
                     {col.cards.length}
                   </span>
                 }
@@ -236,7 +236,7 @@ export default function PipelinePage() {
                       }}
                       onClick={() => setEditing({ card: c, stage: col.stage })}
                       className={cx(
-                        "elevated cursor-grab rounded-lg border border-white/[0.06] bg-surface-2 p-2.5 shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:shadow-md active:cursor-grabbing",
+                        "elevated cursor-grab rounded-lg border border-hairline bg-surface-2 p-2.5 shadow-sm transition-all duration-200 hover:border-hairline-strong hover:shadow-md active:cursor-grabbing",
                         dragged?.id === c.id && "opacity-40",
                       )}
                     >

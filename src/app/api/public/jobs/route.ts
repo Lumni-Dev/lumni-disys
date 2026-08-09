@@ -12,7 +12,6 @@ export async function GET(req: Request) {
   const account = await accountByToken(token);
   if (!account) return NextResponse.json([]);
 
-  // Filtro opcional por vaga (link publico de uma vaga especifica).
   const idParam = Number(url.searchParams.get("id"));
   const conditions = [
     eq(schema.jobs.accountId, account.id),
@@ -27,7 +26,6 @@ export async function GET(req: Request) {
     .from(schema.jobs)
     .where(and(...conditions))
     .orderBy(asc(schema.jobs.id));
-  // Endpoint publico: nao expoe contagem de candidatos (a pagina de carreiras
-  // mostra apenas as vagas). Evita servir o valor obsoleto da coluna.
+
   return NextResponse.json(rows.map((r) => serializeJob(r, 0)));
 }

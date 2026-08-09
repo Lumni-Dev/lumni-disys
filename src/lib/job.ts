@@ -1,10 +1,6 @@
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 
-/**
- * Candidatos por vaga (vinculo por ID): contagem de candidatos por jobId, na
- * conta. Mapa jobId -> quantidade. Fonte da verdade do numero de candidatos.
- */
 export async function applicantsByJob(
   accountId: number,
 ): Promise<Map<number, number>> {
@@ -36,11 +32,6 @@ export type ResolvedJob = {
   company: string;
 };
 
-/**
- * Resolve a vaga pelo ID, escopada a conta. Retorna titulo/descricao (para a
- * analise por IA) e a empresa denormalizada, ou null se o ID e invalido/de
- * outra conta. O vinculo candidato/card -> vaga e sempre por ID.
- */
 export async function resolveJob(
   accountId: number,
   jobId: unknown,

@@ -4,9 +4,6 @@ import Link from "next/link";
 import { Modal } from "@/components/ui/modal";
 import { useI18n } from "@/i18n/context";
 
-// Aviso de limite do plano Free atingido (1 empresa/vaga/candidato), com
-// atalho para a pagina do plano. Aberto pelas telas de cadastro quando a
-// API devolve 402 plan_limit.
 export function PlanLimitModal({
   resource,
   open,
@@ -41,7 +38,8 @@ export function PlanLimitModal({
         </button>
         <Link
           href="/plan"
-          className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+          onClick={onClose}
+          className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
         >
           {admin.plan.limitCta}
         </Link>

@@ -1,5 +1,3 @@
-// Erro de API que preserva o status HTTP e o corpo da resposta, para o
-// chamador poder reagir (ex.: 409 de exclusao bloqueada por dependencias).
 export class ApiError extends Error {
   status: number;
   data: unknown;
@@ -21,7 +19,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     try {
       data = await res.json();
     } catch {
-      // Resposta sem corpo JSON: mantem data nulo.
+
     }
     throw new ApiError(res.status, data);
   }

@@ -9,11 +9,6 @@ type Authz =
   | { account: Account; response: null }
   | { account: null; response: NextResponse };
 
-/**
- * Autorizacao por modulo/acao: o dono do workspace pode tudo; colaborador
- * precisa da permissao correspondente (definida na tela de Colaboradores).
- * Retorna a conta quando autorizado, ou a resposta de erro pronta (401/403).
- */
 export async function authorize(
   module: string,
   action: Action,
@@ -27,21 +22,19 @@ export async function authorize(
     };
 
   const account = await accountForEmail(email);
-  // Sem workspace: o usuario ainda precisa criar o dele no onboarding.
+
   if (!account)
     return {
       account: null,
       response: NextResponse.json({ error: "no_workspace" }, { status: 403 }),
     };
 
-  // Dono da conta ativa: acesso total.
   const [acc] = await db
     .select({ ownerEmail: schema.accounts.ownerEmail })
     .from(schema.accounts)
     .where(eq(schema.accounts.id, account.id));
   if (acc?.ownerEmail === email) return { account, response: null };
 
-  // Colaborador (convite aceito): precisa da permissao do modulo/acao.
   const [member] = await db
     .select({ id: schema.teamMembers.id })
     .from(schema.teamMembers)

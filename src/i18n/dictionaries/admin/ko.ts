@@ -3,7 +3,6 @@ import type { Admin } from "@/i18n/types";
 const ko: Admin = {
   nav: {
     dashboard: "대시보드",
-    companies: "회사",
     jobs: "채용 공고",
     candidates: "지원자",
     pipeline: "파이프라인",
@@ -19,15 +18,27 @@ const ko: Admin = {
     myWorkspace: "내 워크스페이스",
     readonly: "읽기 전용",
     plan: "플랜",
+    lightMode: "라이트 모드",
+    darkMode: "다크 모드",
   },
   workspace: {
-    newWorkspace: "새 워크스페이스",
     createTitle: "워크스페이스 만들기",
     createSubtitle: "워크스페이스를 만들어 채용 공고 등록을 시작하세요",
     nameLabel: "워크스페이스 이름",
     namePlaceholder: "예: 우리 회사",
     hint: "팁: 회사 이름을 사용하세요.",
     create: "워크스페이스 만들기",
+    editTitle: "워크스페이스 이름 변경",
+    editSubtitle: "워크스페이스 이름을 변경합니다",
+    title: "내 워크스페이스",
+    subtitle: "워크스페이스 관리",
+    searchPlaceholder: "워크스페이스 검색...",
+    active: "사용 중",
+    activate: "열기",
+    jobsCount: (n) => `채용공고 ${n}개`,
+    empty: "워크스페이스가 없습니다",
+    deleteBlocked: (n) => `삭제할 수 없습니다: 연결된 공고 ${n}개.`,
+    deleteMessage: "이 워크스페이스를 삭제하시겠습니까? 되돌릴 수 없습니다.",
   },
   plan: {
     title: "플랜",
@@ -58,8 +69,6 @@ const ko: Admin = {
     limitTitle: "Free 플랜 한도",
     limitWorkspaces:
       "Free 플랜은 워크스페이스 1개만 만들 수 있습니다. 무제한은 Plus를 구독하세요.",
-    limitCompanies:
-      "Free 플랜은 기업 1개만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
     limitJobs:
       "Free 플랜은 공고 1개만 등록할 수 있습니다. 무제한 등록은 Plus를 구독하세요.",
     limitCandidates:
@@ -72,8 +81,6 @@ const ko: Admin = {
   },
   deleteBlocked: {
     title: "삭제할 수 없습니다",
-    companyHasJobs: (n) =>
-      `이 회사에 채용 공고가 ${n}개 있습니다. 회사를 삭제하기 전에 공고를 삭제하거나 연결을 해제하세요.`,
     jobHasCandidates: (n) =>
       `이 채용 공고에 후보자가 ${n}명 있습니다. 공고를 삭제하기 전에 후보자를 삭제하세요.`,
   },
@@ -139,13 +146,14 @@ const ko: Admin = {
   },
   dashboard: {
     cards: {
-      activeCompanies: "활성 회사",
       openJobs: "공개 채용 공고",
       candidates: "지원자",
       activePipeline: "활성 파이프라인",
+      team: "팀원",
     },
     deltaTalent: "인재 풀에서",
     deltaInProgress: "진행 중",
+    deltaTeam: "팀 내",
     funnelTitle: "채용 퍼널",
     funnelSubtitle: "단계별 지원자",
     totalInProcess: "진행 중 총계",
@@ -155,22 +163,6 @@ const ko: Admin = {
     movedTo: (stage) => `${stage} 단계로 이동됨`,
     noActivity: "아직 최근 활동이 없습니다.",
     noMovements: "업데이트 0건",
-  },
-  companies: {
-    searchPlaceholder: "회사 검색...",
-    add: "새 회사",
-    allSectors: "모든 업종",
-    allStatuses: "모든 상태",
-    listTitle: "등록된 회사",
-    empty: "회사를 찾을 수 없습니다.",
-    fileName: "회사",
-    cols: {
-      name: "회사",
-      sector: "업종",
-      location: "위치",
-      openings: "채용 인원",
-      status: "상태",
-    },
   },
   jobs: {
     searchPlaceholder: "채용 공고 검색...",
@@ -287,25 +279,6 @@ const ko: Admin = {
     permissionsByPage: "페이지별 권한",
     page: "페이지",
     selectOnePermission: "최소 하나의 권한을 선택하세요.",
-    company: {
-      editTitle: "회사 편집",
-      newTitle: "새 회사",
-      editSubtitle: "회사 정보를 업데이트하세요",
-      newSubtitle: "협력 회사를 등록하세요",
-      name: "회사명",
-      sector: "업종",
-      country: "국가",
-      cnpj: "CNPJ",
-      cnpjLookup: "CNPJ 정보 조회 중...",
-      state: "주",
-      city: "도시",
-      taxId: "사업자 등록번호",
-      stateProvince: "주 / 도",
-      status: "상태",
-      selectCity: "도시를 선택하세요",
-      selectStateFirst: "먼저 주를 선택하세요",
-      taxIdPlaceholder: "Tax ID / VAT / EIN…",
-    },
     job: {
       companyHint: "목록에서 회사를 찾지 못했다면,",
       companyHintLink: "회사 페이지에서 등록하세요",
@@ -400,7 +373,6 @@ const ko: Admin = {
     invalidLink:
       "이 채용 링크는 유효하지 않습니다. 회사에 전체 링크를 요청하세요.",
     jobNotFound: "이 공고는 더 이상 지원할 수 없습니다.",
-    viewAll: "모든 공고 보기",
     goHome: "홈으로",
   },
   login: {

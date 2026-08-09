@@ -25,7 +25,7 @@ function IconMail({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-/** Rodapé corporativo da Lumni, espelhado do lumni-sirius-landing. */
+
 export function SiteFooter() {
   const { dict } = useI18n();
   const f = dict.footer;
