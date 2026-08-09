@@ -16,7 +16,7 @@ export type Theme = {
 };
 
 export const THEMES: Theme[] = [
-  { key: "white", label: "Branco", color: "#f2f2f2", fg: "#000000" },
+  { key: "white", label: "Preto", color: "#171717", fg: "#ffffff" },
   { key: "red", label: "Vermelho", color: "#ef4444", fg: "#ffffff" },
   { key: "orange", label: "Laranja", color: "#f97316", fg: "#ffffff" },
   { key: "emerald", label: "Esmeralda", color: "#10b981", fg: "#ffffff" },

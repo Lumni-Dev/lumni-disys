@@ -207,11 +207,9 @@ export default function AccountPage() {
       action: (
         <ConfirmAction
           label={admin.account.leaveTitle}
-          onConfirm={() => {
-            void api
-              .del("/api/workspaces")
-              .then(() => window.location.assign("/dashboard"))
-              .catch(() => {});
+          onConfirm={async () => {
+            await api.del("/api/workspaces");
+            window.location.assign("/dashboard");
           }}
         />
       ),
@@ -389,11 +387,9 @@ export default function AccountPage() {
               label={admin.account.deleteAccount}
               icon={<IconTrash className="h-4 w-4" />}
               confirmLabel={admin.account.confirmDelete}
-              onConfirm={() => {
-                void api
-                  .del("/api/account")
-                  .then(() => signOut({ redirectTo: "/" }))
-                  .catch(() => {});
+              onConfirm={async () => {
+                await api.del("/api/account");
+                await signOut({ redirectTo: "/" });
               }}
             />
           </CardBody>

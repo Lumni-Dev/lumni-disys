@@ -122,6 +122,18 @@ export async function DELETE() {
 
 
     await tx.delete(schema.accounts).where(eq(schema.accounts.id, acc.id));
+
+    // Se era o ultimo workspace do dono, apaga o perfil (foto/nome/tema) para
+    // nao "ressuscitar" a imagem antiga ao recriar a conta depois.
+    const remaining = await tx.$count(
+      schema.accounts,
+      eq(schema.accounts.ownerEmail, email),
+    );
+    if (remaining === 0) {
+      await tx
+        .delete(schema.userProfiles)
+        .where(eq(schema.userProfiles.email, email));
+    }
   });
 
   return NextResponse.json({ ok: true });
