@@ -24,7 +24,7 @@ const nl: Landing = {
     ctaSecondary: "Bekijk modules",
   },
   kpis: {
-    companies: "Bedrijven",
+    companies: "Workspaces",
     openJobs: "Openstaande vacatures",
     candidates: "Kandidaten",
     inProcess: "In behandeling",
@@ -37,8 +37,8 @@ const nl: Landing = {
   },
   modules: [
     {
-      title: "Bedrijven",
-      desc: "Registreer klanten en vestigingen met volledige gegevens en realtime status.",
+      title: "Workspaces",
+      desc: "Organiseer elk bedrijf of team in een eigen workspace en wissel wanneer je wilt.",
     },
     {
       title: "Vacatures",

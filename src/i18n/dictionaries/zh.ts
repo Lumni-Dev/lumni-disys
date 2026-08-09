@@ -24,7 +24,7 @@ const zh: Landing = {
     ctaSecondary: "查看模块",
   },
   kpis: {
-    companies: "公司",
+    companies: "Workspaces",
     openJobs: "开放职位",
     candidates: "候选人",
     inProcess: "进行中",
@@ -37,8 +37,8 @@ const zh: Landing = {
   },
   modules: [
     {
-      title: "公司",
-      desc: "登记客户和单位，包含完整数据和实时状态。",
+      title: "Workspaces",
+      desc: "为每个公司或团队创建独立的工作区，随时切换。",
     },
     {
       title: "职位",

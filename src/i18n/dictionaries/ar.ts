@@ -24,7 +24,7 @@ const ar: Landing = {
     ctaSecondary: "اطّلع على الوحدات",
   },
   kpis: {
-    companies: "الشركات",
+    companies: "Workspaces",
     openJobs: "الوظائف المفتوحة",
     candidates: "المرشحون",
     inProcess: "قيد المعالجة",
@@ -37,8 +37,8 @@ const ar: Landing = {
   },
   modules: [
     {
-      title: "الشركات",
-      desc: "سجّل العملاء والفروع ببيانات كاملة وحالة محدّثة في الوقت الفعلي.",
+      title: "Workspaces",
+      desc: "نظّم كل شركة أو فريق في مساحة عمل خاصة وبدّل بينها متى شئت.",
     },
     {
       title: "الوظائف",

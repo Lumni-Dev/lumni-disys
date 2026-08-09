@@ -24,7 +24,7 @@ const ja: Landing = {
     ctaSecondary: "モジュールを見る",
   },
   kpis: {
-    companies: "企業",
+    companies: "Workspaces",
     openJobs: "募集中の求人",
     candidates: "候補者",
     inProcess: "選考中",
@@ -37,8 +37,8 @@ const ja: Landing = {
   },
   modules: [
     {
-      title: "企業",
-      desc: "クライアントや拠点を、完全なデータとリアルタイムのステータスで登録します。",
+      title: "Workspaces",
+      desc: "会社やチームごとに専用のワークスペースを作り、いつでも切り替えられます。",
     },
     {
       title: "求人",

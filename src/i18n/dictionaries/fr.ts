@@ -24,7 +24,7 @@ const fr: Landing = {
     ctaSecondary: "Voir les modules",
   },
   kpis: {
-    companies: "Entreprises",
+    companies: "Workspaces",
     openJobs: "Postes ouverts",
     candidates: "Candidats",
     inProcess: "En cours",
@@ -37,8 +37,8 @@ const fr: Landing = {
   },
   modules: [
     {
-      title: "Entreprises",
-      desc: "Enregistrez clients et unités avec des données complètes et un statut en temps réel.",
+      title: "Workspaces",
+      desc: "Organisez chaque entreprise ou équipe dans son propre espace et basculez quand vous le souhaitez.",
     },
     {
       title: "Postes",

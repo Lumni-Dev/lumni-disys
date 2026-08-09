@@ -24,7 +24,7 @@ const ko: Landing = {
     ctaSecondary: "모듈 보기",
   },
   kpis: {
-    companies: "기업",
+    companies: "Workspaces",
     openJobs: "채용 중인 공고",
     candidates: "지원자",
     inProcess: "진행 중",
@@ -37,8 +37,8 @@ const ko: Landing = {
   },
   modules: [
     {
-      title: "기업",
-      desc: "완전한 데이터와 실시간 상태로 고객사와 사업장을 등록하세요.",
+      title: "Workspaces",
+      desc: "회사나 팀별로 전용 워크스페이스를 만들고 언제든지 전환하세요.",
     },
     {
       title: "채용 공고",

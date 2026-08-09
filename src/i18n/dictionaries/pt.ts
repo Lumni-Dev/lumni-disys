@@ -24,7 +24,7 @@ const pt: Landing = {
     ctaSecondary: "Ver módulos",
   },
   kpis: {
-    companies: "Empresas",
+    companies: "Workspaces",
     openJobs: "Vagas abertas",
     candidates: "Candidatos",
     inProcess: "Em processo",
@@ -37,8 +37,8 @@ const pt: Landing = {
   },
   modules: [
     {
-      title: "Empresas",
-      desc: "Cadastre clientes e unidades com dados completos e status em tempo real.",
+      title: "Workspaces",
+      desc: "Organize cada empresa ou equipe em um workspace próprio e alterne entre eles quando quiser.",
     },
     {
       title: "Vagas",

@@ -24,7 +24,7 @@ const it: Landing = {
     ctaSecondary: "Scopri i moduli",
   },
   kpis: {
-    companies: "Aziende",
+    companies: "Workspaces",
     openJobs: "Posizioni aperte",
     candidates: "Candidati",
     inProcess: "In corso",
@@ -37,8 +37,8 @@ const it: Landing = {
   },
   modules: [
     {
-      title: "Aziende",
-      desc: "Registra clienti e sedi con dati completi e stato in tempo reale.",
+      title: "Workspaces",
+      desc: "Organizza ogni azienda o team nel proprio workspace e passa dall'uno all'altro quando vuoi.",
     },
     {
       title: "Posizioni",
