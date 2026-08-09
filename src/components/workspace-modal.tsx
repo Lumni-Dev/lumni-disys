@@ -5,6 +5,7 @@ import { Modal, ModalFooter } from "@/components/ui/modal";
 import { Field, Input } from "@/components/ui/form";
 import { PlanLimitModal } from "@/components/plan-limit-modal";
 import { api, ApiError } from "@/lib/api-client";
+import { trackSignup } from "@/lib/analytics";
 import { useI18n } from "@/i18n/context";
 
 export function WorkspaceModal({
@@ -57,7 +58,7 @@ export function WorkspaceModal({
           onSaved();
           onClose();
         } else {
-          window.location.assign("/dashboard");
+          trackSignup(() => window.location.assign("/dashboard"));
         }
       }
     } catch (err) {

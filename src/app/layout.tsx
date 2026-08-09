@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
 import { AppGuards } from "@/components/app-guards";
+import { Analytics } from "@/components/analytics";
 import { LanguageProvider } from "@/i18n/context";
 import {
   SITE_URL,
@@ -89,6 +90,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full">
+        <Analytics />
         <AppGuards />
         <LanguageProvider>{children}</LanguageProvider>
       </body>
