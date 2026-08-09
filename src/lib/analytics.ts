@@ -2,10 +2,39 @@ export const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 export const GADS_ID = process.env.NEXT_PUBLIC_GADS_ID ?? "";
 export const GADS_SIGNUP_LABEL = process.env.NEXT_PUBLIC_GADS_SIGNUP_LABEL ?? "";
 
+export const ANALYTICS_ENABLED = !!(GA_ID || GADS_ID);
+const CONSENT_KEY = "disys-consent";
+
 type GtagFn = (...args: unknown[]) => void;
 
 function gtag(...args: unknown[]): void {
   (window as unknown as { gtag?: GtagFn }).gtag?.(...args);
+}
+
+// Retorna true quando o usuario ja escolheu (aceitou ou recusou) os cookies.
+export function hasConsentChoice(): boolean {
+  try {
+    const v = localStorage.getItem(CONSENT_KEY);
+    return v === "granted" || v === "denied";
+  } catch {
+    return false;
+  }
+}
+
+// Persiste a escolha e atualiza o Consent Mode do gtag (ad + analytics).
+export function setAdConsent(granted: boolean): void {
+  const v = granted ? "granted" : "denied";
+  try {
+    localStorage.setItem(CONSENT_KEY, v);
+  } catch {
+    // ignore
+  }
+  gtag("consent", "update", {
+    ad_storage: v,
+    ad_user_data: v,
+    ad_personalization: v,
+    analytics_storage: v,
+  });
 }
 
 // Dispara a conversao de cadastro no Google Ads e so entao executa o callback

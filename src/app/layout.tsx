@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
 import { AppGuards } from "@/components/app-guards";
 import { Analytics } from "@/components/analytics";
+import { ConsentBanner } from "@/components/consent-banner";
 import { LanguageProvider } from "@/i18n/context";
 import {
   SITE_URL,
@@ -93,6 +94,7 @@ export default function RootLayout({
         <Analytics />
         <AppGuards />
         <LanguageProvider>{children}</LanguageProvider>
+        <ConsentBanner />
       </body>
     </html>
   );
