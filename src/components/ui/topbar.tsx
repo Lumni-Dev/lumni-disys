@@ -27,7 +27,7 @@ export function Topbar({
   return (
     <header
       className={cx(
-        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-hairline bg-background/60 p-2.5 shadow-[0_1px_0_0_var(--overlay-faint)] backdrop-blur-xl",
+        "sticky top-0 z-10 flex items-center gap-2.5 border-b border-hairline bg-surface p-2.5",
         emptyOnDesktop && "lg:hidden",
       )}
     >
