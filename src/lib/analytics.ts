@@ -13,10 +13,20 @@ function gtag(...args: unknown[]): void {
 // Sempre chama o callback, mesmo sem gtag/rotulo configurado, com um timeout de
 // seguranca para nunca travar o redirecionamento.
 export function trackSignup(done: () => void): void {
+  const hasGtag = typeof window !== "undefined" && "gtag" in window;
+  if (!hasGtag) {
+    done();
+    return;
+  }
+
+  // Evento GA4 (pode ser importado como conversao no Google Ads).
+  if (GA_ID) gtag("event", "sign_up", { method: "workspace" });
+
+  // Conversao direta no Google Ads (quando o tag AW e o rotulo estao definidos):
+  // redireciona no event_callback para garantir que o clique seja contado.
   const label =
     GADS_ID && GADS_SIGNUP_LABEL ? `${GADS_ID}/${GADS_SIGNUP_LABEL}` : "";
-  const hasGtag = typeof window !== "undefined" && "gtag" in window;
-  if (!label || !hasGtag) {
+  if (!label) {
     done();
     return;
   }
