@@ -215,6 +215,7 @@ export function ApplyModal({
           {failed && <p className="px-2.5 text-xs text-accent">{t.sendFailed}</p>}
           <ModalFooter
             onCancel={close}
+            loading={sending}
             submitLabel={sending ? t.sending : t.send}
           />
         </form>

@@ -283,7 +283,7 @@ export default function AccountPage() {
             <span className="text-xs text-muted">
               {admin.account.keepUpdated}
             </span>
-            <Button type="submit" disabled={savingProfile}>
+            <Button type="submit" loading={savingProfile}>
               {savingProfile
                 ? admin.common.saving
                 : profileSaved
@@ -325,7 +325,7 @@ export default function AccountPage() {
               THEMES.find((t) => t.key === theme)?.label ?? "",
             )}
           </span>
-          <Button onClick={onSaveTheme} disabled={savingTheme}>
+          <Button onClick={onSaveTheme} loading={savingTheme}>
             {savingTheme
               ? admin.common.saving
               : themeSaved

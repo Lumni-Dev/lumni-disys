@@ -29,6 +29,7 @@ export default function WorkspacesPage() {
   const [editing, setEditing] = useState<Workspace | null>(null);
 
   const [blockedJobs, setBlockedJobs] = useState<number | null>(null);
+  const [switching, setSwitching] = useState<number | null>(null);
 
   function load() {
 
@@ -43,10 +44,12 @@ export default function WorkspacesPage() {
   }, []);
 
   function activate(id: number) {
+    if (switching) return;
+    setSwitching(id);
     void api
       .put("/api/workspaces", { id })
       .then(() => window.location.assign("/dashboard"))
-      .catch(() => {});
+      .catch(() => setSwitching(null));
   }
 
   async function remove(w: Workspace) {
@@ -114,7 +117,11 @@ export default function WorkspacesPage() {
                   {t.active}
                 </span>
               ) : (
-                <Button variant="outline" onClick={() => activate(w.id)}>
+                <Button
+                  variant="outline"
+                  loading={switching === w.id}
+                  onClick={() => activate(w.id)}
+                >
                   {t.activate}
                 </Button>
               )}

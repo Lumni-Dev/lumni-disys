@@ -104,7 +104,11 @@ function FormModal({
             {admin.common.saveError}
           </p>
         )}
-        <ModalFooter onCancel={onClose} secondaryAction={secondaryAction} />
+        <ModalFooter
+          onCancel={onClose}
+          secondaryAction={secondaryAction}
+          loading={busy}
+        />
       </form>
     </Modal>
   );

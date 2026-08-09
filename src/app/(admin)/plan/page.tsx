@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PageShell } from "@/components/ui/page-shell";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Card, CardBody, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Modal, ModalFooter } from "@/components/ui/modal";
 import { IconCheck } from "@/components/ui/icons";
@@ -240,7 +240,7 @@ export default function PlanPage() {
         </CardBody>
       </Card>
 
-      <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-2.5 lg:grid-cols-3">
         {TIERS.map((tier) => {
           const isCurrent = current === tier;
           const paidCurrent = isCurrent && tier !== "free";
@@ -289,23 +289,29 @@ export default function PlanPage() {
                     </li>
                   ))}
                 </ul>
+              </CardBody>
 
-                {info && !isCurrent && tier !== "free" && (
-                  <Button
-                    className="mt-3"
-                    disabled={busy !== null}
-                    onClick={() => void subscribe(tier)}
-                  >
-                    {busy === tier
-                      ? admin.plan.redirecting
-                      : RANK[tier] > RANK[current]
-                        ? `${admin.plan.upgrade} ${tierName(tier)}`
-                        : admin.plan.switchPlan}
-                  </Button>
-                )}
+              {info && !isCurrent && tier !== "free" && (
+                <CardFooter>
+                  <div className="flex w-full justify-end">
+                    <Button
+                      loading={busy === tier}
+                      disabled={busy !== null}
+                      onClick={() => void subscribe(tier)}
+                    >
+                      {busy === tier
+                        ? admin.plan.redirecting
+                        : RANK[tier] > RANK[current]
+                          ? `${admin.plan.upgrade} ${tierName(tier)}`
+                          : admin.plan.switchPlan}
+                    </Button>
+                  </div>
+                </CardFooter>
+              )}
 
-                {paidCurrent && info && (
-                  <div className="mt-3 flex flex-col gap-2">
+              {paidCurrent && info && (
+                <CardFooter>
+                  <div className="flex w-full flex-col gap-2">
                     {info.renewsAt && (
                       <p className="text-xs text-muted">
                         {info.cancelAtPeriodEnd
@@ -313,26 +319,29 @@ export default function PlanPage() {
                           : admin.plan.renewsAt(fmtDate(info.renewsAt))}
                       </p>
                     )}
-                    {info.cancelAtPeriodEnd ? (
-                      <Button
-                        variant="outline"
-                        disabled={busy !== null}
-                        onClick={() => void manage("resume")}
-                      >
-                        {admin.plan.resume}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        disabled={busy !== null}
-                        onClick={() => setConfirmCancel(true)}
-                      >
-                        {admin.plan.cancel}
-                      </Button>
-                    )}
+                    <div className="flex justify-end">
+                      {info.cancelAtPeriodEnd ? (
+                        <Button
+                          variant="outline"
+                          loading={busy === "manage"}
+                          disabled={busy !== null}
+                          onClick={() => void manage("resume")}
+                        >
+                          {admin.plan.resume}
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          disabled={busy !== null}
+                          onClick={() => setConfirmCancel(true)}
+                        >
+                          {admin.plan.cancel}
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                )}
-              </CardBody>
+                </CardFooter>
+              )}
             </Card>
           );
         })}
@@ -350,7 +359,7 @@ export default function PlanPage() {
             void manage("cancel");
           }}
         >
-          <ModalFooter submitLabel={admin.common.confirm} />
+          <ModalFooter submitLabel={admin.common.confirm} loading={busy === "manage"} />
         </form>
       </Modal>
     </PageShell>

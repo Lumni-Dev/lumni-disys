@@ -4,7 +4,7 @@ import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
-import { IconClose } from "./icons";
+import { IconClose, IconSpinner } from "./icons";
 
 
 const emptySubscribe = () => () => {};
@@ -97,12 +97,12 @@ export function Modal({
 export function ModalFooter({
   submitLabel,
   secondaryAction,
+  loading = false,
 }: {
-
   onCancel?: () => void;
   submitLabel?: string;
-
   secondaryAction?: ReactNode;
+  loading?: boolean;
 }) {
   const { admin } = useI18n();
   const label = submitLabel ?? admin.common.save;
@@ -116,8 +116,10 @@ export function ModalFooter({
       {secondaryAction}
       <button
         type="submit"
-        className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+        disabled={loading}
+        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:active:scale-100"
       >
+        {loading && <IconSpinner className="h-4 w-4" />}
         {label}
       </button>
     </div>

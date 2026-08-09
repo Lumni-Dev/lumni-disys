@@ -103,6 +103,7 @@ export function MemberModal({
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);
   const [saveError, setSaveError] = useState(false);
+  const [busy, setBusy] = useState(false);
   const invalid = (k: string) => (errs[k] ? attempt : 0);
 
   const hasPermission = MODULES.some((m) =>
@@ -111,6 +112,7 @@ export function MemberModal({
 
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
     const errors = {
       email: !isEmail(email),
       name: !name.trim(),
@@ -123,6 +125,7 @@ export function MemberModal({
       return;
     }
     setSaveError(false);
+    setBusy(true);
     try {
       await onSave({
         name: name.trim(),
@@ -132,8 +135,9 @@ export function MemberModal({
       });
       onClose();
     } catch {
-
       setSaveError(true);
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -197,7 +201,7 @@ export function MemberModal({
             {admin.common.saveError}
           </p>
         )}
-        <ModalFooter onCancel={onClose} />
+        <ModalFooter onCancel={onClose} loading={busy} />
       </form>
     </Modal>
   );

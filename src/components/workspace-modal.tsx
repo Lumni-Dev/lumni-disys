@@ -101,9 +101,8 @@ export function WorkspaceModal({
             )}
           </div>
           <ModalFooter
-            submitLabel={
-              editing ? admin.common.save : admin.workspace.create
-            }
+            loading={busy}
+            submitLabel={editing ? admin.common.save : admin.workspace.create}
           />
         </form>
       </Modal>

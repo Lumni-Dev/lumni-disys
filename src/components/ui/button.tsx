@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cx } from "@/lib/utils";
-import { IconPlus } from "./icons";
+import { IconPlus, IconSpinner } from "./icons";
 import { Tooltip } from "./tooltip";
 
 type Variant = "primary" | "outline" | "ghost";
@@ -16,18 +16,21 @@ const variants: Record<Variant, string> = {
 export function Button({
   variant = "primary",
   icon,
+  loading = false,
   children,
   className,
+  disabled,
   ...props
 }: {
   variant?: Variant;
   icon?: ReactNode;
+  loading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
-
-  const iconOnly = icon != null && children == null;
+  const iconOnly = children == null && (icon != null || loading);
   return (
     <button
       {...props}
+      disabled={disabled || loading}
       className={cx(
         "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100",
         iconOnly ? "w-8" : "px-3",
@@ -35,7 +38,7 @@ export function Button({
         className,
       )}
     >
-      {icon}
+      {loading ? <IconSpinner className="h-4 w-4" /> : icon}
       {children}
     </button>
   );
