@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
-import { enqueueStageEmail } from "@/lib/notify";
+import { enqueueStageEmail, flushOutboxRow } from "@/lib/notify";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -65,12 +65,13 @@ export async function PUT(req: Request, { params }: Params) {
       );
 
     if (before && before.stage !== row.stage) {
-      await enqueueStageEmail({
+      const mailId = await enqueueStageEmail({
         accountId: account.id,
         candidateId: row.candidateId,
         stageLabel: row.stage,
         kind: "stage",
       });
+      if (mailId) after(() => flushOutboxRow(mailId));
     }
   }
 
@@ -120,12 +121,13 @@ export async function DELETE(_req: Request, { params }: Params) {
         ),
       );
 
-    await enqueueStageEmail({
+    const mailId = await enqueueStageEmail({
       accountId: account.id,
       candidateId: card.candidateId,
       stageLabel: "-",
       kind: "removed",
     });
+    if (mailId) after(() => flushOutboxRow(mailId));
   }
 
   return NextResponse.json({ ok: true });

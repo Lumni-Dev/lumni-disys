@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { and, asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
 import { planLimitError } from "@/lib/plan";
 import { resolveJob } from "@/lib/job";
-import { enqueueStageEmail } from "@/lib/notify";
+import { enqueueStageEmail, flushOutboxRow } from "@/lib/notify";
 
 const STAGES = [
   "Triagem",
@@ -123,12 +123,13 @@ export async function POST(req: Request) {
       ),
     );
 
-  await enqueueStageEmail({
+  const mailId = await enqueueStageEmail({
     accountId: account.id,
     candidateId: candidate.id,
     stageLabel: stage,
     kind: "stage",
   });
+  if (mailId) after(() => flushOutboxRow(mailId));
 
   return NextResponse.json(
     {

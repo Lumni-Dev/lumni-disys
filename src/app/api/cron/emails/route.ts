@@ -3,12 +3,13 @@ import { and, asc, eq, lt } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { sendRawEmail } from "@/lib/mail";
 
-const BATCH = 40;
+const BATCH = 200;
 const MAX_ATTEMPTS = 5;
 
-// Worker da fila (outbox) de e-mails: processa um lote por execucao e deixa o
-// restante para a proxima passada do cron. Isso evita picos no SMTP quando
-// muitos candidatos mudam de etapa ao mesmo tempo. Protegido por CRON_SECRET.
+// Rede de seguranca (diaria): reprocessa e-mails que ficaram pendentes (o envio
+// em segundo plano via after() nao concluiu) ou que falharam antes do limite de
+// tentativas. O caminho normal ja envia na hora; aqui so limpamos o que sobrou.
+// Protegido por CRON_SECRET.
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (secret && req.headers.get("authorization") !== `Bearer ${secret}`)
