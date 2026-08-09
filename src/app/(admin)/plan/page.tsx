@@ -263,6 +263,7 @@ export default function PlanPage() {
             <Card
               key={tier}
               className={cx(
+                "transition-all duration-200 hover:-translate-y-1 hover:border-hairline-strong",
                 isCurrent && "ring-1 ring-accent/40",
                 !isCurrent && highlight && "ring-1 ring-hairline",
               )}
