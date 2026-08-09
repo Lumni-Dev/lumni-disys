@@ -175,3 +175,81 @@ select:not(:disabled) {
 .scroll-thin::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
 }
+
+/* --- Animacoes da landing --- */
+
+/* Revelacao no scroll: comeca deslocado/transparente e entra suave. A classe
+   .is-visible e adicionada quando o elemento entra na viewport (IntersectionObserver). */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Flutuacao suave (mockup do hero). */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float {
+  animation: float 7s ease-in-out infinite;
+}
+
+/* Gráfico "ao vivo": a linha desliza continuamente (sensacao de dados mudando).
+   O path tem 2 copias (largura 200) e o grupo anda -100 (um periodo), em loop. */
+@keyframes spark-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100px);
+  }
+}
+.animate-spark {
+  animation: spark-scroll 10s linear infinite;
+}
+
+/* Brilho deslizante no texto de destaque do hero. */
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+.text-shine {
+  background-image: linear-gradient(
+    100deg,
+    var(--foreground) 20%,
+    var(--muted) 40%,
+    var(--foreground) 60%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none;
+  }
+  .animate-float,
+  .text-shine,
+  .animate-spark {
+    animation: none;
+  }
+}

@@ -23,7 +23,7 @@ export function priceCents(tier: PaidTier): number {
   const raw =
     tier === "max" ? process.env.MAX_PRICE_CENTS : process.env.PLUS_PRICE_CENTS;
   const cents = Number(raw);
-  const fallback = tier === "max" ? 18990 : 8990;
+  const fallback = tier === "max" ? 14990 : 4990;
   return Number.isFinite(cents) && cents > 0 ? Math.round(cents) : fallback;
 }
 

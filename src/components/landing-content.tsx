@@ -1,11 +1,17 @@
 "use client";
 
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type ElementType,
+} from "react";
 import Link from "next/link";
 import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SiteFooter } from "@/components/site-footer";
-import { Sparkline } from "@/components/ui/sparkline";
 import {
   IconBuilding,
   IconBriefcase,
@@ -16,6 +22,98 @@ import {
   IconDashboard,
   IconCheck,
 } from "@/components/ui/icons";
+
+// Revela o conteudo quando entra na viewport (fade + subida), com stagger
+// opcional via delay. Respeita prefers-reduced-motion pelo CSS (.reveal).
+function Reveal({
+  children,
+  className,
+  delay = 0,
+  as: Tag = "div",
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+  as?: ElementType;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <Tag
+      ref={ref}
+      className={cx("reveal", visible && "is-visible", className)}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+// Sparkline "ao vivo": a linha desliza continuamente (duas copias dos dados),
+// dando a sensacao de estatisticas mudando. Velocidade variavel por card.
+function LiveSparkline({
+  data,
+  height = 30,
+  durationSec = 10,
+}: {
+  data: number[];
+  height?: number;
+  durationSec?: number;
+}) {
+  const n = data.length;
+  const h = 34;
+  const series = [...data, ...data];
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const span = max - min || 1;
+  const pts = series.map((v, i) => {
+    const x = i * (100 / n);
+    const y = h - ((v - min) / span) * (h - 4) - 2;
+    return [x, y] as const;
+  });
+  const line = pts
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
+  const lastX = pts[pts.length - 1][0].toFixed(1);
+  const area = `${line} L${lastX},${h} L0,${h} Z`;
+  return (
+    <svg
+      viewBox={`0 0 100 ${h}`}
+      preserveAspectRatio="none"
+      className="w-full overflow-hidden"
+      style={{ height }}
+      aria-hidden
+    >
+      <g className="animate-spark" style={{ animationDuration: `${durationSec}s` }}>
+        <path d={area} fill="var(--accent)" fillOpacity={0.15} />
+        <path
+          d={line}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth={1.5}
+          vectorEffect="non-scaling-stroke"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+      </g>
+    </svg>
+  );
+}
 
 const MODULE_ICONS = [
   IconBuilding,
@@ -194,16 +292,24 @@ export function LandingContent({
 
       <main className="relative z-10 mx-auto max-w-6xl px-5">
         <section className="flex flex-col items-center pt-20 pb-16 text-center md:pt-28">
-          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl">
+          <Reveal
+            as="h1"
+            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+          >
             {dict.hero.titleLead}{" "}
-            <span className="bg-gradient-to-r from-foreground to-muted bg-clip-text text-transparent">
-              {dict.hero.titleAccent}
-            </span>
-          </h1>
-          <p className="mt-5 max-w-xl text-base text-muted sm:text-lg">
+            <span className="text-shine">{dict.hero.titleAccent}</span>
+          </Reveal>
+          <Reveal
+            as="p"
+            delay={90}
+            className="mt-5 max-w-xl text-base text-muted sm:text-lg"
+          >
             {dict.hero.subtitle}
-          </p>
-          <div className="mt-8 flex flex-col items-center gap-2.5 sm:flex-row">
+          </Reveal>
+          <Reveal
+            delay={180}
+            className="mt-8 flex flex-col items-center gap-2.5 sm:flex-row"
+          >
             <Link
               href={ctaHref}
               className="rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-lg shadow-black/40 transition-colors hover:bg-white"
@@ -216,10 +322,10 @@ export function LandingContent({
             >
               {dict.hero.ctaSecondary}
             </a>
-          </div>
-          <div className="relative mt-16 w-full max-w-4xl">
+          </Reveal>
+          <Reveal delay={260} className="relative mt-16 w-full max-w-4xl">
             <div className="absolute -inset-x-10 -top-6 bottom-0 rounded-lg bg-white/20 blur-[80px]" />
-            <div className="relative overflow-hidden rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">
+            <div className="animate-float relative overflow-hidden rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">
               <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
                 <span className="h-2.5 w-2.5 rounded-lg bg-white/60" />
                 <span className="h-2.5 w-2.5 rounded-lg bg-muted/30" />
@@ -229,7 +335,7 @@ export function LandingContent({
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-4 sm:grid-cols-4">
-                {KPI_META.map((c) => (
+                {KPI_META.map((c, i) => (
                   <div
                     key={c.key}
                     className="group/kpi rounded-lg border border-border bg-surface-2 p-3 text-left transition-colors hover:border-white/[0.15]"
@@ -252,16 +358,18 @@ export function LandingContent({
                     <p className="mt-1.5 text-xl font-semibold tracking-tight">
                       {c.v}
                     </p>
-                    <Sparkline
-                      data={[...c.data]}
-                      height={30}
-                      className="mt-2 opacity-70 transition-opacity group-hover/kpi:opacity-100"
-                    />
+                    <div className="mt-2 opacity-70 transition-opacity group-hover/kpi:opacity-100">
+                      <LiveSparkline
+                        data={[...c.data]}
+                        height={30}
+                        durationSec={9 + i * 1.6}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         <section className="relative grid grid-cols-2 gap-2.5 border-y border-border py-8 md:grid-cols-4">
@@ -270,12 +378,12 @@ export function LandingContent({
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-40 w-[640px] max-w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[110px]"
           />
           {STAT_VALUES.map((value, i) => (
-            <div key={dict.stats[i]} className="text-center">
+            <Reveal key={dict.stats[i]} delay={i * 90} className="text-center">
               <p className="text-3xl font-semibold tracking-tight text-foreground">
                 {value}
               </p>
               <p className="mt-1 text-xs text-muted">{dict.stats[i]}</p>
-            </div>
+            </Reveal>
           ))}
         </section>
 
@@ -297,19 +405,20 @@ export function LandingContent({
                 "radial-gradient(ellipse 65% 70% at 50% 42%, black, transparent 78%)",
             }}
           />
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <Eyebrow label={dict.nav.modules} />
             <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
               {dict.modulesSection.title}
             </h2>
             <p className="mt-3 text-muted">{dict.modulesSection.subtitle}</p>
-          </div>
+          </Reveal>
           <div className="mt-12 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {dict.modules.map((mod, i) => {
               const Icon = MODULE_ICONS[i];
               return (
-                <div
+                <Reveal
                   key={mod.title}
+                  delay={i * 80}
                   className="group relative overflow-hidden rounded-lg border border-border bg-surface/60 p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-surface/80"
                 >
                   <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -326,7 +435,7 @@ export function LandingContent({
                     {mod.title}
                   </h3>
                   <p className="mt-1.5 text-sm text-muted">{mod.desc}</p>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -341,15 +450,16 @@ export function LandingContent({
             aria-hidden
             className="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-lg bg-foreground opacity-[0.045] blur-[120px]"
           />
-          <div className="mb-10 flex justify-center">
+          <Reveal className="mb-10 flex justify-center">
             <Eyebrow label={dict.nav.features} />
-          </div>
+          </Reveal>
           <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
             {dict.features.map((f, i) => {
               const Icon = FEATURE_ICONS[i];
               return (
-                <div
+                <Reveal
                   key={f.title}
+                  delay={i * 90}
                   className="group relative overflow-hidden rounded-lg border border-border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/40"
                 >
                   <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-lg bg-foreground opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-10" />
@@ -360,7 +470,7 @@ export function LandingContent({
                     {f.title}
                   </h3>
                   <p className="mt-1.5 text-sm text-muted">{f.desc}</p>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -371,19 +481,20 @@ export function LandingContent({
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-6 -z-10 h-[440px] w-[780px] max-w-[95%] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[140px]"
           />
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <Eyebrow label={dict.nav.pricing} />
             <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
               {dict.pricing.title}
             </h2>
             <p className="mt-3 text-muted">{dict.pricing.subtitle}</p>
-          </div>
+          </Reveal>
           <div className="mt-12 grid grid-cols-1 items-start gap-2.5 md:grid-cols-3">
-            {PRICING_TIERS.map((tier) => {
+            {PRICING_TIERS.map((tier, i) => {
               const highlight = tier.key === "max";
               return (
-                <div
+                <Reveal
                   key={tier.key}
+                  delay={i * 100}
                   className={cx(
                     "relative flex flex-col overflow-hidden rounded-lg border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1",
                     highlight
@@ -429,14 +540,14 @@ export function LandingContent({
                   >
                     {dict.pricing.cta}
                   </Link>
-                </div>
+                </Reveal>
               );
             })}
           </div>
         </section>
 
         <section id="acesso" className="scroll-mt-20 py-20">
-          <div className="relative overflow-hidden rounded-lg border border-white/20 bg-surface/60 px-6 py-16 text-center backdrop-blur">
+          <Reveal className="relative overflow-hidden rounded-lg border border-white/20 bg-surface/60 px-6 py-16 text-center backdrop-blur">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 opacity-[0.25]"
@@ -477,7 +588,7 @@ export function LandingContent({
                 </Link>
               </div>
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 
