@@ -6,7 +6,13 @@ const zh: Landing = {
     modules: "模块",
     features: "功能",
     access: "访问",
+    pricing: "价格",
     signIn: "登录",
+  },
+  pricing: {
+    title: "方案与价格",
+    subtitle: "免费开始，需要时再升级。",
+    cta: "开始",
   },
   hero: {
     titleLead: "实用又快速的",

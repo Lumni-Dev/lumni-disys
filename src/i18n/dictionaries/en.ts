@@ -6,7 +6,13 @@ const en: Landing = {
     modules: "Modules",
     features: "Features",
     access: "Access",
+    pricing: "Pricing",
     signIn: "Sign in",
+  },
+  pricing: {
+    title: "Plans & pricing",
+    subtitle: "Start free and upgrade when you need.",
+    cta: "Get started",
   },
   hero: {
     titleLead: "The practical, fast",

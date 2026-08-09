@@ -6,7 +6,13 @@ const ja: Landing = {
     modules: "モジュール",
     features: "特長",
     access: "アクセス",
+    pricing: "料金",
     signIn: "ログイン",
+  },
+  pricing: {
+    title: "料金プラン",
+    subtitle: "無料で始めて、必要になったらアップグレード。",
+    cta: "始める",
   },
   hero: {
     titleLead: "実用的で速い",

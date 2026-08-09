@@ -6,7 +6,13 @@ const pt: Landing = {
     modules: "Módulos",
     features: "Recursos",
     access: "Acesso",
+    pricing: "Planos",
     signIn: "Entrar",
+  },
+  pricing: {
+    title: "Planos e preços",
+    subtitle: "Comece grátis e evolua quando precisar.",
+    cta: "Começar",
   },
   hero: {
     titleLead: "O ATS de Recursos Humanos",

@@ -15,7 +15,13 @@ export interface Landing {
     modules: string;
     features: string;
     access: string;
+    pricing: string;
     signIn: string;
+  };
+  pricing: {
+    title: string;
+    subtitle: string;
+    cta: string;
   };
   hero: {
     titleLead: string;

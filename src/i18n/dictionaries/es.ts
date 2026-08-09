@@ -6,7 +6,13 @@ const es: Landing = {
     modules: "Módulos",
     features: "Características",
     access: "Acceso",
+    pricing: "Planes",
     signIn: "Iniciar sesión",
+  },
+  pricing: {
+    title: "Planes y precios",
+    subtitle: "Empieza gratis y mejora cuando lo necesites.",
+    cta: "Comenzar",
   },
   hero: {
     titleLead: "El ATS de RR. HH.",

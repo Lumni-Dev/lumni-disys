@@ -6,7 +6,13 @@ const fr: Landing = {
     modules: "Modules",
     features: "Fonctionnalités",
     access: "Accès",
+    pricing: "Tarifs",
     signIn: "Se connecter",
+  },
+  pricing: {
+    title: "Offres et tarifs",
+    subtitle: "Commencez gratuitement et évoluez au besoin.",
+    cta: "Commencer",
   },
   hero: {
     titleLead: "L'ATS RH",

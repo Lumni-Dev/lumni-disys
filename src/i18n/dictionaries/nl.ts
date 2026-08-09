@@ -6,7 +6,13 @@ const nl: Landing = {
     modules: "Modules",
     features: "Functies",
     access: "Toegang",
+    pricing: "Prijzen",
     signIn: "Inloggen",
+  },
+  pricing: {
+    title: "Plannen en prijzen",
+    subtitle: "Begin gratis en upgrade wanneer nodig.",
+    cta: "Beginnen",
   },
   hero: {
     titleLead: "Het praktische, snelle",

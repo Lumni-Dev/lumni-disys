@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SiteFooter } from "@/components/site-footer";
@@ -13,6 +14,7 @@ import {
   IconShield,
   IconSearch,
   IconDashboard,
+  IconCheck,
 } from "@/components/ui/icons";
 
 const MODULE_ICONS = [
@@ -60,10 +62,59 @@ function Eyebrow({ label }: { label: string }) {
   );
 }
 
-export function LandingContent({ authed }: { authed: boolean }) {
-  const { dict } = useI18n();
+const PRICING_TIERS = [
+  { key: "free", name: "Free", price: 0 },
+  { key: "plus", name: "Plus", price: null },
+  { key: "max", name: "Max", price: null },
+] as const;
+
+const TIER_LIMITS: Record<
+  "free" | "plus" | "max",
+  { workspaces: number | null; jobs: number | null; candidates: number | null; processes: number | null; members: number | null }
+> = {
+  free: { workspaces: 1, jobs: 5, candidates: 5, processes: 5, members: 1 },
+  plus: { workspaces: 5, jobs: 25, candidates: 25, processes: 25, members: 5 },
+  max: { workspaces: null, jobs: null, candidates: null, processes: null, members: null },
+};
+
+export function LandingContent({
+  authed,
+  prices,
+}: {
+  authed: boolean;
+  prices: { plus: number; max: number };
+}) {
+  const { dict, admin } = useI18n();
   const ctaHref = authed ? "/dashboard" : "/login";
   const ctaLabel = authed ? dict.hero.ctaAuthed : dict.hero.ctaGuest;
+
+  const brl = (cents: number) =>
+    new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "BRL",
+    }).format(cents / 100);
+
+  const priceOf = (key: "free" | "plus" | "max") =>
+    key === "free" ? "R$ 0" : brl(key === "max" ? prices.max : prices.plus);
+
+  const tierDesc = (key: "free" | "plus" | "max") =>
+    key === "free"
+      ? admin.plan.freeDesc
+      : key === "max"
+        ? admin.plan.maxDesc
+        : admin.plan.plusDesc;
+
+  const featureRows = (key: "free" | "plus" | "max") => {
+    const l = TIER_LIMITS[key];
+    const val = (n: number | null) => (n == null ? admin.plan.unlimited : n);
+    return [
+      { label: admin.plan.companies, value: `${val(l.workspaces)}`, per: false },
+      { label: admin.nav.jobs, value: `${val(l.jobs)}`, per: l.jobs != null },
+      { label: admin.nav.candidates, value: `${val(l.candidates)}`, per: l.candidates != null },
+      { label: admin.nav.pipeline, value: `${val(l.processes)}`, per: l.processes != null },
+      { label: admin.nav.team, value: `${val(l.members)}`, per: l.members != null },
+    ];
+  };
 
   return (
     <div className="force-dark landing-root relative min-h-screen overflow-hidden bg-background text-foreground">
@@ -121,6 +172,9 @@ export function LandingContent({ authed }: { authed: boolean }) {
             </a>
             <a href="#recursos" className="transition-colors hover:text-foreground">
               {dict.nav.features}
+            </a>
+            <a href="#planos" className="transition-colors hover:text-foreground">
+              {dict.nav.pricing}
             </a>
             <a href="#acesso" className="transition-colors hover:text-foreground">
               {dict.nav.access}
@@ -306,6 +360,75 @@ export function LandingContent({ authed }: { authed: boolean }) {
                     {f.title}
                   </h3>
                   <p className="mt-1.5 text-sm text-muted">{f.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="planos" className="relative scroll-mt-20 py-20">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-6 -z-10 h-[440px] w-[780px] max-w-[95%] -translate-x-1/2 rounded-lg bg-foreground opacity-[0.05] blur-[140px]"
+          />
+          <div className="mx-auto max-w-2xl text-center">
+            <Eyebrow label={dict.nav.pricing} />
+            <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
+              {dict.pricing.title}
+            </h2>
+            <p className="mt-3 text-muted">{dict.pricing.subtitle}</p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 items-start gap-2.5 md:grid-cols-3">
+            {PRICING_TIERS.map((tier) => {
+              const highlight = tier.key === "max";
+              return (
+                <div
+                  key={tier.key}
+                  className={cx(
+                    "relative flex flex-col overflow-hidden rounded-lg border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1",
+                    highlight
+                      ? "border-white/40"
+                      : "border-border hover:border-white/40",
+                  )}
+                >
+                  <h3 className="text-base font-semibold text-foreground">
+                    {tier.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted">{tierDesc(tier.key)}</p>
+                  <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
+                    {priceOf(tier.key)}
+                    <span className="text-sm font-normal text-muted">
+                      {admin.plan.perMonth}
+                    </span>
+                  </p>
+                  <ul className="mt-5 flex flex-col gap-2">
+                    {featureRows(tier.key).map((r) => (
+                      <li
+                        key={r.label}
+                        className="flex items-center gap-2 text-sm text-muted"
+                      >
+                        <IconCheck className="h-3.5 w-3.5 shrink-0 text-foreground" />
+                        <span className="text-foreground">{r.value}</span>
+                        {r.label}
+                        {r.per && (
+                          <span className="text-muted/70">
+                            {admin.plan.perCompanyShort}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={ctaHref}
+                    className={cx(
+                      "mt-6 inline-flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium transition-colors",
+                      highlight
+                        ? "bg-foreground text-background hover:bg-white"
+                        : "border border-border bg-surface/60 text-foreground hover:border-white hover:bg-white/10",
+                    )}
+                  >
+                    {dict.pricing.cta}
+                  </Link>
                 </div>
               );
             })}

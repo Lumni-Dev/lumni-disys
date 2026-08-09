@@ -6,7 +6,13 @@ const ko: Landing = {
     modules: "모듈",
     features: "기능",
     access: "접속",
+    pricing: "요금제",
     signIn: "로그인",
+  },
+  pricing: {
+    title: "요금제",
+    subtitle: "무료로 시작하고 필요할 때 업그레이드하세요.",
+    cta: "시작하기",
   },
   hero: {
     titleLead: "실용적이고 빠른",

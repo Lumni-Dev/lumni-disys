@@ -6,7 +6,13 @@ const ar: Landing = {
     modules: "الوحدات",
     features: "المميزات",
     access: "الدخول",
+    pricing: "الأسعار",
     signIn: "تسجيل الدخول",
+  },
+  pricing: {
+    title: "الخطط والأسعار",
+    subtitle: "ابدأ مجانًا وقم بالترقية عند الحاجة.",
+    cta: "ابدأ",
   },
   hero: {
     titleLead: "نظام ATS للموارد البشرية",

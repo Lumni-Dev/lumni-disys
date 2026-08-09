@@ -6,7 +6,13 @@ const ru: Landing = {
     modules: "Модули",
     features: "Возможности",
     access: "Доступ",
+    pricing: "Тарифы",
     signIn: "Войти",
+  },
+  pricing: {
+    title: "Тарифы и цены",
+    subtitle: "Начните бесплатно и перейдите на платный план при необходимости.",
+    cta: "Начать",
   },
   hero: {
     titleLead: "ATS для отдела кадров,",

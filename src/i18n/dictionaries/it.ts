@@ -6,7 +6,13 @@ const it: Landing = {
     modules: "Moduli",
     features: "Funzionalità",
     access: "Accesso",
+    pricing: "Prezzi",
     signIn: "Accedi",
+  },
+  pricing: {
+    title: "Piani e prezzi",
+    subtitle: "Inizia gratis e passa a un piano superiore quando serve.",
+    cta: "Inizia",
   },
   hero: {
     titleLead: "L'ATS per le Risorse Umane",
