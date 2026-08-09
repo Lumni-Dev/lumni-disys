@@ -118,7 +118,7 @@ export default function Home() {
     <>
       <Topbar showSearch={false} />
       <div className="flex flex-col gap-2.5 p-2.5">
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
           {data
             ? cards.map((s) => <StatCard key={s.label} {...s} />)
             : Array.from({ length: 4 }).map((_, i) => (
