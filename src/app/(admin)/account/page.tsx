@@ -68,6 +68,7 @@ export default function AccountPage() {
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);
   const [savingProfile, setSavingProfile] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
   const invalid = (k: string) => (errs[k] ? attempt : 0);
   const fullName = nameEdit ?? name;
@@ -176,7 +177,11 @@ export default function AccountPage() {
             variant="outline"
             aria-label={admin.account.signOutTitle}
             icon={<IconLogout className="h-4 w-4" />}
-            onClick={() => signOut({ redirectTo: "/login" })}
+            loading={signingOut}
+            onClick={() => {
+              setSigningOut(true);
+              void signOut({ redirectTo: "/login" });
+            }}
           />
         </Tooltip>
       ),
