@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -113,6 +114,124 @@ function LiveSparkline({
         />
       </g>
     </svg>
+  );
+}
+
+// Interpreta um valor formatado (ex.: "1.204", "R$ 49,90", "+12%", "24/7") em
+// { prefixo, sufixo, numero, casas decimais, separadores } para animar. Se nao
+// houver numero (ex.: "Ilimitado"), retorna null (fica estatico).
+function parseValue(str: string) {
+  const m = str.match(/^(\D*)(\d[\d.,]*)([\s\S]*)$/);
+  if (!m) return null;
+  const [, prefix, numStr, suffix] = m;
+  const hasComma = numStr.includes(",");
+  const hasDot = numStr.includes(".");
+  let decimalSep = "";
+  let thousandSep = "";
+  let decimals = 0;
+  let cleaned = numStr;
+  if (hasComma && hasDot) {
+    const decSep =
+      numStr.lastIndexOf(",") > numStr.lastIndexOf(".") ? "," : ".";
+    thousandSep = decSep === "," ? "." : ",";
+    decimalSep = decSep;
+    decimals = numStr.length - numStr.lastIndexOf(decSep) - 1;
+    cleaned = numStr.split(thousandSep).join("").replace(decSep, ".");
+  } else if (hasComma || hasDot) {
+    const sep = hasComma ? "," : ".";
+    const after = numStr.length - numStr.lastIndexOf(sep) - 1;
+    const single = numStr.indexOf(sep) === numStr.lastIndexOf(sep);
+    if (single && after > 0 && after <= 2) {
+      decimalSep = sep;
+      decimals = after;
+      cleaned = numStr.replace(sep, ".");
+    } else {
+      thousandSep = sep;
+      cleaned = numStr.split(sep).join("");
+    }
+  }
+  const value = parseFloat(cleaned);
+  if (!Number.isFinite(value)) return null;
+  return { prefix, suffix, value, decimals, decimalSep, thousandSep };
+}
+
+type Parsed = NonNullable<ReturnType<typeof parseValue>>;
+
+function formatValue(n: number, p: Parsed): string {
+  const fixed = Math.abs(n).toFixed(p.decimals);
+  const dot = fixed.indexOf(".");
+  let int = dot === -1 ? fixed : fixed.slice(0, dot);
+  const dec = dot === -1 ? "" : fixed.slice(dot + 1);
+  if (p.thousandSep)
+    int = int.replace(/\B(?=(\d{3})+(?!\d))/g, p.thousandSep);
+  const num = p.decimals > 0 ? `${int}${p.decimalSep}${dec}` : int;
+  return `${p.prefix}${num}${p.suffix}`;
+}
+
+// Conta de 0 ate o valor quando entra na viewport; ao sair e voltar, repete.
+function CountUp({
+  value,
+  className,
+  duration = 1300,
+}: {
+  value: string;
+  className?: string;
+  duration?: number;
+}) {
+  const parsed = useMemo(() => parseValue(value), [value]);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [display, setDisplay] = useState(
+    parsed ? formatValue(0, parsed) : value,
+  );
+  const raf = useRef(0);
+
+  useEffect(() => {
+    if (!parsed) {
+      setDisplay(value);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    function run() {
+      cancelAnimationFrame(raf.current);
+      let start = 0;
+      const tick = (now: number) => {
+        if (!start) start = now;
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplay(formatValue(parsed!.value * eased, parsed!));
+        if (t < 1) raf.current = requestAnimationFrame(tick);
+        else setDisplay(value);
+      };
+      raf.current = requestAnimationFrame(tick);
+    }
+
+    let active = false;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !active) {
+          active = true;
+          run();
+        } else if (!entry.isIntersecting) {
+          active = false;
+          cancelAnimationFrame(raf.current);
+          setDisplay(formatValue(0, parsed));
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf.current);
+    };
+  }, [parsed, value, duration]);
+
+  return (
+    <span ref={ref} className={className}>
+      {display}
+    </span>
   );
 }
 
@@ -363,11 +482,11 @@ export function LandingContent({
                         }`}
                       >
                         <TrendArrow up={c.up} />
-                        {c.delta}
+                        <CountUp value={c.delta} />
                       </span>
                     </div>
                     <p className="mt-1.5 text-xl font-semibold tracking-tight">
-                      {c.v}
+                      <CountUp value={c.v} />
                     </p>
                     <div className="mt-2 opacity-70 transition-opacity group-hover/kpi:opacity-100">
                       <LiveSparkline
@@ -391,7 +510,7 @@ export function LandingContent({
           {STAT_VALUES.map((value, i) => (
             <Reveal key={dict.stats[i]} delay={i * 90} className="text-center">
               <p className="text-3xl font-semibold tracking-tight text-foreground">
-                {value}
+                <CountUp value={value} />
               </p>
               <p className="mt-1 text-xs text-muted">{dict.stats[i]}</p>
             </Reveal>
@@ -507,7 +626,7 @@ export function LandingContent({
                   key={tier.key}
                   delay={i * 100}
                   className={cx(
-                    "relative flex flex-col overflow-hidden rounded-lg border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1",
+                    "relative flex flex-col overflow-hidden rounded-lg border bg-surface/60 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:bg-surface/80",
                     highlight
                       ? "border-white/40"
                       : "border-border hover:border-white/40",
@@ -518,7 +637,7 @@ export function LandingContent({
                   </h3>
                   <p className="mt-1 text-sm text-muted">{tierDesc(tier.key)}</p>
                   <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
-                    {priceOf(tier.key)}
+                    <CountUp value={priceOf(tier.key)} />
                     <span className="text-sm font-normal text-muted">
                       {admin.plan.perMonth}
                     </span>
@@ -530,7 +649,7 @@ export function LandingContent({
                         className="flex items-center gap-2 text-sm text-muted"
                       >
                         <IconCheck className="h-3.5 w-3.5 shrink-0 text-foreground" />
-                        <span className="text-foreground">{r.value}</span>
+                        <CountUp className="text-foreground" value={r.value} />
                         {r.label}
                         {r.per && (
                           <span className="text-muted/70">
