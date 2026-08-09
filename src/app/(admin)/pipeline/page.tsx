@@ -199,14 +199,16 @@ export default function PipelinePage() {
           onClick={toggleNotify}
           disabled={notifySaving}
           className={cx(
-            "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60",
-            notify ? "bg-foreground" : "bg-surface-2 border border-hairline",
+            "relative h-5 w-9 shrink-0 rounded-md border transition-colors disabled:opacity-60",
+            notify
+              ? "border-transparent bg-foreground"
+              : "border-hairline bg-surface-2",
           )}
         >
           <span
             className={cx(
-              "absolute top-0.5 h-5 w-5 rounded-full border border-hairline bg-background shadow-sm transition-all",
-              notify ? "left-[22px]" : "left-0.5",
+              "absolute top-0.5 h-3.5 w-3.5 rounded-md border border-hairline bg-background shadow-sm transition-all",
+              notify ? "left-[18px]" : "left-0.5",
             )}
           />
         </button>
