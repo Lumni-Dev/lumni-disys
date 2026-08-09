@@ -1,0 +1,1 @@
+ALTER TABLE "candidates" ADD COLUMN "consent_at" timestamp with time zone;

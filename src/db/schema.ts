@@ -93,6 +93,9 @@ export const candidates = pgTable("candidates", {
 
 
   matchScore: integer(),
+  // LGPD: momento do consentimento do candidato (null = cadastro manual pelo
+  // recrutador, sem consentimento coletado no formulario publico).
+  consentAt: timestamp({ withTimezone: true }),
   ...timestamps,
 }, (t) => [
   index("candidates_account_id_idx").on(t.accountId),

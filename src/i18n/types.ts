@@ -434,6 +434,10 @@ export interface Admin {
     send: string;
     sending: string;
     sendFailed: string;
+    /** LGPD: consentimento do candidato no formulario publico. */
+    consent: string;
+    consentPolicy: string;
+    consentRequired: string;
     empty: string;
     namePlaceholder: string;
     emailPlaceholder: string;

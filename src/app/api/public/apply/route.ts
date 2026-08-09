@@ -20,6 +20,13 @@ export async function POST(req: Request) {
   if (!name || !email)
     return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
 
+  // LGPD: consentimento explicito e obrigatorio para tratar os dados.
+  if (body.consent !== true)
+    return NextResponse.json(
+      { error: "Consentimento obrigatorio" },
+      { status: 400 },
+    );
+
   const role = String(body.jobTitle ?? "").slice(0, 160);
   const jobId = Number(body.jobId);
 
@@ -91,6 +98,7 @@ export async function POST(req: Request) {
       cvName,
       cvBase64: cvData,
       matchScore,
+      consentAt: new Date(),
     })
     .returning({ id: schema.candidates.id });
 

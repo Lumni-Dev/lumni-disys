@@ -382,6 +382,9 @@ const de: Admin = {
     sending: "Wird gesendet...",
     sendFailed:
       "Die Bewerbung konnte nicht gesendet werden. Bitte erneut versuchen.",
+    consent: "Ich stimme der Verarbeitung meiner personenbezogenen Daten für Recruiting-Zwecke zu.",
+    consentPolicy: "Datenschutzerklärung",
+    consentRequired: "Sie müssen der Datenverarbeitung zustimmen, um sich zu bewerben.",
     empty: "Keine Stellen gefunden.",
     namePlaceholder: "z. B. Anna Weber",
     emailPlaceholder: "sie@email.com",

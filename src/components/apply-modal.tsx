@@ -6,6 +6,7 @@ import { Field, Input, Textarea } from "@/components/ui/form";
 import { PhoneInput } from "@/components/ui/masked-input";
 import { IconCheck } from "@/components/ui/icons";
 import { isEmail, isPhone, isUrl } from "@/lib/validation";
+import { cx } from "@/lib/utils";
 import { useI18n } from "@/i18n/context";
 import type { Job } from "@/lib/data";
 
@@ -31,6 +32,7 @@ export function ApplyModal({
   const [cvName, setCvName] = useState("");
   const [cvData, setCvData] = useState("");
   const [cvTooBig, setCvTooBig] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [errs, setErrs] = useState<Record<string, boolean>>({});
   const [attempt, setAttempt] = useState(0);
   const invalid = (k: string) => (errs[k] ? attempt : 0);
@@ -65,6 +67,7 @@ export function ApplyModal({
       linkedin: !isUrl(linkedin),
 
       cv: !cvData,
+      consent: !consent,
     };
     setErrs(errors);
     if (Object.values(errors).some(Boolean)) {
@@ -90,6 +93,7 @@ export function ApplyModal({
           message,
           cvName,
           cvData,
+          consent,
         }),
       });
       if (!res.ok) throw new Error("failed");
@@ -113,6 +117,7 @@ export function ApplyModal({
     setCvName("");
     setCvData("");
     setCvTooBig(false);
+    setConsent(false);
     setErrs({});
     onClose();
   }
@@ -211,6 +216,40 @@ export function ApplyModal({
                 onChange={(e) => onCvFile(e.target.files?.[0])}
               />
             </Field>
+          </div>
+          <div className="px-2.5 pb-1">
+            <label className="flex cursor-pointer items-start gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="sr-only"
+              />
+              <span
+                className={cx(
+                  "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-lg border transition-colors",
+                  consent
+                    ? "border-accent bg-accent text-accent-foreground"
+                    : invalid("consent")
+                      ? "border-accent text-transparent"
+                      : "border-border bg-surface-2 text-transparent",
+                )}
+              >
+                <IconCheck className="h-3 w-3" />
+              </span>
+              <span className="text-muted">{t.consent}</span>
+            </label>
+            <a
+              href="https://lumni.dev.br/privacy"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 inline-block pl-6 text-xs font-medium text-foreground underline hover:no-underline"
+            >
+              {t.consentPolicy}
+            </a>
+            {invalid("consent") ? (
+              <p className="pl-6 text-xs text-accent">{t.consentRequired}</p>
+            ) : null}
           </div>
           {failed && <p className="px-2.5 text-xs text-accent">{t.sendFailed}</p>}
           <ModalFooter
