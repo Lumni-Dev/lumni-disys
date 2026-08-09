@@ -1,32 +1,22 @@
-// beforeInteractive no root layout e o uso correto no App Router; a regra
-// abaixo e do Pages Router antigo (falso-positivo aqui).
-/* eslint-disable @next/next/no-before-interactive-script-outside-document */
-import Script from "next/script";
 import { GA_ID, GADS_ID } from "@/lib/analytics";
 
-// gtag.js (GA4 e/ou Google Ads) via next/script beforeInteractive: o Next injeta
-// no <head> cedo (ajuda a deteccao do tag) e gerencia a hidratacao (sem
-// mismatch). Renderiza nada quando nenhum ID esta nas envs NEXT_PUBLIC_GA_ID /
-// _GADS_ID. Consent Mode v2: consentimento negado por padrao; reaplica a escolha.
+// Snippet oficial do Google (gtag.js) inline no <head>, carregando de imediato
+// — igual ao que o Google gera, para a deteccao do tag funcionar. Renderiza um
+// unico <script> (mesmo padrao do script de tema), evitando o mismatch de
+// hidratacao que ocorre ao colocar um <script src> como JSX no head.
+// Modelo opt-out (LGPD-BR): o tag roda por padrao; o banner permite recusar,
+// que grava 'denied' em localStorage e e reaplicado aqui no carregamento.
 export function Analytics() {
   const primary = GA_ID || GADS_ID;
   if (!primary) return null;
 
-  return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${primary}`}
-        strategy="beforeInteractive"
-      />
-      <Script id="gtag-init" strategy="beforeInteractive">
-        {`window.dataLayer = window.dataLayer || [];
+  const html = `var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${primary}';document.head.appendChild(s);
+window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
-try{if(localStorage.getItem('disys-consent')==='granted'){gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});}}catch(e){}
+gtag('js',new Date());
+try{if(localStorage.getItem('disys-consent')==='denied'){gtag('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});}}catch(e){}
 ${GA_ID ? `gtag('config','${GA_ID}');` : ""}
-${GADS_ID ? `gtag('config','${GADS_ID}');` : ""}`}
-      </Script>
-    </>
-  );
+${GADS_ID ? `gtag('config','${GADS_ID}');` : ""}`;
+
+  return <script dangerouslySetInnerHTML={{ __html: html }} />;
 }
