@@ -177,8 +177,22 @@ export default function PlanPage() {
     ];
   };
 
+  const renewNote =
+    info && info.plan !== "free" && info.renewsAt
+      ? info.cancelAtPeriodEnd
+        ? admin.plan.endsAt(fmtDate(info.renewsAt))
+        : admin.plan.renewsAt(fmtDate(info.renewsAt))
+      : null;
+
   return (
-    <PageShell showSearch={false}>
+    <PageShell
+      showSearch={false}
+      action={
+        renewNote ? (
+          <span className="text-xs text-muted">{renewNote}</span>
+        ) : undefined
+      }
+    >
       {notice && (
         <div
           className={cx(
@@ -311,34 +325,25 @@ export default function PlanPage() {
 
               {paidCurrent && info && (
                 <CardFooter>
-                  <div className="flex w-full flex-col gap-2">
-                    {info.renewsAt && (
-                      <p className="text-xs text-muted">
-                        {info.cancelAtPeriodEnd
-                          ? admin.plan.endsAt(fmtDate(info.renewsAt))
-                          : admin.plan.renewsAt(fmtDate(info.renewsAt))}
-                      </p>
+                  <div className="flex w-full justify-end">
+                    {info.cancelAtPeriodEnd ? (
+                      <Button
+                        variant="outline"
+                        loading={busy === "manage"}
+                        disabled={busy !== null}
+                        onClick={() => void manage("resume")}
+                      >
+                        {admin.plan.resume}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        disabled={busy !== null}
+                        onClick={() => setConfirmCancel(true)}
+                      >
+                        {admin.plan.cancel}
+                      </Button>
                     )}
-                    <div className="flex justify-end">
-                      {info.cancelAtPeriodEnd ? (
-                        <Button
-                          variant="outline"
-                          loading={busy === "manage"}
-                          disabled={busy !== null}
-                          onClick={() => void manage("resume")}
-                        >
-                          {admin.plan.resume}
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          disabled={busy !== null}
-                          onClick={() => setConfirmCancel(true)}
-                        >
-                          {admin.plan.cancel}
-                        </Button>
-                      )}
-                    </div>
                   </div>
                 </CardFooter>
               )}
