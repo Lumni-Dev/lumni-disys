@@ -10,11 +10,13 @@ export default auth((req) => {
   const isPublic =
     isGuestOnly ||
     pathname.startsWith("/careers") ||
-
     pathname.startsWith("/invite") ||
+    // Pagina publica de direitos LGPD (exportar/excluir dados).
+    pathname.startsWith("/privacidade") ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/public") ||
-
+    // Cron do Vercel (protegido por CRON_SECRET na rota).
+    pathname.startsWith("/api/cron") ||
     pathname.startsWith("/api/stripe/webhook");
 
   if (req.auth && isGuestOnly) {

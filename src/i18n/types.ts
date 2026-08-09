@@ -447,6 +447,22 @@ export interface Admin {
     goHome: string;
   };
 
+  /** Pagina publica de direitos LGPD do titular (exportar/excluir dados). */
+  dataRights: {
+    title: string;
+    subtitle: string;
+    emailLabel: string;
+    exportOption: string;
+    deleteOption: string;
+    submit: string;
+    sent: string;
+    confirmTitle: string;
+    confirmDelete: string;
+    exportDownload: string;
+    invalid: string;
+    deleted: string;
+  };
+
   login: {
     subtitle: string;
     google: string;
