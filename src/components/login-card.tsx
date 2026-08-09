@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useI18n } from "@/i18n/context";
-import { IconGoogle, IconLinkedin } from "@/components/ui/icons";
+import { IconGoogle, IconLinkedin, IconSpinner } from "@/components/ui/icons";
 
 function IconArrowLeft({ className = "h-4 w-4" }: { className?: string }) {
   return (
@@ -25,6 +26,15 @@ function IconArrowLeft({ className = "h-4 w-4" }: { className?: string }) {
 export function LoginCard({ error }: { error: boolean }) {
   const { admin } = useI18n();
   const t = admin.login;
+  const [loading, setLoading] = useState<"google" | "linkedin" | null>(null);
+
+  function go(provider: "google" | "linkedin") {
+    if (loading) return;
+    setLoading(provider);
+    void signIn(provider, { callbackUrl: "/dashboard" });
+  }
+
+  const busy = loading !== null;
 
   return (
     <div className="relative z-10 w-full max-w-sm rounded-lg border border-border bg-surface/80 shadow-2xl backdrop-blur">
@@ -43,19 +53,29 @@ export function LoginCard({ error }: { error: boolean }) {
         )}
         <button
           type="button"
-          onClick={() => void signIn("google", { callbackUrl: "/dashboard" })}
-          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-surface-2 px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10"
+          onClick={() => go("google")}
+          disabled={busy}
+          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-surface-2 px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border disabled:hover:bg-surface-2"
         >
-          <IconGoogle className="h-5 w-5" />
+          {loading === "google" ? (
+            <IconSpinner className="h-5 w-5" />
+          ) : (
+            <IconGoogle className="h-5 w-5" />
+          )}
           {t.google}
         </button>
 
         <button
           type="button"
-          onClick={() => void signIn("linkedin", { callbackUrl: "/dashboard" })}
-          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-surface-2 px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10"
+          onClick={() => go("linkedin")}
+          disabled={busy}
+          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-surface-2 px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border disabled:hover:bg-surface-2"
         >
-          <IconLinkedin className="h-5 w-5" />
+          {loading === "linkedin" ? (
+            <IconSpinner className="h-5 w-5" />
+          ) : (
+            <IconLinkedin className="h-5 w-5" />
+          )}
           {t.linkedin}
         </button>
 
