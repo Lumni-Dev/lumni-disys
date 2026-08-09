@@ -89,9 +89,9 @@ export default function RootLayout({
               "try{document.documentElement.setAttribute('data-theme',localStorage.getItem('disys-theme')==='dark'?'dark':'light')}catch(e){}",
           }}
         />
-        <Analytics />
       </head>
       <body className="min-h-full">
+        <Analytics />
         <AppGuards />
         <LanguageProvider>{children}</LanguageProvider>
         <ConsentBanner />
