@@ -13,6 +13,26 @@ function transporter() {
   });
 }
 
+// Envia um e-mail ja montado (usado pelo worker da fila outbox).
+// Retorna false quando o SMTP nao esta configurado (para nao contar tentativa).
+export async function sendRawEmail(opts: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}): Promise<boolean> {
+  const t = transporter();
+  if (!t) return false;
+  await t.sendMail({
+    from: `"DISYS" <${process.env.SMTP_USER}>`,
+    to: opts.to,
+    subject: opts.subject,
+    html: opts.html,
+    text: opts.text,
+  });
+  return true;
+}
+
 export async function sendInviteEmail(opts: {
   to: string;
   inviterName: string;

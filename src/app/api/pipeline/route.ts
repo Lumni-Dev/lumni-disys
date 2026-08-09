@@ -4,6 +4,7 @@ import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
 import { planLimitError } from "@/lib/plan";
 import { resolveJob } from "@/lib/job";
+import { enqueueStageEmail } from "@/lib/notify";
 
 const STAGES = [
   "Triagem",
@@ -121,6 +122,13 @@ export async function POST(req: Request) {
         eq(schema.candidates.accountId, account.id),
       ),
     );
+
+  await enqueueStageEmail({
+    accountId: account.id,
+    candidateId: candidate.id,
+    stageLabel: stage,
+    kind: "stage",
+  });
 
   return NextResponse.json(
     {

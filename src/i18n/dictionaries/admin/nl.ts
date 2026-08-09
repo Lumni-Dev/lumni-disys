@@ -218,6 +218,8 @@ const nl: Admin = {
     add: "Nieuwe pijplijn",
     dropHere: "Sleep hier een kandidaat naartoe",
     fileName: "pijplijn",
+    notify: "Kandidaten per e-mail informeren",
+    notifyHint: "Bij faseovergang, toevoegen of verwijderen krijgt de kandidaat automatisch een e-mail.",
     cols: {
       name: "Kandidaat",
       job: "Vacature",

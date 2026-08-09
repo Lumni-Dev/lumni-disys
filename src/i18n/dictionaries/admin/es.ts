@@ -218,6 +218,8 @@ const es: Admin = {
     add: "Nuevo proceso",
     dropHere: "Suelta un candidato aquí",
     fileName: "proceso",
+    notify: "Notificar a los candidatos por correo",
+    notifyHint: "Al cambiar de etapa, agregar o quitar, el candidato recibe un correo automatico.",
     cols: {
       name: "Candidato",
       job: "Vacante",

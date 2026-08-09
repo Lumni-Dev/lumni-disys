@@ -220,6 +220,8 @@ const pt: Admin = {
     add: "Novo processo",
     dropHere: "Solte um candidato aqui",
     fileName: "processos",
+    notify: "Notificar candidatos por e-mail",
+    notifyHint: "Ao mudar de etapa, incluir ou remover, o candidato recebe um e-mail automatico.",
     cols: {
       name: "Candidato",
       job: "Vaga",

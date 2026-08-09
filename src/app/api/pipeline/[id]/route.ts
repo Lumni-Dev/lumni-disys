@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, count, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { authorize } from "@/lib/authz";
+import { enqueueStageEmail } from "@/lib/notify";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -11,6 +12,16 @@ export async function PUT(req: Request, { params }: Params) {
 
   const id = Number((await params).id);
   const body = await req.json();
+
+  const [before] = await db
+    .select({ stage: schema.pipelineCards.stage })
+    .from(schema.pipelineCards)
+    .where(
+      and(
+        eq(schema.pipelineCards.id, id),
+        eq(schema.pipelineCards.accountId, account.id),
+      ),
+    );
 
   const set: Record<string, unknown> = {};
   if (body.stage !== undefined) set.stage = body.stage;
@@ -52,6 +63,15 @@ export async function PUT(req: Request, { params }: Params) {
           eq(schema.candidates.accountId, account.id),
         ),
       );
+
+    if (before && before.stage !== row.stage) {
+      await enqueueStageEmail({
+        accountId: account.id,
+        candidateId: row.candidateId,
+        stageLabel: row.stage,
+        kind: "stage",
+      });
+    }
   }
 
   return NextResponse.json({
@@ -99,6 +119,13 @@ export async function DELETE(_req: Request, { params }: Params) {
           eq(schema.candidates.accountId, account.id),
         ),
       );
+
+    await enqueueStageEmail({
+      accountId: account.id,
+      candidateId: card.candidateId,
+      stageLabel: "-",
+      kind: "removed",
+    });
   }
 
   return NextResponse.json({ ok: true });

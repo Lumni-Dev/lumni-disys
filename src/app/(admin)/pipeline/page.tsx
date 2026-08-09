@@ -32,13 +32,32 @@ export default function PipelinePage() {
     card: PipelineCard;
     stage: string;
   } | null>(null);
+  const [notify, setNotify] = useState(false);
+  const [notifySaving, setNotifySaving] = useState(false);
 
   useEffect(() => {
     api
       .get<Column[]>("/api/pipeline")
       .then(setColumns)
       .finally(() => setLoading(false));
+    api
+      .get<{ notifyStageChange: boolean }>("/api/settings/notify")
+      .then((r) => setNotify(r.notifyStageChange))
+      .catch(() => {});
   }, []);
+
+  async function toggleNotify() {
+    const next = !notify;
+    setNotify(next);
+    setNotifySaving(true);
+    try {
+      await api.put("/api/settings/notify", { notifyStageChange: next });
+    } catch {
+      setNotify(!next);
+    } finally {
+      setNotifySaving(false);
+    }
+  }
 
   const stages = columns.map((c) => c.stage);
   const q = query.trim().toLowerCase();
@@ -165,6 +184,33 @@ export default function PipelinePage() {
       searchValue={query}
       onSearchChange={setQuery}
     >
+      <div className="mb-2.5 flex items-center justify-between gap-2.5 rounded-lg border border-hairline bg-surface p-2.5">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-foreground">
+            {admin.pipeline.notify}
+          </p>
+          <p className="text-xs text-muted">{admin.pipeline.notifyHint}</p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={notify}
+          aria-label={admin.pipeline.notify}
+          onClick={toggleNotify}
+          disabled={notifySaving}
+          className={cx(
+            "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60",
+            notify ? "bg-foreground" : "bg-surface-2 border border-hairline",
+          )}
+        >
+          <span
+            className={cx(
+              "absolute top-0.5 h-5 w-5 rounded-full border border-hairline bg-background shadow-sm transition-all",
+              notify ? "left-[22px]" : "left-0.5",
+            )}
+          />
+        </button>
+      </div>
       {loading ? (
         <div className="scroll-thin flex gap-2.5 overflow-x-auto pb-2.5">
           {Array.from({ length: 5 }).map((_, i) => (

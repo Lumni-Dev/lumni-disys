@@ -219,6 +219,8 @@ const de: Admin = {
     add: "Neue Pipeline",
     dropHere: "Kandidat hier ablegen",
     fileName: "pipeline",
+    notify: "Kandidaten per E-Mail benachrichtigen",
+    notifyHint: "Bei Phasenwechsel, Hinzufugen oder Entfernen erhalt der Kandidat automatisch eine E-Mail.",
     cols: {
       name: "Kandidat",
       job: "Stelle",

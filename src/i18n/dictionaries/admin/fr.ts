@@ -219,6 +219,8 @@ const fr: Admin = {
     add: "Nouveau pipeline",
     dropHere: "Déposez un candidat ici",
     fileName: "pipeline",
+    notify: "Notifier les candidats par e-mail",
+    notifyHint: "Lors d'un changement d'etape, ajout ou retrait, le candidat recoit un e-mail automatique.",
     cols: {
       name: "Candidat",
       job: "Offre",

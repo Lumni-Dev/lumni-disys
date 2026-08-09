@@ -211,6 +211,8 @@ const ja: Admin = {
     add: "新規パイプライン",
     dropHere: "ここに候補者をドロップ",
     fileName: "pipeline",
+    notify: "候補者にメールで通知",
+    notifyHint: "ステージ変更、追加、削除の際に候補者へ自動でメールが送信されます。",
     cols: {
       name: "候補者",
       job: "求人",

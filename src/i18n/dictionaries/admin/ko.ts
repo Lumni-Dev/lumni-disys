@@ -211,6 +211,8 @@ const ko: Admin = {
     add: "새 파이프라인",
     dropHere: "여기에 지원자를 놓으세요",
     fileName: "파이프라인",
+    notify: "지원자에게 이메일로 알림",
+    notifyHint: "단계 변경, 추가 또는 제거 시 지원자에게 자동으로 이메일이 발송됩니다.",
     cols: {
       name: "지원자",
       job: "채용 공고",

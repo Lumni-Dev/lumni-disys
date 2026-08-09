@@ -273,6 +273,8 @@ export interface Admin {
     add: string;
     dropHere: string;
     fileName: string;
+    notify: string;
+    notifyHint: string;
     cols: {
       name: string;
       job: string;

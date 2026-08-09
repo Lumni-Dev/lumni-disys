@@ -218,6 +218,8 @@ const it: Admin = {
     add: "Nuova pipeline",
     dropHere: "Trascina qui un candidato",
     fileName: "pipeline",
+    notify: "Notifica i candidati via e-mail",
+    notifyHint: "Al cambio di fase, aggiunta o rimozione, il candidato riceve un'e-mail automatica.",
     cols: {
       name: "Candidato",
       job: "Posizione",

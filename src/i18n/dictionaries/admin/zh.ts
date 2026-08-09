@@ -206,6 +206,8 @@ const zh: Admin = {
     add: "新建招聘流程",
     dropHere: "将候选人拖放到此处",
     fileName: "pipeline",
+    notify: "通过邮件通知候选人",
+    notifyHint: "在阶段变更、加入或移除时，候选人会自动收到邮件。",
     cols: {
       name: "候选人",
       job: "职位",

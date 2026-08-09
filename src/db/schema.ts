@@ -40,6 +40,8 @@ export const accounts = pgTable(
     cancelAtPeriodEnd: boolean().notNull().default(false),
 
     planRenewsAt: timestamp({ withTimezone: true }),
+    // Notificar o candidato por e-mail a cada mudanca de etapa no pipeline.
+    notifyStageChange: boolean().notNull().default(false),
     ...timestamps,
   },
   (t) => [
@@ -47,6 +49,24 @@ export const accounts = pgTable(
     index("accounts_owner_email_key").on(t.ownerEmail),
     uniqueIndex("accounts_public_token_key").on(t.publicToken),
   ],
+);
+
+// Fila (outbox) de e-mails: as mudancas de etapa enfileiram aqui e um cron
+// envia em lotes, para nao travar a request nem estourar o SMTP em picos.
+export const emailOutbox = pgTable(
+  "email_outbox",
+  {
+    id: serial().primaryKey(),
+    toEmail: varchar({ length: 200 }).notNull(),
+    subject: varchar({ length: 300 }).notNull(),
+    html: text().notNull().default(""),
+    bodyText: text().notNull().default(""),
+    // pending | sent | failed
+    status: varchar({ length: 20 }).notNull().default("pending"),
+    attempts: integer().notNull().default(0),
+    ...timestamps,
+  },
+  (t) => [index("email_outbox_status_idx").on(t.status)],
 );
 
 export const jobs = pgTable("jobs", {
