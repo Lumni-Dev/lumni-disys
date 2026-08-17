@@ -7,7 +7,7 @@ export const SITE_URL = (
 export const SITE_NAME = "DISYS";
 
 export const SITE_TITLE =
-  "DISYS — ATS de recrutamento com análise de currículos por IA";
+  "DISYS - ATS de recrutamento com análise de currículos por IA";
 
 export const SITE_DESCRIPTION =
   "ATS completo para recrutamento e seleção: gerencie vagas, candidatos e processos em um só fluxo, com análise de currículos e compatibilidade por IA de 0 a 100. Comece grátis.";
