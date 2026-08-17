@@ -43,10 +43,10 @@ export function stageEmail(opts: {
     return { subject, html: shell(title, body), text: `${title}. ${body}` };
   }
 
-  const subject = `Sua candidatura avancou: ${opts.stageLabel}`;
-  const title = "Sua candidatura avancou";
-  const body = `Ola ${first}, sua candidatura${forJob} avancou para a etapa: <strong style="color:#ffffff;">${opts.stageLabel}</strong>. Em breve entraremos em contato com os proximos passos.`;
-  const text = `Ola ${first}, sua candidatura${forJob} avancou para a etapa: ${opts.stageLabel}.`;
+  const subject = `Sua candidatura mudou de etapa: ${opts.stageLabel}`;
+  const title = "Sua candidatura mudou de etapa";
+  const body = `Ola ${first}, sua candidatura${forJob} mudou para a etapa: <strong style="color:#ffffff;">${opts.stageLabel}</strong>. Em breve entraremos em contato com os proximos passos.`;
+  const text = `Ola ${first}, sua candidatura${forJob} mudou para a etapa: ${opts.stageLabel}.`;
   return { subject, html: shell(title, body), text };
 }
 
